@@ -1,0 +1,58 @@
+@use './../../styles/index.scss' as *;
+@use './../../styles/colors.scss' as *;
+
+.locations-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $backgroundColor;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+        border-bottom: 1px solid $borderColor;
+        position: sticky;
+        top: 0px;
+        z-index: 10;
+
+        .collapse-all-button {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+
+            .collapse-all-text {
+                font-size: 1rem;
+                color: $fontColor;
+            }
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: $fontColor;
+        }
+
+        .back-button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    }
+
+    .locations-page-content {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px 40px 20px;
+    }
+}

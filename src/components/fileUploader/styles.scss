@@ -1,0 +1,39 @@
+@use './../../styles/index.scss' as *;
+@use './../../styles/colors.scss' as *;
+
+.file-uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+
+    .container {
+        text-align: center;
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: .5rem 2rem;
+            border: 2px dashed $borderColor;
+            border-radius: 1rem;
+            background-color: $backgroundColor;
+            color: $fontColor;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color 0.15s, color 0.15s;
+
+            &:hover {
+                border-color: $primaryColor;
+                color: #fff;
+            }
+
+            input[type="file"] {
+                display: none; // hide the native input
+            }
+        }
+    }
+}

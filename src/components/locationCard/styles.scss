@@ -1,0 +1,66 @@
+@use './../../styles/index.scss' as *;
+@use './../../styles/colors.scss' as *;
+
+.location-card {
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+
+    .location-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .content {
+        margin-top: 12px;
+        padding-left: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.trainer-card {
+    display: flex;
+    gap: 16px;
+    padding: 8px;
+    border: 1px solid $borderColor;
+    border-radius: 8px;
+
+    .trainer-party {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .trainer-pokemon {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid $borderColor;
+    }
+}
+
+.encounters-table,
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        border: 1px solid $borderColor;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background: $backgroundColor;
+    }
+}
