@@ -1,0 +1,42 @@
+@use './../../../../../../styles/index.scss' as *;
+@use './../../../../../../styles/colors.scss' as *;
+
+.trainer-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 6px 10px;
+    border: 1px solid $borderColor;
+    width: 150px;
+    min-width: 150px;
+    border-radius: 8px;
+    margin-right: 12px;
+
+    .trainer-sprite-container {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .trainer-info {
+        text-align: center;
+
+        .trainer-class {
+            color: $fontColor;
+        }
+
+        .trainer-name {
+            font-weight: bold;
+            color: $fontColor;
+        }
+    }
+}

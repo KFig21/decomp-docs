@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Trainer } from '../../../../types/decomp';
-import TrainerCard from './components/TrainerCard';
+import PartyCard from './components/partyCard/PartyCard';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
+import './styles.scss';
 
 type Props = {
   trainers: Trainer[];
@@ -20,16 +21,16 @@ export default function Trainers({ trainers, expandAll = true, parentOpen = true
   }, [expandAll, parentOpen]);
 
   return (
-    <div className="section">
+    <div className="trainers-section">
       <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Trainers ({trainers.length})</span>
       </div>
 
       {open && (
-        <div className="section-body">
+        <div className="trainers-list">
           {trainers.map((trainer, i) => (
-            <TrainerCard key={i} trainer={trainer} />
+            <PartyCard key={i} trainer={trainer} />
           ))}
         </div>
       )}

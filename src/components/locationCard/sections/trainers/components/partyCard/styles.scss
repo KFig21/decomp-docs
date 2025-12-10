@@ -1,0 +1,16 @@
+@use './../../../../../../styles/index.scss' as *;
+@use './../../../../../../styles/colors.scss' as *;
+
+.party-card-container {
+    display: flex;
+    gap: 16px;
+    padding: 8px;
+    border: 1px solid $borderColor;
+    border-radius: 8px;
+
+    .trainer-party {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+}

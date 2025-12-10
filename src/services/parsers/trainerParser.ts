@@ -162,7 +162,7 @@ function getDefaultMoves(
   return Array.from(learnsetMatch[0].matchAll(/LEVEL_UP_MOVE\(\s*(\d+),\s*(MOVE_[A-Z0-9_]+)\s*\)/g))
     .filter((m) => Number(m[1]) <= level)
     .slice(-4)
-    .map((m) => m[2]);
+    .map((m) => normalizeMoveName(m[2]));
 }
 
 function normalizeTrainerConstant(constant: string) {
@@ -175,6 +175,17 @@ function normalizeTrainerConstant(constant: string) {
   return name
     .toLowerCase()
     .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function normalizeMoveName(move: string) {
+  if (!move) return '';
+
+  return move
+    .replace(/^MOVE_/, '') // remove prefix
+    .toLowerCase()
+    .split('_') // split words
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 }

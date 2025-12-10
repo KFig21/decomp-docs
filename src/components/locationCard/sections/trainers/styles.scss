@@ -1,0 +1,13 @@
+@use './../../../../styles/index.scss' as *;
+@use './../../../../styles/colors.scss' as *;
+
+.trainers-section {
+    .trainers-list {
+        display: flex;
+        flex-direction: column;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        margin-top: 12px;
+        gap: 12px;
+    }
+}
