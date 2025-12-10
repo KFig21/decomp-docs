@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Location, Item } from '../../types/decomp';
+import type { Location, Item } from '../../../types/decomp';
 import { getFile } from './utils';
 
 export function parseItems({

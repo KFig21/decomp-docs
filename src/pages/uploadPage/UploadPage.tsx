@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileUploader from '../../components/fileUploader/FileUploader';
 import { readFolderFiles } from '../../services/fileReader';
-import { parseDecomp } from '../../services/parsers/index';
+import { parseDecomp } from '../../services/parsers/v1/index';
 import type { Location } from '../../types/decomp';
 import './styles.scss';
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Location, Trainer, TrainerPokemon } from '../../types/decomp';
+import type { Location, Trainer, TrainerPokemon } from '../../../types/decomp';
 import { getFile } from './utils';
 
 type Args = {

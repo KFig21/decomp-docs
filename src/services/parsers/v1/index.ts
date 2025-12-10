@@ -1,4 +1,4 @@
-import type { Location } from '../../types/decomp';
+import type { Location } from '../../../types/decomp';
 import { getFile } from './utils';
 import { parseMapFolders, prettyMapName } from './mapParser';
 import { parseTrainers } from './trainerParser';
