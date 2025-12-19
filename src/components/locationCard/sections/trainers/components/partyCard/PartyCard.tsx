@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function PartyCard({ trainer }: Props) {
-  console.log('trainer', trainer);
   return (
     <div className="party-card-container">
       <TrainerCard trainer={trainer} />

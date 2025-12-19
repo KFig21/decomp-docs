@@ -6,6 +6,7 @@ import { readFolderFiles } from '../../services/fileReader';
 import { parseDecomp } from '../../services/parsers/v1/index';
 import type { Location } from '../../types/decomp';
 import './styles.scss';
+import { parseDecompV2 } from '../../services/parsers/v2';
 
 type Props = {
   setLocations: (locs: Location[]) => void;
@@ -35,6 +36,9 @@ export default function UploadPage({ setLocations, projectName, setProjectName }
 
     const map = await readFolderFiles(uploadedFiles);
     const locations = parseDecomp(map);
+
+    // V2 PARSER TEST
+    parseDecompV2(map);
 
     setLocations(locations);
     navigate('/locations');
