@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getFile } from './utils';
+import { getFile } from '../utils';
 
 export type RawIdentifier = string;
 
