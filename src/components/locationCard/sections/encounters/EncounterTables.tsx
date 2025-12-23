@@ -24,14 +24,14 @@ export default function EncounterTable({
   }, [expandAll, parentOpen]);
 
   return (
-    <div className="section">
+    <div className="section container-style">
       <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Encounters</span>
       </div>
 
       {open && encounterTable.length > 0 && (
-        <div className="encounters-table">
+        <div className="encounters-container ">
           {encounterTable.map((table, i) => {
             return <Encounters key={i} table={table} expandAll={expandAll} parentOpen={open} />;
           })}

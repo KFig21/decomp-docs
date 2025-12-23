@@ -3,6 +3,7 @@ import './../../styles.scss';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import type { LocationMap, LocationRoot } from '../../../../services/parsers/v2/locations/types';
 import MapCard from './MapCard';
+import { formatReadableName } from '../../../../utils/functions.ts';
 
 type Props = {
   locationRoot: LocationRoot;
@@ -18,10 +19,10 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
   }, [expandAll]);
 
   return (
-    <div className="location-card">
+    <div className="location-card container-style">
       <div className="location-card-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
-        <span className="title">{locationRoot.root}</span>
+        <span className="title">{formatReadableName(locationRoot.root)}</span>
       </div>
 
       {open && (
@@ -31,10 +32,12 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
               locationMap.trainers.length > 0 ||
               locationMap.wildPokemon.length > 0 ||
               locationMap.items.length > 0;
+            console.log('locationRoot', locationRoot);
+            const isOverworld = locationMap.name === locationRoot.root;
             return (
               hasContent && (
                 <div key={i} className="map-section">
-                  <MapCard location={locationMap} expandAll={expandAll} />
+                  <MapCard location={locationMap} expandAll={expandAll} isOverworld={isOverworld} />
                 </div>
               )
             );

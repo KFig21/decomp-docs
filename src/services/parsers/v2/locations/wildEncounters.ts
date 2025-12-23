@@ -55,7 +55,6 @@ export function parseWildEncounters(
 
           indexes.forEach((i) => {
             const monInContext = encounterablePokemon[i];
-            console.log('Processing grouped method mon:', monInContext);
             if (!monInContext) return;
 
             const species = pokemonBySpecies[monInContext.species];

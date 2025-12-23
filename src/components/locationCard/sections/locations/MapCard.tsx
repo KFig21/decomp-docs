@@ -5,13 +5,15 @@ import ItemsSection from '../items/Items';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import type { LocationMap } from '../../../../services/parsers/v2/locations/types';
 import EncounterTable from '../encounters/EncounterTables';
+import { formatReadableName } from '../../../../utils/functions';
 
 type Props = {
   location: LocationMap;
   expandAll?: boolean;
+  isOverworld?: boolean;
 };
 
-export default function MapCard({ location, expandAll = true }: Props) {
+export default function MapCard({ location, expandAll = true, isOverworld = false }: Props) {
   const [open, setOpen] = useState(true);
 
   // Sync local state with parent expand/collapse
@@ -20,10 +22,12 @@ export default function MapCard({ location, expandAll = true }: Props) {
   }, [expandAll]);
 
   return (
-    <div className="location-card">
-      <div className="location-card-header" onClick={() => setOpen(!open)}>
+    <div className="map-card container-style">
+      <div className="map-card-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
-        <span className="title">{location.name}</span>
+        <span className="title">
+          {isOverworld ? 'Overworld' : formatReadableName(location.name)}
+        </span>
       </div>
 
       {open && (

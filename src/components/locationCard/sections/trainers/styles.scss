@@ -2,6 +2,8 @@
 @use './../../../../styles/colors.scss' as *;
 
 .trainers-section {
+    gap: 16px;
+
     .trainers-list {
         display: flex;
         flex-direction: column;

@@ -20,36 +20,44 @@ export default function ItemsSection({ items, expandAll = true, parentOpen = tru
   }, [expandAll, parentOpen]);
 
   return (
-    <div className="section">
+    <div className="section container-style">
       <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Items ({items.length})</span>
       </div>
 
       {open && items.length > 0 && (
-        <table className="items-table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((mappedItem: ParsedMapItem, i) => {
-              const item = mappedItem.item;
-              return (
-                <tr key={i}>
-                  <td className="item-name">
-                    <ItemSprite item={item} />
-                    <span>{item.name}</span>
-                  </td>
-                  {/* TODO - Fix whatever this hard-coded value is */}
-                  <td>{mappedItem.quantity || 1}</td>
+        <div className="table-container">
+          <div className="table-wrapper">
+            <table className="items-table">
+              <thead>
+                <tr>
+                  <th className="left">Item</th>
+                  <th className="center">Qty</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {items.map((mappedItem: ParsedMapItem, i) => {
+                  const item = mappedItem.item;
+                  return (
+                    <tr key={i}>
+                      <td>
+                        <div className="encounter-item">
+                          <ItemSprite item={item} />
+                          <span>{item.name}</span>
+                        </div>
+                      </td>
+                      {/* TODO - Fix whatever this hard-coded value is */}
+                      <td>
+                        <div className="encounter-rate">{mappedItem.quantity || 1}</div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );
