@@ -1,10 +1,10 @@
-import type { Trainer } from '../../../../../../types/decomp';
 import TrainerCard from '../trainerCard/TrainerCard';
 import TrainerPokemonCard from '../pokemonCard/TrainerPokemonCard';
 import './styles.scss';
+import type { ParsedTrainer } from '../../../../../../services/parsers/v2/trainers/types';
 
 type Props = {
-  trainer: Trainer;
+  trainer: ParsedTrainer;
 };
 
 export default function PartyCard({ trainer }: Props) {
@@ -14,7 +14,7 @@ export default function PartyCard({ trainer }: Props) {
 
       <div className="trainer-party">
         {trainer.party?.map((mon, i) => (
-          <TrainerPokemonCard key={i} name={mon.name} level={mon.level} moves={mon.moves} />
+          <TrainerPokemonCard key={i} pokemon={mon} />
         ))}
       </div>
     </div>

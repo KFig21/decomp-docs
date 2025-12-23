@@ -1,21 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getFile } from './utils';
-
-export type RawIdentifier = string;
-
-export interface ParsedAttack {
-  key: RawIdentifier;
-  power?: number;
-  accuracy?: number;
-  pp?: number;
-  priority?: number;
-  secondaryEffectChance?: number;
-  type?: RawIdentifier;
-  effect?: RawIdentifier;
-  target?: RawIdentifier;
-  split?: RawIdentifier;
-  flags?: RawIdentifier[];
-}
+import { getFile } from '../utils';
+import type { ParsedAttack, RawIdentifier } from './types';
 
 type Args = {
   files: Map<string, string>;

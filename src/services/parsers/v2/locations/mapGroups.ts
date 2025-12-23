@@ -13,6 +13,9 @@ export function parseMapGroups(mapGroups: MapGroupsJson): Record<string, Locatio
   const locations: Record<string, LocationRoot> = {};
 
   for (const [groupName, maps] of Object.entries(mapGroups)) {
+    // Skip the ordering metadata
+    if (groupName === 'group_order') continue;
+    // Skip non-array map definitions
     if (!Array.isArray(maps)) continue;
 
     const mapType = getMapType(groupName);

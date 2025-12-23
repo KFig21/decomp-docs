@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import type { Item } from '../../../../types/decomp';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import ItemSprite from '../../../elements/sprites/ItemSprite';
+import type { ParsedMapItem } from '../../../../services/parsers/v2/locations/types';
 
 type Props = {
-  items: Item[];
+  items: ParsedMapItem[];
   expandAll?: boolean;
   parentOpen?: boolean;
 };
@@ -35,16 +35,19 @@ export default function ItemsSection({ items, expandAll = true, parentOpen = tru
             </tr>
           </thead>
           <tbody>
-            {items.map((item, i) => (
-              <tr key={i}>
-                <td className="item-name">
-                  <ItemSprite name={item.name} />
-                  <span>{item.name}</span>
-                </td>
-                {/* TODO - Fix whatever this hard-coded value is */}
-                <td>1</td>
-              </tr>
-            ))}
+            {items.map((mappedItem: ParsedMapItem, i) => {
+              const item = mappedItem.item;
+              return (
+                <tr key={i}>
+                  <td className="item-name">
+                    <ItemSprite item={item} />
+                    <span>{item.name}</span>
+                  </td>
+                  {/* TODO - Fix whatever this hard-coded value is */}
+                  <td>{mappedItem.quantity || 1}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

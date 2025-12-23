@@ -3,44 +3,53 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileUploader from '../../components/fileUploader/FileUploader';
 import { readFolderFiles } from '../../services/fileReader';
-import { parseDecomp } from '../../services/parsers/v1/index';
-import type { Location } from '../../types/decomp';
-import './styles.scss';
 import { parseDecompV2 } from '../../services/parsers/v2';
+import './styles.scss';
 
 type Props = {
-  setLocations: (locs: Location[]) => void;
   projectName: string;
   setProjectName: (name: string) => void;
+
+  setLocations: (l: any[]) => void;
+  setPokemon: (p: any[]) => void;
+  setItems: (i: any[]) => void;
+  setTrainers: (t: any[]) => void;
 };
 
-export default function UploadPage({ setLocations, projectName, setProjectName }: Props) {
+export default function UploadPage({
+  projectName,
+  setProjectName,
+  setLocations,
+  setPokemon,
+  setItems,
+  setTrainers,
+}: Props) {
   const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
-  const [folderIsChosen, setFolderIsChosen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false); // new state
+  const [folderIsChosen, setFolderIsChosen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleUpload = async (files: FileList) => {
     setUploadedFiles(files);
     if (files.length > 0) {
       const path = (files[0] as any).webkitRelativePath || files[0].name;
-      const name = path.split('/')[0];
-      setProjectName(name);
+      setProjectName(path.split('/')[0]);
       setFolderIsChosen(true);
     }
   };
 
   const handleParse = async () => {
     if (!uploadedFiles || loading) return;
-    setLoading(true); // start loader
+    setLoading(true);
 
-    const map = await readFolderFiles(uploadedFiles);
-    const locations = parseDecomp(map);
+    const files = await readFolderFiles(uploadedFiles);
+    const result = parseDecompV2(files);
 
-    // V2 PARSER TEST
-    parseDecompV2(map);
+    setLocations(result.locations);
+    setPokemon(result.pokemon);
+    setItems(result.items);
+    setTrainers(result.trainers);
 
-    setLocations(locations);
     navigate('/locations');
   };
 
@@ -48,10 +57,11 @@ export default function UploadPage({ setLocations, projectName, setProjectName }
     <div className="upload-page">
       <div className="main-container">
         <h1>Decomp-Docs</h1>
+
         <div className="upload-container">
           <FileUploader
             onUpload={handleUpload}
-            folderName={projectName || ''}
+            folderName={projectName}
             folderIsChosen={folderIsChosen}
           />
         </div>
@@ -59,9 +69,9 @@ export default function UploadPage({ setLocations, projectName, setProjectName }
           <button
             className={folderIsChosen ? 'enabled' : 'disabled'}
             onClick={handleParse}
-            disabled={!folderIsChosen || loading} // prevent multiple clicks
+            disabled={!folderIsChosen || loading}
           >
-            {loading ? <span className="spinner"></span> : 'Parse'}
+            {loading ? <span className="spinner" /> : 'Parse'}
           </button>
         </div>
       </div>

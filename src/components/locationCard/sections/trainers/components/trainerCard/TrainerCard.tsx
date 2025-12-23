@@ -1,14 +1,14 @@
 import TrainerSprite from '../../../../../elements/sprites/TrainerSprite';
 import ItemSprite from '../../../../../elements/sprites/ItemSprite';
-import type { Trainer } from '../../../../../../types/decomp';
 import './styles.scss';
+import type { ParsedTrainer } from '../../../../../../services/parsers/v2/trainers/types';
 
 type Props = {
-  trainer: Trainer;
+  trainer: ParsedTrainer;
 };
 
 export default function TrainerCard({ trainer }: Props) {
-  const { name, class: trainerClass, sprite, items } = trainer;
+  const { name, trainerClass, sprite, items } = trainer;
   return (
     <div className="trainer-card-container">
       <div className="trainer-sprite-container">
@@ -22,7 +22,7 @@ export default function TrainerCard({ trainer }: Props) {
         {items && items.length > 0 && (
           <div className="trainer-items">
             {items.map((item, i) => (
-              <ItemSprite key={i} name={item} size={24} />
+              <ItemSprite key={i} item={item} size={24} />
             ))}
           </div>
         )}

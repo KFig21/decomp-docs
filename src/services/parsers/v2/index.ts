@@ -4,7 +4,7 @@ import { parseAbilities } from './abilities';
 import { parseItems } from './items';
 import { attachItemLocations } from './items/attachItemLocations';
 import { parseLocations } from './locations';
-import { parseMoves } from './moves';
+import { parseMoves } from './moves/moves';
 import { parsePokemon } from './pokemon';
 import { parseTrainers } from './trainers';
 
@@ -32,4 +32,13 @@ export function parseDecompV2(files: Map<string, string>): any {
   console.log('Parsed Pokémon:', pokemon);
   console.log('Parsed trainers:', trainers);
   console.log('Parsed locations:', locations);
+
+  return {
+    moves,
+    items,
+    abilities,
+    pokemon,
+    trainers,
+    locations,
+  };
 }

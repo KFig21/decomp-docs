@@ -1,34 +1,10 @@
-import type { WildEncounterTable, WildPokemonEntry } from './types';
 import type { ParsedPokemon } from '../pokemon/types';
-
-type WildEncounterMon = {
-  min_level: number;
-  max_level: number;
-  species: string;
-};
-
-type WildEncounterMethodData = {
-  encounter_rate: number;
-  mons: WildEncounterMon[];
-};
-
-type WildEncounterEntry = {
-  map: string;
-  base_label?: string;
-} & Record<string, WildEncounterMethodData | string | undefined>;
-
-type WildEncountersJson = {
-  wild_encounter_groups: {
-    label: string;
-    for_maps: boolean;
-    fields: {
-      type: string;
-      encounter_rates: number[];
-      groups?: Record<string, number[]>;
-    }[];
-    encounters: WildEncounterEntry[];
-  }[];
-};
+import type {
+  WildPokemonEntry,
+  WildEncounters_fromJson,
+  WildEncounterTable,
+  WildEncounterMethod_fromJson,
+} from './types';
 
 function mergeAndSortEncounters(encounters: WildPokemonEntry[]): WildPokemonEntry[] {
   const merged = new Map<string, WildPokemonEntry>();
@@ -48,30 +24,29 @@ function mergeAndSortEncounters(encounters: WildPokemonEntry[]): WildPokemonEntr
 }
 
 export function parseWildEncounters(
-  json: WildEncountersJson,
+  json: WildEncounters_fromJson,
   pokemonBySpecies: Record<string, ParsedPokemon>,
 ): Record<string, WildEncounterTable[]> {
   const result: Record<string, WildEncounterTable[]> = {};
-
   const group = json.wild_encounter_groups.find((g) => g.for_maps);
   if (!group) return result;
 
   const fieldDefs = Object.fromEntries(group.fields.map((f) => [f.type, f]));
 
-  for (const encounter of group.encounters) {
-    const mapId = encounter.map;
+  for (const location of group.encounters) {
+    const mapId = location.map;
     const tables: WildEncounterTable[] = [];
 
-    for (const [method, data] of Object.entries(encounter)) {
+    for (const [method, data] of Object.entries(location)) {
       if (method === 'map' || method === 'base_label') continue;
       if (!data || typeof data !== 'object') continue;
 
-      const methodData = data as WildEncounterMethodData;
+      const encounterMethodData = data as WildEncounterMethod_fromJson;
       const field = fieldDefs[method];
       if (!field) continue;
 
       const rates = field.encounter_rates;
-      const mons = methodData.mons;
+      const encounterablePokemon = encounterMethodData.mons;
 
       // 🎣 Grouped methods (Old Rod / Good Rod / Super Rod)
       if (field.groups) {
@@ -79,23 +54,24 @@ export function parseWildEncounters(
           const rawEncounters: WildPokemonEntry[] = [];
 
           indexes.forEach((i) => {
-            const mon = mons[i];
-            if (!mon) return;
+            const monInContext = encounterablePokemon[i];
+            console.log('Processing grouped method mon:', monInContext);
+            if (!monInContext) return;
 
-            const pokemon = pokemonBySpecies[mon.species];
-            if (!pokemon) return;
+            const species = pokemonBySpecies[monInContext.species];
+            if (!species) return;
 
             rawEncounters.push({
-              pokemon,
-              minLevel: mon.min_level,
-              maxLevel: mon.max_level,
+              pokemon: species,
+              minLevel: monInContext.min_level,
+              maxLevel: monInContext.max_level,
               rate: rates[i],
             });
           });
 
           tables.push({
             method: `${method}_${groupName}`,
-            encounterRate: methodData.encounter_rate,
+            encounterRate: encounterMethodData.encounter_rate,
             encounters: mergeAndSortEncounters(rawEncounters),
           });
         }
@@ -103,21 +79,21 @@ export function parseWildEncounters(
         // 🌿 Standard methods (land, water, rock smash, etc)
         const rawEncounters: WildPokemonEntry[] = [];
 
-        mons.forEach((mon, i) => {
-          const pokemon = pokemonBySpecies[mon.species];
-          if (!pokemon) return;
+        encounterablePokemon.forEach((monInContext, i) => {
+          const species = pokemonBySpecies[monInContext.species];
+          if (!species) return;
 
           rawEncounters.push({
-            pokemon,
-            minLevel: mon.min_level,
-            maxLevel: mon.max_level,
+            pokemon: species,
+            minLevel: monInContext.min_level,
+            maxLevel: monInContext.max_level,
             rate: rates[i],
           });
         });
 
         tables.push({
           method,
-          encounterRate: methodData.encounter_rate,
+          encounterRate: encounterMethodData.encounter_rate,
           encounters: mergeAndSortEncounters(rawEncounters),
         });
       }

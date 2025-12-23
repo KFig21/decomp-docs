@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ParsedTrainer } from '../trainers/types';
+import type { ParsedPokemon } from '../pokemon/types';
+import type { ParsedItem } from '../items/types';
 
 export type LocationMap = {
   name: string;
@@ -8,7 +10,7 @@ export type LocationMap = {
   trainers: ParsedTrainer[];
   items: ParsedMapItem[];
   npcs: ParsedNpc[];
-  wildPokemon: WildEncounterTable[]; // stub for now
+  wildPokemon: WildEncounterTable[];
 };
 
 export type LocationRoot = {
@@ -22,7 +24,7 @@ export type MapGroupsJson = {
 };
 
 export type ParsedMapItem = {
-  item: any; // resolved item object
+  item: ParsedItem;
   x: number;
   y: number;
   source: 'item_ball' | 'hidden_item' | 'npc';
@@ -39,7 +41,7 @@ export type ParsedNpc = {
   trainer?: ParsedTrainer;
 };
 
-import type { ParsedPokemon } from '../pokemon/types';
+// --- Wild encounters types ---
 
 export interface WildPokemonEntry {
   pokemon: ParsedPokemon;
@@ -53,3 +55,34 @@ export interface WildEncounterTable {
   encounterRate: number; // map-level rate
   encounters: WildPokemonEntry[];
 }
+
+// --- Wild encounters data parsed from JSON ('src/data/wild_encounters.json') ---
+
+export type WildEncounterPokemon_fromJson = {
+  species: string;
+  min_level: number;
+  max_level: number;
+};
+
+export type WildEncounterMethod_fromJson = {
+  encounter_rate: number;
+  mons: WildEncounterPokemon_fromJson[];
+};
+
+export type WildEncounterLocation_fromJson = {
+  map: string;
+  base_label?: string;
+} & Record<string, WildEncounterMethod_fromJson | string | undefined>;
+
+export type WildEncounters_fromJson = {
+  wild_encounter_groups: {
+    label: string;
+    for_maps: boolean;
+    fields: {
+      type: string;
+      encounter_rates: number[];
+      groups?: Record<string, number[]>;
+    }[];
+    encounters: WildEncounterLocation_fromJson[];
+  }[];
+};

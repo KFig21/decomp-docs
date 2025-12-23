@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import PartyCard from './components/partyCard/PartyCard';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import './styles.scss';
-import type { ParsedTrainer } from '../../../../services/parsers/v2/trainers/types';
+import type { WildEncounterTable } from '../../../../services/parsers/v2/locations/types';
+import Encounters from './Encounters';
 
 type Props = {
-  trainers: ParsedTrainer[];
+  encounterTable: WildEncounterTable[];
   expandAll?: boolean;
   parentOpen?: boolean;
 };
 
-export default function Trainers({ trainers, expandAll = true, parentOpen = true }: Props) {
+export default function EncounterTable({
+  encounterTable,
+  expandAll = true,
+  parentOpen = true,
+}: Props) {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -21,17 +24,17 @@ export default function Trainers({ trainers, expandAll = true, parentOpen = true
   }, [expandAll, parentOpen]);
 
   return (
-    <div className="trainers-section">
+    <div className="section">
       <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
-        <span>Trainers ({trainers.length})</span>
+        <span>Encounters</span>
       </div>
 
-      {open && (
-        <div className="trainers-list">
-          {trainers.map((trainer, i) => (
-            <PartyCard key={i} trainer={trainer} />
-          ))}
+      {open && encounterTable.length > 0 && (
+        <div className="encounters-table">
+          {encounterTable.map((table, i) => {
+            return <Encounters key={i} table={table} expandAll={expandAll} parentOpen={open} />;
+          })}
         </div>
       )}
     </div>

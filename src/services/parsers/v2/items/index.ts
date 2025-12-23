@@ -1,28 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFile } from '../utils';
-
-export type RawIdentifier = string;
-
-export interface ItemLocationRef {
-  mapScript: string;
-}
-
-export interface ParsedItem {
-  key: RawIdentifier;
-  name?: string;
-  price?: number;
-  pocket?: RawIdentifier;
-  type?: string | RawIdentifier;
-  holdEffect?: RawIdentifier;
-  description?: RawIdentifier;
-  fieldUseFunc?: RawIdentifier;
-  battleUsage?: RawIdentifier;
-  battleUseFunc?: RawIdentifier;
-  flingPower?: number;
-  secondaryId?: string;
-
-  locations: ItemLocationRef[];
-}
+import type { ParsedItem, RawIdentifier } from './types';
 
 type Args = {
   files: Map<string, string>;

@@ -1,13 +1,13 @@
+import type { ParsedTrainerPokemon } from '../../../../../../services/parsers/v2/trainers/types';
 import PokemonSprite from '../../../../../elements/sprites/PokemonSprite';
 import './styles.scss';
 
 type Props = {
-  name: string;
-  level: number;
-  moves: string[];
+  pokemon: ParsedTrainerPokemon;
 };
 
-export default function TrainerPokemonCard({ name, level, moves }: Props) {
+export default function TrainerPokemonCard({ pokemon }: Props) {
+  const { species: name, level, moves = [] } = pokemon;
   return (
     <div className="trainer-pokemon-container">
       <div className="sprite-container">
@@ -23,7 +23,8 @@ export default function TrainerPokemonCard({ name, level, moves }: Props) {
           {moves.length > 0 &&
             moves.map((move, i) => (
               <div key={i} className="move">
-                {move}
+                {/* TODO - Move name lookup */}
+                {move.key}
               </div>
             ))}
         </div>

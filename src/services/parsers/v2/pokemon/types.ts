@@ -16,7 +16,7 @@ export type tmhmLearnset = TMHMEntry[];
 export interface ParsedPokemon {
   key: RawIdentifier;
 
-  name?: string;
+  name: string;
 
   baseStats?: {
     hp?: number;

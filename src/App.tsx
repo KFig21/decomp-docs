@@ -1,14 +1,32 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { createRouter } from './router';
-import type { Location } from './types/decomp';
+import type { LocationRoot } from './services/parsers/v2/locations/types';
+import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
+import type { ParsedItem } from './services/parsers/v2/items/types';
+import type { ParsedTrainer } from './services/parsers/v2/trainers/types';
 import './styles/index.scss';
 
 export default function App() {
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [name, setName] = useState<string>('');
+  const [projectName, setProjectName] = useState('');
 
-  const router = createRouter(locations, setLocations, name, setName);
+  const [locations, setLocations] = useState<LocationRoot[]>([]);
+  const [pokemon, setPokemon] = useState<ParsedPokemon[]>([]);
+  const [items, setItems] = useState<ParsedItem[]>([]);
+  const [trainers, setTrainers] = useState<ParsedTrainer[]>([]);
+
+  const router = createRouter({
+    projectName,
+    setProjectName,
+    locations,
+    setLocations,
+    pokemon,
+    setPokemon,
+    items,
+    setItems,
+    trainers,
+    setTrainers,
+  });
 
   return <RouterProvider router={router} />;
 }
