@@ -6,7 +6,12 @@ type Props = {
 };
 
 export default function ItemSprite({ item, size = 32 }: Props) {
-  const safeName = item.key.toLowerCase().replace('item_', '').replaceAll(' ', '-');
+  console.log('Rendering ItemSprite for:', item);
+  const safeName = item.key
+    .toLowerCase()
+    .replace('item_', '')
+    .replaceAll(' ', '-')
+    .replaceAll('_', '-');
   // example remote URL (Pokémon Showdown item icons)
   const src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${safeName}.png`;
 
@@ -14,6 +19,7 @@ export default function ItemSprite({ item, size = 32 }: Props) {
     <img
       src={src}
       alt={safeName}
+      title={item.name ?? safeName}
       width={size}
       height={size}
       loading="lazy"

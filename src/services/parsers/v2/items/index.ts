@@ -36,6 +36,7 @@ function parseItemDefinitions(content: string, items: Record<string, ParsedItem>
 
     const item: ParsedItem = {
       key,
+      name: '',
       locations: [],
     };
 
@@ -78,10 +79,12 @@ function parseItemLocations(content: string, items: Record<string, ParsedItem>) 
   while ((match = scriptRegex.exec(content)) !== null) {
     const scriptName = match[1];
     const itemKey = match[2];
+    const itemName = items[itemKey]?.name ?? '';
 
     if (!items[itemKey]) {
       items[itemKey] = {
         key: itemKey,
+        name: itemName,
         locations: [],
       };
     }

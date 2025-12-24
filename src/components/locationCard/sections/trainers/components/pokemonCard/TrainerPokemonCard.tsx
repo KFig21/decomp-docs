@@ -12,19 +12,34 @@ export default function TrainerPokemonCard({ pokemon }: Props) {
 
   return (
     <div className="trainer-pokemon-container">
-      <div className="sprite-container">
-        <PokemonSprite name={species.name} />
+      <div className="sprite-wrapper">
+        <div className="sprite-container">
+          <PokemonSprite name={species.name} />
+        </div>
       </div>
 
       <div className="mon-info">
-        <div className="name-lvl">
-          <div className="mon-name">{species.name}</div>
-          <div className="mon-level">Lv {level}</div>
+        {/* Name */}
+        <div className="name-container">
+          <div className="mon-info-detail">{species.name}</div>
         </div>
-        <div className="ability">
-          {/* TODO: Figure out how abilities are determined */}
-          <span>{species.abilities ? species.abilities[0].name : 'None'}</span>
+        {/* Level */}
+        <div className="lvl-container">
+          <div className="mon-info-detail">Level {level}</div>
         </div>
+        {/* Nature */}
+        {/* TODO: Figure out how NATURES are determined */}
+        {/* <div className="nature-container">
+          <div className="mon-info-detail">{pokemon.nature ? pokemon.nature.name : 'Nature'}</div>
+        </div> */}
+        {/* Ability */}
+        {/* TODO: Figure out how ABILITIES are determined */}
+        <div className="ability-container">
+          <div className="mon-info-detail">
+            {species.abilities ? species.abilities[0].name : 'None'}
+          </div>
+        </div>
+        {/* Moves */}
         <div className="mon-moves">
           {moves.length > 0 &&
             moves.map((move, i) => (

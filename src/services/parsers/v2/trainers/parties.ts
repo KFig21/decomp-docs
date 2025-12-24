@@ -27,6 +27,10 @@ export function parseTrainerParties(
     const species = speciesString ? pokemon[speciesString] : undefined;
     const level = Number(body.match(/\.lvl\s*=\s*(\d+)/)?.[1]);
     const iv = Number(body.match(/\.iv\s*=\s*(\d+)/)?.[1] ?? 0);
+    // TODO: figure out how natures are determined, then add parsing. It looks really confusing
+    // const natureString = body.match(/\.nature\s*=\s*(NATURE_[A-Z0-9_]+)/)?.[1];
+    // const nature = natureString ? pokemon[natureString] : undefined;
+    // console.log(nature);
 
     const heldItemKey = body.match(/\.heldItem\s*=\s*(ITEM_[A-Z0-9_]+)/)?.[1];
 
@@ -53,6 +57,8 @@ export function parseTrainerParties(
       iv,
       heldItem: heldItemKey ? items[heldItemKey] : undefined,
       moves: resolvedMoves,
+      // TODO: figure out how natures are determined, then add parsing. It looks really confusing
+      nature: null,
     });
   }
 

@@ -5,8 +5,9 @@
     display: flex;
     gap: 16px;
     padding: 8px;
-    border: 1px solid $borderColor;
+    border: 1px solid $containerBorderColor;
     border-radius: 8px;
+    background-color: $containerBgColor;
 
     .trainer-party {
         display: flex;

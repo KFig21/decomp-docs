@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { ParsedItem } from '../items/types';
 import type { ParsedAttack } from '../moves/types';
+import type { ParsedNature } from '../natures/types';
 import type { ParsedPokemon } from '../pokemon/types';
 
 // v2/trainers/types.ts
@@ -28,6 +27,7 @@ export interface ParsedTrainerPokemon {
   species: ParsedPokemon;
   level: number;
   iv: number;
-  heldItem?: any; // ParsedItem
-  moves: ParsedAttack[]; // ParsedMove[]
+  heldItem?: ParsedItem;
+  moves: ParsedAttack[];
+  nature: ParsedNature | null;
 }
