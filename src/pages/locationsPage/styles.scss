@@ -18,7 +18,8 @@
         border-bottom: 1px solid $borderColor;
         position: sticky;
         top: 0px;
-        z-index: 10;
+        z-index: 100;
+        height: $topbarHeight;
 
         .collapse-all-button {
             display: flex;

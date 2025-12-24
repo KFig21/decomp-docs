@@ -22,7 +22,7 @@ export default function Trainers({ trainers, expandAll = true, parentOpen = true
 
   return (
     <div className="trainers-section container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
+      <div className="section-header trainers" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Trainers ({trainers.length})</span>
       </div>

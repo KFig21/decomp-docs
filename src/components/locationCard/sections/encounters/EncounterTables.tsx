@@ -25,7 +25,7 @@ export default function EncounterTable({
 
   return (
     <div className="section container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
+      <div className="section-header encounters" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Encounters</span>
       </div>

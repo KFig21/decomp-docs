@@ -21,7 +21,7 @@ export default function ItemsSection({ items, expandAll = true, parentOpen = tru
 
   return (
     <div className="section container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
+      <div className="section-header items" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span>Items ({items.length})</span>
       </div>
