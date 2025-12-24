@@ -7,6 +7,7 @@ export function parseTrainerParties(
   partyKey: string,
   moves: Record<string, any>,
   items: Record<string, any>,
+  pokemon: Record<string, any>,
   learnsetPtrs: string,
   learnsets: string,
 ): ParsedTrainerPokemon[] {
@@ -22,7 +23,8 @@ export function parseTrainerParties(
   while ((monMatch = monRegex.exec(blockMatch[1]))) {
     const body = monMatch[1];
 
-    const species = body.match(/\.species\s*=\s*(SPECIES_[A-Z0-9_]+)/)?.[1];
+    const speciesString = body.match(/\.species\s*=\s*(SPECIES_[A-Z0-9_]+)/)?.[1];
+    const species = speciesString ? pokemon[speciesString] : undefined;
     const level = Number(body.match(/\.lvl\s*=\s*(\d+)/)?.[1]);
     const iv = Number(body.match(/\.iv\s*=\s*(\d+)/)?.[1] ?? 0);
 
@@ -40,7 +42,7 @@ export function parseTrainerParties(
         .map((m) => m.trim())
         .filter(Boolean);
     } else {
-      moveKeys = getDefaultMoves(species!, level, learnsetPtrs, learnsets);
+      moveKeys = getDefaultMoves(speciesString!, level, learnsetPtrs, learnsets);
     }
 
     const resolvedMoves = moveKeys.map((key) => moves[key]).filter(Boolean);

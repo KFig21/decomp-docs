@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ParsedAbility } from '../abilities';
+import type { ParsedItem } from '../items/types';
+import type { ParsedAttack } from '../moves/types';
+
 export type RawIdentifier = string;
 
 export type LevelUpEntry = {
   lvl: number;
-  move: any; // ParsedMove TODO MAKE A TYPE FOR THIS
+  move: ParsedAttack;
 };
 
 export type TMHMEntry = {
-  tm: any; // ParsedItem (TM or HM)
-  move: any; // ParsedMove TODO MAKE A TYPE FOR THIS
+  tm: ParsedItem;
+  move: ParsedAttack;
 };
+
 export type levelUpLearnset = LevelUpEntry[];
 export type tmhmLearnset = TMHMEntry[];
 
@@ -18,21 +22,22 @@ export interface ParsedPokemon {
 
   name: string;
 
-  baseStats?: {
-    hp?: number;
-    attack?: number;
-    defense?: number;
-    spAttack?: number;
-    spDefense?: number;
-    speed?: number;
+  baseStats: {
+    hp: number;
+    attack: number;
+    defense: number;
+    spAttack: number;
+    spDefense: number;
+    speed: number;
   };
 
+  // TODO: Make a type for this
   types?: [RawIdentifier, RawIdentifier | null];
-  abilities?: RawIdentifier[];
+  abilities: ParsedAbility[];
 
-  levelUpLearnset?: levelUpLearnset;
+  levelUpLearnset: levelUpLearnset;
 
-  tmhmLearnset?: tmhmLearnset;
+  tmhmLearnset: tmhmLearnset;
 }
 
 export type PokemonMap = Record<RawIdentifier, ParsedPokemon>;

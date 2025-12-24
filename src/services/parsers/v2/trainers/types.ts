@@ -2,6 +2,7 @@
 
 import type { ParsedItem } from '../items/types';
 import type { ParsedAttack } from '../moves/types';
+import type { ParsedPokemon } from '../pokemon/types';
 
 // v2/trainers/types.ts
 export type TrainerPartyType =
@@ -24,7 +25,7 @@ export interface ParsedTrainer {
 }
 
 export interface ParsedTrainerPokemon {
-  species: string;
+  species: ParsedPokemon;
   level: number;
   iv: number;
   heldItem?: any; // ParsedItem

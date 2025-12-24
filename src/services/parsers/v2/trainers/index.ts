@@ -7,6 +7,7 @@ export function parseTrainers(
   files: Map<string, string>,
   moves: Record<string, any>,
   items: Record<string, any>,
+  pokemon: Record<string, any>,
 ) {
   const trainersFile = getFile(files, 'src/data/trainers.h');
   const partiesFile = getFile(files, 'src/data/trainer_parties.h');
@@ -25,6 +26,7 @@ export function parseTrainers(
       trainer.partyKey,
       moves,
       items,
+      pokemon,
       learnsetPtrs,
       learnsets,
     );

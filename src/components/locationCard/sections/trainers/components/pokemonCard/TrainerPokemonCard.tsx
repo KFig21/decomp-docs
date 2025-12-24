@@ -7,24 +7,29 @@ type Props = {
 };
 
 export default function TrainerPokemonCard({ pokemon }: Props) {
-  const { species: name, level, moves = [] } = pokemon;
+  // console.log('Rendering TrainerPokemonCard for:', pokemon);
+  const { species, level, moves = [] } = pokemon;
+
   return (
     <div className="trainer-pokemon-container">
       <div className="sprite-container">
-        <PokemonSprite name={name} />
+        <PokemonSprite name={species.name} />
       </div>
 
       <div className="mon-info">
         <div className="name-lvl">
-          <div className="mon-name">{name}</div>
+          <div className="mon-name">{species.name}</div>
           <div className="mon-level">Lv {level}</div>
+        </div>
+        <div className="ability">
+          {/* TODO: Figure out how abilities are determined */}
+          <span>{species.abilities ? species.abilities[0].name : 'None'}</span>
         </div>
         <div className="mon-moves">
           {moves.length > 0 &&
             moves.map((move, i) => (
               <div key={i} className="move">
-                {/* TODO - Move name lookup */}
-                {move.key}
+                {move.name}
               </div>
             ))}
         </div>

@@ -34,7 +34,8 @@ export function attachMapData(
           x: obj.x,
           y: obj.y,
           source: 'item_ball',
-          quantity: 1, // TODO: determine if quantity can vary
+          // TODO: determine if quantity can vary
+          quantity: 1,
         });
       }
     }

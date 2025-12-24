@@ -17,9 +17,16 @@ export function parseMoves({ files }: Args): Record<RawIdentifier, ParsedAttack>
 
   while ((match = moveBlockRegex.exec(battleMovesFile)) !== null) {
     const key = match[1];
+    // name should remove 'MOVE_' prefix and format nicely ex) 'MOVE_FIRE_BLAST' -> 'Fire Blast'
+    const name = key
+      .replace('MOVE_', '')
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
     const body = match[2];
 
-    const attack: ParsedAttack = { key };
+    const attack: ParsedAttack = { key, name };
+    attack.name = name;
 
     // Simple numeric fields
     extractNumber(body, 'power', attack);

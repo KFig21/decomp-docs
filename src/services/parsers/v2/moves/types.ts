@@ -2,6 +2,7 @@ export type RawIdentifier = string;
 
 export interface ParsedAttack {
   key: RawIdentifier;
+  name: string;
   power?: number;
   accuracy?: number;
   pp?: number;

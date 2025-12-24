@@ -47,7 +47,7 @@ export default function ItemsSection({ items, expandAll = true, parentOpen = tru
                           <span>{item.name}</span>
                         </div>
                       </td>
-                      {/* TODO - Fix whatever this hard-coded value is */}
+                      {/* TODO: Fix whatever this hard-coded value is */}
                       <td>
                         <div className="encounter-rate">{mappedItem.quantity || 1}</div>
                       </td>

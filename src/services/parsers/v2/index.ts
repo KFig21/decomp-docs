@@ -18,7 +18,7 @@ export function parseDecompV2(files: Map<string, string>): any {
   const pokemon = parsePokemon(files, items, moves, abilities);
 
   // Then parse trainers, which depends on moves
-  const trainers = parseTrainers(files, moves, items);
+  const trainers = parseTrainers(files, moves, items, pokemon);
 
   // Finally, parse locations, which may depend on trainers, moves, and items
   const locations = parseLocations(files, items, trainers, pokemon);

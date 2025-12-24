@@ -32,7 +32,6 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
               locationMap.trainers.length > 0 ||
               locationMap.wildPokemon.length > 0 ||
               locationMap.items.length > 0;
-            console.log('locationRoot', locationRoot);
             const isOverworld = locationMap.name === locationRoot.root;
             return (
               hasContent && (

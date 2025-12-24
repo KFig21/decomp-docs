@@ -61,7 +61,6 @@ export default function Encounters({ table, expandAll = true, parentOpen = true 
               </thead>
               <tbody>
                 {table.encounters.map((mon, i) => {
-                  // console.log('Rendering encounter mon:', mon);
                   const { minLevel, maxLevel, rate } = mon;
                   const species = mon.pokemon?.name || 'Unknown';
                   return (
