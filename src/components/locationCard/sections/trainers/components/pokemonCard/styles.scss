@@ -79,6 +79,11 @@
                 padding: 2px 0px;
                 border-top: 1px solid $borderColor;
                 background-color: $backgroundColor;
+
+                &.empty {
+                    color: rgba(255, 255, 255, 0.35);
+                    font-style: italic;
+                }
             }
         }
     }

@@ -6,6 +6,8 @@ type Props = {
   pokemon: ParsedTrainerPokemon;
 };
 
+const MAX_MOVES = 4;
+
 export default function TrainerPokemonCard({ pokemon }: Props) {
   // console.log('Rendering TrainerPokemonCard for:', pokemon);
   const { species, level, moves = [] } = pokemon;
@@ -41,12 +43,14 @@ export default function TrainerPokemonCard({ pokemon }: Props) {
         </div>
         {/* Moves */}
         <div className="mon-moves">
-          {moves.length > 0 &&
-            moves.map((move, i) => (
-              <div key={i} className="move">
-                {move.name}
+          {Array.from({ length: MAX_MOVES }).map((_, i) => {
+            const move = moves[i];
+            return (
+              <div key={i} className={`move ${!move ? 'empty' : ''}`}>
+                {move ? move.name : '—'}
               </div>
-            ))}
+            );
+          })}
         </div>
       </div>
     </div>
