@@ -31,7 +31,7 @@ export default function EncounterTable({
       </div>
 
       {open && encounterTable.length > 0 && (
-        <div className="encounters-container ">
+        <div className="content">
           {encounterTable.map((table, i) => {
             return <Encounters key={i} table={table} expandAll={expandAll} parentOpen={open} />;
           })}
