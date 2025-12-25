@@ -23,7 +23,7 @@ export default function MapCard({ location, expandAll = true, isOverworld = fals
 
   return (
     <div className="map-card container-style">
-      <div className="map-card-header" onClick={() => setOpen(!open)}>
+      <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span className="title">
           {isOverworld ? 'Overworld' : formatReadableName(location.name)}

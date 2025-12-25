@@ -2,17 +2,7 @@
 @use './../../styles/colors.scss' as *;
 
 .location-card {
-    border-radius: 12px;
-    padding: 12px;
     margin-bottom: 16px;
-
-    .location-card-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        font-weight: 700;
-    }
 
     .content {
         padding-left: 2rem;
@@ -29,14 +19,6 @@
 .map-card {
     border-radius: 12px;
     gap: 8px;
-
-    .map-card-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        font-weight: 700;
-    }
 
     .content {
         margin-top: 12px;
@@ -61,7 +43,6 @@
     padding-left: 2rem;
     margin-top: 12px;
     gap: 16px;
-
 }
 
 .container-style {

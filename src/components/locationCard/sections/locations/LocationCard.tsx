@@ -20,7 +20,7 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
 
   return (
     <div className="location-card container-style">
-      <div className="location-card-header" onClick={() => setOpen(!open)}>
+      <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span className="title">{formatReadableName(locationRoot.root)}</span>
       </div>
