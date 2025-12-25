@@ -1,0 +1,45 @@
+@use './../../styles/index.scss' as *;
+@use './../../styles/colors.scss' as *;
+
+.layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+}
+
+.locations-sidebar {
+    position: sticky;
+    top: 0; // below header
+    height: calc(100vh - $topbarHeight);
+    overflow-y: auto;
+    width: auto;
+    border-right: solid 1px $borderColor;
+    background-color: darken($containerBgColor, 3%);
+}
+
+.sidebar-item {
+    display: block;
+    padding: 6px 8px;
+    font-size: 0.95rem;
+    color: #aaa;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+
+    span {
+        margin-right: 1rem;
+
+    }
+
+    &:hover {
+        color: $fontColor;
+    }
+
+    &.active {
+        color: $fontColor;
+        font-weight: 700;
+        border-left-color: $primaryColor;
+        border-left-width: 3px;
+        background: $containerBgColor;
+    }
+}

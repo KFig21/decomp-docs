@@ -4,6 +4,7 @@ import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import type { LocationMap, LocationRoot } from '../../../../services/parsers/v2/locations/types';
 import MapCard from './MapCard';
 import { formatReadableName } from '../../../../utils/functions.ts';
+import { toSafeId } from '../../../../utils/dom.ts';
 
 type Props = {
   locationRoot: LocationRoot;
@@ -19,14 +20,14 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
   }, [expandAll]);
 
   return (
-    <div className="location-card container-style">
+    <div className="location-card container-style" id={toSafeId(locationRoot.root)}>
       <div className="section-header" onClick={() => setOpen(!open)}>
         <CollapseToggle isOpen={open} />
         <span className="title">{formatReadableName(locationRoot.root)}</span>
       </div>
 
       {open && (
-        <div className="content">
+        <div>
           {Object.values(locationRoot.maps).map((locationMap: LocationMap, i: number) => {
             const hasContent =
               locationMap.trainers.length > 0 ||
@@ -35,7 +36,7 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
             const isOverworld = locationMap.name === locationRoot.root;
             return (
               hasContent && (
-                <div key={i} className="map-section">
+                <div key={i} className="map-section content">
                   <MapCard location={locationMap} expandAll={expandAll} isOverworld={isOverworld} />
                 </div>
               )
