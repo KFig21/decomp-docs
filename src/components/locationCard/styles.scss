@@ -6,6 +6,7 @@
     padding: 8px;
     background: $containerBgColor;
     border: solid 1px $containerBorderColor;
+    box-shadow: 0px 0px 10px 3px $boxShadowColor;
 
     .section-header {
         display: flex;

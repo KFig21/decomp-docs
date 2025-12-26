@@ -14,14 +14,14 @@
     overflow-y: auto;
     width: auto;
     border-right: solid 1px $borderColor;
-    background-color: darken($containerBgColor, 3%);
+    background-color: rgba($containerBgColor, 0.02);
 }
 
 .sidebar-item {
     display: block;
     padding: 6px 8px;
     font-size: 0.95rem;
-    color: #aaa;
+    color: $fadedFont;
     text-decoration: none;
     border-left: 2px solid transparent;
     transition: all 0.15s ease;
