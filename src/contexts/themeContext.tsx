@@ -1,29 +1,27 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-interface ThemeContextProps {
+type ThemeContextType = {
   theme: string;
-  toggleTheme: () => void;
-}
+  setTheme: (theme: string) => void;
+  themes: string[];
+};
 
-const ThemeContext = createContext<ThemeContextProps>({
-  theme: 'dark',
-  toggleTheme: () => {},
-});
+const ThemeContext = createContext<ThemeContextType | null>(null);
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
+  return ctx;
+};
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const themes = ['base', 'night', 'light'];
+  const [theme, setThemeState] = useState('base');
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState('dark');
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'night' : 'light';
-    setTheme(newTheme);
+  const setTheme = (newTheme: string) => {
+    setThemeState(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
@@ -31,5 +29,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
-};
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, themes }}>{children}</ThemeContext.Provider>
+  );
+}

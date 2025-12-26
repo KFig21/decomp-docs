@@ -1,6 +1,8 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import UploadIcon from '../../components/elements/uploadIcon/UploadIcon';
 import './styles.scss';
+import ThemeDrawer from './components/themeDrawer/ThemeDrawer';
+import { useState } from 'react';
 
 type Props = {
   projectName: string;
@@ -10,6 +12,7 @@ type Props = {
 export default function AppLayout({ projectName, currentPage }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [themeOpen, setThemeOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -54,7 +57,9 @@ export default function AppLayout({ projectName, currentPage }: Props) {
 
         {/* Right */}
         <div className="themes-container">
-          <div className="theme-dropdown">Themes</div>
+          <button className="theme-button" onClick={() => setThemeOpen((o) => !o)}>
+            Themes
+          </button>
         </div>
       </header>
 
@@ -62,6 +67,9 @@ export default function AppLayout({ projectName, currentPage }: Props) {
       <main className="page-wrapper">
         <Outlet />
       </main>
+
+      {/* Theme drawer */}
+      <ThemeDrawer open={themeOpen} onClose={() => setThemeOpen(false)} />
     </div>
   );
 }
