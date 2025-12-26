@@ -12,9 +12,9 @@
     top: 0; // below header
     height: calc(100vh - $topbarHeight);
     overflow-y: auto;
-    width: auto;
+    width: 250px;
     border-right: solid 1px $borderColor;
-    background-color: rgba($containerBgColor, 0.02);
+    background-color: $backgroundColor;
 }
 
 .sidebar-item {
@@ -23,7 +23,7 @@
     font-size: 0.95rem;
     color: $fadedFont;
     text-decoration: none;
-    border-left: 2px solid transparent;
+    border-left: 3px solid transparent;
     transition: all 0.15s ease;
 
     span {

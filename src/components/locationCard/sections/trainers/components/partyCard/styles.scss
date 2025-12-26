@@ -4,9 +4,9 @@
 .party-card-container {
     display: flex;
     gap: 16px;
-    padding: 8px;
-    border: 1px solid $containerBorderColor;
-    border-radius: 8px;
+    padding: 16px;
+    border-top: 1px solid $containerBorderColor;
+    border-left: solid 1px $containerBorderColor;
     background-color: $containerBgColor;
 
     .trainer-party {

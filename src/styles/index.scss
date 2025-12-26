@@ -61,11 +61,12 @@ body {
 ::-webkit-scrollbar-track {
   background-color: $containerBgColor;
   background: $containerBgColor;
+  border-left: solid 1px $containerBorderColor;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: $primaryColor;
   border: solid 4px transparent;
-  border-radius: 20px;
+  // border-radius: 20px;
   background-clip: content-box;
 }
