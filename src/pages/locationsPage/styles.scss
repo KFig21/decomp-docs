@@ -7,61 +7,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    height: 100vh;
-    overflow: hidden;
-
-    .header {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        background-color: var(--backgroundColor);
-        padding: .25rem 0.5rem;
-        border-bottom: 1px solid var(--containerBorderColor);
-        position: sticky;
-        top: 0px;
-        z-index: 10;
-
-        // left
-        .title-container {
-            display: flex;
-            align-items: center;
-
-            .title {
-                font-size: 1.5rem;
-                font-weight: bold;
-                color: var(--fontColor);
-                text-align: left;
-                padding: 0px 16px;
-            }
-        }
-
-        //  center
-        .nav {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 32px;
-        }
-
-        .back-button {
-            // padding: 0.5rem 1rem;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        // right
-        .themes-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0px 16px;
-        }
-    }
+    // overflow: hidden;
 
     .page-content {
         display: flex;
@@ -72,13 +18,13 @@
             width: auto;
             flex: 2;
             margin: 0 auto;
-            // padding: 16px 20px 40px 20px;
-            height: calc(100vh - $topbarHeight);
-            overflow: scroll;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
+            // padding: 16px 20px 40px 20px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: calc(100vh - $topbarHeight);
         }
     }
 }

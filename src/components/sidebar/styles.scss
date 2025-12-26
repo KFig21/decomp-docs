@@ -1,10 +1,10 @@
 @use './../../styles/index.scss' as *;
 @use './../../styles/colors.scss' as *;
 
-$collapseButtonHeight: 42px;
+$collapseButtonHeight: 41px;
 
 .sidebar-wrapper {
-    height: calc(100vh - $topbarHeight);
+    height: $scrollableContainerHeight;
     border-right: solid 1px var(--containerBorderColor);
     background-color: var(--backgroundColor);
 

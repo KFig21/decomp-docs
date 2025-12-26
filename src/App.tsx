@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { createRouter } from './router';
+import { CreateRouter } from './router';
 import type { LocationRoot } from './services/parsers/v2/locations/types';
 import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
 import type { ParsedItem } from './services/parsers/v2/items/types';
@@ -15,7 +15,7 @@ export default function App() {
   const [items, setItems] = useState<ParsedItem[]>([]);
   const [trainers, setTrainers] = useState<ParsedTrainer[]>([]);
 
-  const router = createRouter({
+  const router = CreateRouter({
     projectName,
     setProjectName,
     locations,

@@ -1,20 +1,14 @@
 import { createBrowserRouter } from 'react-router-dom';
+import AppLayout from './layouts/appLayout/AppLayout';
 
 import UploadPage from './pages/uploadPage/UploadPage';
 import LocationsPage from './pages/locationsPage/LocationsPage';
 import LocationDetailPage from './pages/locationsPage/LocationDetailPage';
-
-// import PokemonPage from './pages/pokemonPage/PokemonPage';
-// import PokemonDetailPage from './pages/pokemonPage/PokemonDetailPage';
-// import ItemsPage from './pages/itemsPage/ItemsPage';
-// import ItemDetailPage from './pages/itemsPage/ItemDetailPage';
-// import TrainersPage from './pages/trainersPage/TrainersPage';
-// import TrainerDetailPage from './pages/trainersPage/TrainerDetailPage';
-
 import type { LocationRoot } from './services/parsers/v2/locations/types';
 import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
 import type { ParsedItem } from './services/parsers/v2/items/types';
 import type { ParsedTrainer } from './services/parsers/v2/trainers/types';
+import { useState } from 'react';
 
 type RouterArgs = {
   projectName: string;
@@ -33,68 +27,40 @@ type RouterArgs = {
   setTrainers: (t: ParsedTrainer[]) => void;
 };
 
-export function createRouter({
-  projectName,
-  setProjectName,
-  locations,
-  setLocations,
-  // pokemon,
-  // items,
-  // trainers,
-}: RouterArgs) {
+export function CreateRouter({ projectName, setProjectName, locations, setLocations }: RouterArgs) {
+  const [currentPage, SetCurrentPage] = useState('upload');
+
   return createBrowserRouter([
+    // 🌍 Layout Route (Topbar persists here)
     {
-      path: '/',
-      element: (
-        <UploadPage
-          projectName={projectName}
-          setProjectName={setProjectName}
-          setLocations={setLocations}
-          setPokemon={() => {}}
-          setItems={() => {}}
-          setTrainers={() => {}}
-        />
-      ),
+      element: <AppLayout projectName={projectName} currentPage={currentPage} />,
+      children: [
+        {
+          path: '/',
+          element: (
+            <UploadPage
+              projectName={projectName}
+              setProjectName={setProjectName}
+              setLocations={setLocations}
+              setPokemon={() => {}}
+              setItems={() => {}}
+              setTrainers={() => {}}
+            />
+          ),
+        },
+        {
+          path: '/locations',
+          element: <LocationsPage locations={locations} setCurrentPage={SetCurrentPage} />,
+        },
+        {
+          path: '/locations/:id',
+          element: <LocationDetailPage locations={locations} />,
+        },
+
+        // Future routes:
+        // { path: '/pokemon', element: <PokemonPage pokemon={pokemon} /> },
+        // { path: '/items', element: <ItemsPage items={items} /> },
+      ],
     },
-
-    // 📍 LOCATIONS
-    {
-      path: '/locations',
-      element: <LocationsPage locations={locations} projectName={projectName} />,
-    },
-    {
-      path: '/locations/:id',
-      element: <LocationDetailPage locations={locations} />,
-    },
-
-    // 🐉 POKÉMON
-    // {
-    //   path: '/pokemon',
-    //   element: <PokemonPage pokemon={pokemon} />,
-    // },
-    // {
-    //   path: '/pokemon/:id',
-    //   element: <PokemonDetailPage pokemon={pokemon} />,
-    // },
-
-    // // 🎒 ITEMS
-    // {
-    //   path: '/items',
-    //   element: <ItemsPage items={items} />,
-    // },
-    // {
-    //   path: '/items/:id',
-    //   element: <ItemDetailPage items={items} />,
-    // },
-
-    // // 👤 TRAINERS
-    // {
-    //   path: '/trainers',
-    //   element: <TrainersPage trainers={trainers} />,
-    // },
-    // {
-    //   path: '/trainers/:id',
-    //   element: <TrainerDetailPage trainers={trainers} />,
-    // },
   ]);
 }
