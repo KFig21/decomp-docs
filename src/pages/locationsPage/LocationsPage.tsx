@@ -2,7 +2,6 @@ import LocationCard from '../../components/locationCard/sections/locations/Locat
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.scss';
-import CollapseToggle from '../../components/elements/collapseToggle/CollapseToggle';
 import UploadIcon from '../../components/elements/uploadIcon/UploadIcon';
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
 import LocationsSidebar from '../../components/sidebar/LocationsSidebar';
@@ -20,25 +19,31 @@ export default function LocationsPage({ locations, projectName = 'Locations' }: 
     <div className="locations-page">
       {/* Header */}
       <div className="header">
-        {/* Left: Collapse / Expand */}
-        <div className="collapse-all-button" onClick={() => setExpandAll(!expandAll)}>
-          <CollapseToggle isOpen={expandAll} />
-          <span className="collapse-all-text">{expandAll ? 'Collapse All' : 'Expand All'}</span>
+        {/* Left: Title */}
+        <div className="title-container">
+          <span className="title">{projectName}</span>
         </div>
 
-        {/* Center: Title */}
-        <span className="title">{projectName}</span>
+        {/* Center: page navigation */}
+        <div className="nav">
+          <div className="nav-item-container">Locations</div>
+          <div className="nav-item-container">Pokemon</div>
+          <div className="nav-item-container">Items</div>
+          <div className="back-button" onClick={() => navigate('/')}>
+            <UploadIcon />
+            Upload
+          </div>
+        </div>
 
-        {/* Right: Back to Upload */}
-        <div className="back-button" onClick={() => navigate('/')}>
-          <UploadIcon />
-          Upload
+        {/* Right: Themes */}
+        <div className="themes-container">
+          <div className="theme-dropdown">Themes</div>
         </div>
       </div>
 
       <div className="page-content">
         {/* Sidebar */}
-        <LocationsSidebar locations={locations} />
+        <LocationsSidebar locations={locations} expandAll={expandAll} setExpandAll={setExpandAll} />
 
         {/* Content */}
         <div className="locations-page-content">

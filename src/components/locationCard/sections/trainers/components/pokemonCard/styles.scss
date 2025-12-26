@@ -58,7 +58,6 @@
             align-items: baseline;
             justify-content: center;
             gap: 8px;
-            // border-top: 1px solid var(--borderColor);
             background-color: var(--containerBgColor);
             padding: 2px 0px;
 
@@ -72,12 +71,12 @@
             color: var(--fontColor);
             display: flex;
             flex-direction: column;
-            border-top: 1px solid var(--borderColor);
+            border-top: 1px solid var(--containerBorderColor);
 
             .move {
                 font-size: 0.8rem;
                 padding: 2px 0px;
-                border-top: 1px solid var(--borderColor);
+                border-top: 1px solid var(--containerBorderColor);
                 background-color: var(--backgroundColor);
 
                 &.empty {

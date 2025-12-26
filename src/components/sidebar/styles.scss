@@ -1,20 +1,31 @@
 @use './../../styles/index.scss' as *;
 @use './../../styles/colors.scss' as *;
 
-.layout {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 16px;
+$collapseButtonHeight: 42px;
+
+.sidebar-wrapper {
+    height: calc(100vh - $topbarHeight);
+    border-right: solid 1px var(--containerBorderColor);
+    background-color: var(--backgroundColor);
+
+    .collapse-all-button {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border-bottom: solid 1px var(--containerBorderColor);
+        height: $collapseButtonHeight;
+
+        .collapse-all-text {
+            font-size: 1rem;
+            color: var(--fontColor);
+        }
+    }
 }
 
 .locations-sidebar {
-    position: sticky;
-    top: 0; // below header
-    height: calc(100vh - $topbarHeight);
-    overflow-y: auto;
+    overflow-y: scroll;
     width: 250px;
-    border-right: solid 1px var(--borderColor);
-    background-color: var(--backgroundColor);
+    height: calc(100vh - $topbarHeight - $collapseButtonHeight);
 }
 
 .sidebar-item {

@@ -11,35 +11,40 @@
     overflow: hidden;
 
     .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
         background-color: var(--backgroundColor);
         padding: .25rem 0.5rem;
-        border-bottom: 1px solid var(--borderColor);
+        border-bottom: 1px solid var(--containerBorderColor);
         position: sticky;
         top: 0px;
         z-index: 10;
 
-        .collapse-all-button {
+        // left
+        .title-container {
             display: flex;
             align-items: center;
-            cursor: pointer;
 
-            .collapse-all-text {
-                font-size: 1rem;
+            .title {
+                font-size: 1.5rem;
+                font-weight: bold;
                 color: var(--fontColor);
+                text-align: left;
+                padding: 0px 16px;
             }
         }
 
-        .title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--fontColor);
+        //  center
+        .nav {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
         }
 
         .back-button {
-            padding: 0.5rem 1rem;
+            // padding: 0.5rem 1rem;
             font-size: 1rem;
             cursor: pointer;
             display: flex;
@@ -47,6 +52,14 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+
+        // right
+        .themes-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0px 16px;
         }
     }
 

@@ -3,12 +3,15 @@ import { formatReadableName } from '../../utils/functions';
 import { toSafeId } from '../../utils/dom';
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
 import './styles.scss';
+import CollapseToggle from '../elements/collapseToggle/CollapseToggle';
 
 type Props = {
   locations: LocationRoot[];
+  expandAll: boolean;
+  setExpandAll: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function LocationsSidebar({ locations }: Props) {
+export default function LocationsSidebar({ locations, expandAll, setExpandAll }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,17 +38,23 @@ export default function LocationsSidebar({ locations }: Props) {
   }, [locations]);
 
   return (
-    <aside className="locations-sidebar">
-      {Object.values(locations).map((loc) => {
-        const id = toSafeId(loc.root);
-        const isActive = activeId === id;
+    <div className="sidebar-wrapper">
+      <div className="collapse-all-button" onClick={() => setExpandAll(!expandAll)}>
+        <CollapseToggle isOpen={expandAll} />
+        <span className="collapse-all-text">{expandAll ? 'Collapse All' : 'Expand All'}</span>
+      </div>
+      <aside className="locations-sidebar">
+        {Object.values(locations).map((loc) => {
+          const id = toSafeId(loc.root);
+          const isActive = activeId === id;
 
-        return (
-          <a key={id} href={`#${id}`} className={`sidebar-item ${isActive ? 'active' : ''}`}>
-            <span>{formatReadableName(loc.root)}</span>
-          </a>
-        );
-      })}
-    </aside>
+          return (
+            <a key={id} href={`#${id}`} className={`sidebar-item ${isActive ? 'active' : ''}`}>
+              <span>{formatReadableName(loc.root)}</span>
+            </a>
+          );
+        })}
+      </aside>
+    </div>
   );
 }
