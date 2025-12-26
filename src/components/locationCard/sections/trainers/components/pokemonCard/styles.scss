@@ -11,7 +11,7 @@
     min-width: 130px;
 
     .sprite-wrapper {
-        background-color: $backgroundColor;
+        background-color: var(--backgroundColor);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,7 +20,7 @@
         .sprite-container {
             width: 60px;
             height: 60px;
-            background-color: $backgroundColor;
+            background-color: var(--backgroundColor);
 
             img {
                 width: 100%;
@@ -41,11 +41,11 @@
             justify-content: center;
             padding-top: 1px; // may be unnecessary
             gap: 8px;
-            background-color: $containerBorderColor;
+            background-color: var(--containerBorderColor);
 
             .mon-info-detail {
                 font-weight: bold;
-                color: $fontColor;
+                color: var(--fontColor);
                 font-size: 0.9rem;
             }
         }
@@ -58,27 +58,27 @@
             align-items: baseline;
             justify-content: center;
             gap: 8px;
-            // border-top: 1px solid $borderColor;
-            background-color: $containerBgColor;
+            // border-top: 1px solid var(--borderColor);
+            background-color: var(--containerBgColor);
             padding: 2px 0px;
 
             .mon-info-detail {
-                color: $fontColor;
+                color: var(--fontColor);
                 font-size: 0.8rem;
             }
         }
 
         .mon-moves {
-            color: $fontColor;
+            color: var(--fontColor);
             display: flex;
             flex-direction: column;
-            border-top: 1px solid $borderColor;
+            border-top: 1px solid var(--borderColor);
 
             .move {
                 font-size: 0.8rem;
                 padding: 2px 0px;
-                border-top: 1px solid $borderColor;
-                background-color: $backgroundColor;
+                border-top: 1px solid var(--borderColor);
+                background-color: var(--backgroundColor);
 
                 &.empty {
                     color: rgba(255, 255, 255, 0.35);

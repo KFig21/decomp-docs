@@ -14,9 +14,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: $backgroundColor;
+        background-color: var(--backgroundColor);
         padding: .25rem 0.5rem;
-        border-bottom: 1px solid $borderColor;
+        border-bottom: 1px solid var(--borderColor);
         position: sticky;
         top: 0px;
         z-index: 10;
@@ -28,14 +28,14 @@
 
             .collapse-all-text {
                 font-size: 1rem;
-                color: $fontColor;
+                color: var(--fontColor);
             }
         }
 
         .title {
             font-size: 1.5rem;
             font-weight: bold;
-            color: $fontColor;
+            color: var(--fontColor);
         }
 
         .back-button {

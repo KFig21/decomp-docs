@@ -1,9 +1,42 @@
-$borderColor: rgb(58, 72, 90);
-$backgroundColor: #1e212b;
-$fontColor: rgb(236, 236, 236);
-$fadedFont: rgb(200, 200, 200);
-$primaryColor: rgb(132, 159, 212);
-$primaryColorHover: rgb(102, 134, 199);
-$buttonBgColor: rgb(18, 18, 18);
-$containerBgColor: rgba(136, 190, 255, 0.06);
-$containerBorderColor: rgba(136, 190, 255, 0.24);
+:root,
+[data-theme='base'] {
+    --borderColor: rgb(58, 72, 90);
+    --backgroundColor: #1e212b;
+
+    --fontColor: rgb(236, 236, 236);
+    --fadedFont: rgb(200, 200, 200);
+
+    --primaryColor: rgb(132, 159, 212);
+    --primaryColorHover: rgb(102, 134, 199);
+
+    --containerBgColor: rgba(136, 190, 255, 0.06);
+    --containerBorderColor: rgba(136, 190, 255, 0.24);
+}
+
+[data-theme='night'] {
+    --borderColor: rgb(58, 72, 90);
+    --backgroundColor: #1e212b;
+
+    --fontColor: rgb(236, 236, 236);
+    --fadedFont: rgb(200, 200, 200);
+
+    --primaryColor: rgb(132, 159, 212);
+    --primaryColorHover: rgb(102, 134, 199);
+
+    --containerBgColor: rgba(136, 190, 255, 0.06);
+    --containerBorderColor: rgba(136, 190, 255, 0.24);
+}
+
+[data-theme='light'] {
+    --borderColor: rgb(58, 72, 90);
+    --backgroundColor: #1e212b;
+
+    --fontColor: rgb(236, 236, 236);
+    --fadedFont: rgb(200, 200, 200);
+
+    --primaryColor: rgb(132, 159, 212);
+    --primaryColorHover: rgb(102, 134, 199);
+
+    --containerBgColor: rgba(136, 190, 255, 0.06);
+    --containerBorderColor: rgba(136, 190, 255, 0.24);
+}

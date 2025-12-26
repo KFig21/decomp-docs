@@ -3,7 +3,7 @@
 
 // VARIABLES
 $topbarHeight: 50px;
-$scrollableContainerHeight: calc(100vh - $topbarHeight);
+$scrollableContainerHeight: calc(100vh - var(--topbarHeight));
 
 :root {
   /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
@@ -13,8 +13,8 @@ $scrollableContainerHeight: calc(100vh - $topbarHeight);
   font-weight: 400;
 
   color-scheme: light dark;
-  color: $fontColor;
-  background-color: $backgroundColor;
+  color: var(--fontColor);
+  background-color: var(--backgroundColor);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -38,7 +38,7 @@ body,
 }
 
 a {
-  color: $primaryColor;
+  color: var(--primaryColor);
   font-weight: 500;
   text-decoration: inherit;
 }
@@ -59,13 +59,13 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: $containerBgColor;
-  background: $containerBgColor;
-  border-left: solid 1px $containerBorderColor;
+  background-color: var(--containerBgColor);
+  background: var(--containerBgColor);
+  border-left: solid 1px var(--containerBorderColor);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: $primaryColor;
+  background-color: var(--primaryColor);
   border: solid 4px transparent;
   // border-radius: 20px;
   background-clip: content-box;

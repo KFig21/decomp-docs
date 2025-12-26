@@ -6,9 +6,9 @@
     padding: 8px;
     padding-bottom: 0px;
     padding-right: 0px;
-    background: $containerBgColor;
-    border-top: solid 1px $containerBorderColor;
-    border-left: solid 1px $containerBorderColor;
+    background: var(--containerBgColor);
+    border-top: solid 1px var(--containerBorderColor);
+    border-left: solid 1px var(--containerBorderColor);
     // box-shadow: 0px 0px 10px 3px $boxShadowColor;
 
     .section-header {
@@ -67,13 +67,18 @@
 
     th,
     td {
-        border: 1px solid $containerBorderColor;
+        border: 1px solid var(--containerBorderColor);
         text-align: left;
-        background: darken($backgroundColor, 2%);
+        background-color: color-mix(in srgb,
+                var(--backgroundColor),
+                black 2%);
+        ;
     }
 
     th {
-        background: darken($backgroundColor, 10%);
+        background-color: color-mix(in srgb,
+                var(--backgroundColor),
+                black 40%);
         padding: 5px 12px 4px;
 
         &.left {
@@ -90,11 +95,15 @@
     }
 
     tbody tr:nth-child(even) td {
-        background: lighten($backgroundColor, 3%);
+        background-color: color-mix(in srgb,
+                var(--backgroundColor),
+                white 3%);
     }
 
     tbody tr:hover td {
-        background: lighten($backgroundColor, 8%);
+        background-color: color-mix(in srgb,
+                var(--backgroundColor),
+                white 8%);
         cursor: pointer;
     }
 
