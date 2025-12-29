@@ -1,8 +1,12 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import UploadIcon from '../../components/elements/uploadIcon/UploadIcon';
 import './styles.scss';
 import ThemeDrawer from './components/themeDrawer/ThemeDrawer';
 import { useState } from 'react';
+import SvgIcon from '../../components/elements/svgIcon/SvgIcon';
+import { uploadIcon } from '../../components/elements/svgIcon/icons/uploadIcon';
+import { locationsIcon } from '../../components/elements/svgIcon/icons/locationsIcon';
+import { pokemonIcon } from '../../components/elements/svgIcon/icons/pokemonIcon';
+import { itemsIcon } from '../../components/elements/svgIcon/icons/itemsIcon';
 
 type Props = {
   projectName: string;
@@ -21,8 +25,15 @@ export default function AppLayout({ projectName, currentPage }: Props) {
       {/* 🔝 Persistent Topbar */}
       <header className="topbar">
         {/* Left */}
-        <div className="title-container">
-          <span className="title">{projectName || 'Decomp Docs'}</span>
+        <div className="title-wrapper">
+          <div
+            className="title-container"
+            onClick={() => navigate('/')}
+            title="upload a new folder"
+          >
+            <span className="title">{projectName || 'Decomp Docs'}</span>
+            <SvgIcon viewBox={uploadIcon.viewBox}>{uploadIcon.path}</SvgIcon>
+          </div>
         </div>
 
         {/* Center Nav */}
@@ -33,23 +44,26 @@ export default function AppLayout({ projectName, currentPage }: Props) {
                 className={`nav-item ${isActive('/locations') ? 'active' : ''}`}
                 onClick={() => navigate('/locations')}
               >
+                <SvgIcon viewBox={locationsIcon.viewBox}>{locationsIcon.path}</SvgIcon>
                 Locations
               </div>
+
               <div
                 className={`nav-item ${isActive('/pokemon') ? 'active' : ''}`}
                 onClick={() => navigate('/pokemon')}
               >
+                <SvgIcon viewBox={pokemonIcon.viewBox} width={pokemonIcon.width}>
+                  {pokemonIcon.path}
+                </SvgIcon>
                 Pokémon
               </div>
+
               <div
                 className={`nav-item ${isActive('/items') ? 'active' : ''}`}
                 onClick={() => navigate('/items')}
               >
+                <SvgIcon viewBox={itemsIcon.viewBox}>{itemsIcon.path}</SvgIcon>
                 Items
-              </div>
-              <div className="nav-item back" onClick={() => navigate('/')}>
-                <UploadIcon />
-                Upload
               </div>
             </>
           )}
