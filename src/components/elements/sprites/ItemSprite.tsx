@@ -6,7 +6,6 @@ type Props = {
 };
 
 export default function ItemSprite({ item, size = 32 }: Props) {
-  console.log('Rendering ItemSprite for:', item);
   const safeName = item.key
     .toLowerCase()
     .replace('item_', '')

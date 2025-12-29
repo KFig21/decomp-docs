@@ -1,10 +1,10 @@
 import TrainerCard from '../trainerCard/TrainerCard';
 import TrainerPokemonCard from '../pokemonCard/TrainerPokemonCard';
 import './styles.scss';
-import type { ParsedTrainer } from '../../../../../../services/parsers/v2/trainers/types';
+import type { ParsedTrainerVariant } from '../../../../../../services/parsers/v2/trainers/types';
 
 type Props = {
-  trainer: ParsedTrainer;
+  trainer: ParsedTrainerVariant;
 };
 
 export default function PartyCard({ trainer }: Props) {

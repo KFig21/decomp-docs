@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ParsedTrainer } from '../trainers/types';
+import type { ParsedTrainerVariant } from '../trainers/types';
 import type { ParsedPokemon } from '../pokemon/types';
 import type { ParsedItem } from '../items/types';
 
@@ -7,7 +7,7 @@ export type LocationMap = {
   name: string;
   type: 'outdoor' | 'indoor' | 'special' | 'dungeon' | 'other';
 
-  trainers: ParsedTrainer[];
+  trainers: ParsedTrainerVariant[];
   items: ParsedMapItem[];
   npcs: ParsedNpc[];
   wildPokemon: WildEncounterTable[];
@@ -38,7 +38,7 @@ export type ParsedNpc = {
   script: string | null;
   dialog?: string[];
   givesItem?: any;
-  trainer?: ParsedTrainer;
+  trainer?: ParsedTrainerVariant;
 };
 
 // --- Wild encounters types ---

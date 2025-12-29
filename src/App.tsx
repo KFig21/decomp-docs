@@ -4,7 +4,7 @@ import { CreateRouter } from './router';
 import type { LocationRoot } from './services/parsers/v2/locations/types';
 import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
 import type { ParsedItem } from './services/parsers/v2/items/types';
-import type { ParsedTrainer } from './services/parsers/v2/trainers/types';
+import type { ParsedTrainerVariant } from './services/parsers/v2/trainers/types';
 import './styles/index.scss';
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
   const [locations, setLocations] = useState<LocationRoot[]>([]);
   const [pokemon, setPokemon] = useState<ParsedPokemon[]>([]);
   const [items, setItems] = useState<ParsedItem[]>([]);
-  const [trainers, setTrainers] = useState<ParsedTrainer[]>([]);
+  const [trainers, setTrainers] = useState<ParsedTrainerVariant[]>([]);
 
   const router = CreateRouter({
     projectName,

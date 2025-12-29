@@ -21,15 +21,17 @@ export function parseTrainers(
   const trainers = parseTrainersFile(trainersFile, items);
 
   for (const trainer of Object.values(trainers)) {
-    trainer.party = parseTrainerParties(
-      partiesFile,
-      trainer.partyKey,
-      moves,
-      items,
-      pokemon,
-      learnsetPtrs,
-      learnsets,
-    );
+    for (const variant of trainer.variants) {
+      variant.party = parseTrainerParties(
+        partiesFile,
+        variant.partyKey,
+        moves,
+        items,
+        pokemon,
+        learnsetPtrs,
+        learnsets,
+      );
+    }
   }
 
   return trainers;

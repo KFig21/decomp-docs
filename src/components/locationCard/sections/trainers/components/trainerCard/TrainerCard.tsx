@@ -1,11 +1,11 @@
 import TrainerSprite from '../../../../../elements/sprites/TrainerSprite';
 import ItemSprite from '../../../../../elements/sprites/ItemSprite';
 import './styles.scss';
-import type { ParsedTrainer } from '../../../../../../services/parsers/v2/trainers/types';
+import type { ParsedTrainerVariant } from '../../../../../../services/parsers/v2/trainers/types';
 import type { ParsedItem } from '../../../../../../services/parsers/v2/items/types';
 
 type Props = {
-  trainer: ParsedTrainer;
+  trainer: ParsedTrainerVariant;
 };
 
 export default function TrainerCard({ trainer }: Props) {

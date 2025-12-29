@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocationMap } from './types';
 import type { ParsedTrainer } from '../trainers/types';
-import { resolveItemFromScript, resolveTrainerFromScript } from './utils';
+import {
+  resolveItemFromScript,
+  resolveTrainerFromObjectEvents,
+  resolveTrainersFromScripts,
+} from './utils';
 
 export function attachMapData(
   map: LocationMap,
   mapJson: any,
   trainers: Record<string, ParsedTrainer>,
   items: Record<string, any>,
+  scripts?: string,
 ) {
-  // Initialize containers
   map.trainers = [];
   map.items = [];
   map.npcs = [];
@@ -17,12 +21,11 @@ export function attachMapData(
 
   // ---- OBJECT EVENTS ----
   for (const obj of mapJson.object_events ?? []) {
-    // 🎯 TRAINERS
-    if (obj.trainer_type !== 'TRAINER_TYPE_NONE') {
-      const trainer = resolveTrainerFromScript(obj.script, trainers);
-      if (trainer) {
-        map.trainers.push(trainer);
-      }
+    // 🎯 OBJECT-BOUND TRAINERS
+    const trainer = resolveTrainerFromObjectEvents(obj.script, trainers);
+    if (trainer) {
+      map.trainers.push(trainer);
+      continue;
     }
 
     // 🎁 ITEM BALLS
@@ -34,7 +37,6 @@ export function attachMapData(
           x: obj.x,
           y: obj.y,
           source: 'item_ball',
-          // TODO: determine if quantity can vary
           quantity: 1,
         });
       }
@@ -51,7 +53,17 @@ export function attachMapData(
     }
   }
 
-  // ---- BG EVENTS (hidden items) ----
+  // ---- SCRIPT-DRIVEN TRAINERS (ONCE PER MAP) ----
+  if (scripts) {
+    const scripted = resolveTrainersFromScripts(scripts, trainers);
+    for (const trainer of scripted) {
+      if (!map.trainers.some((t) => t.key === trainer.key)) {
+        map.trainers.push(trainer);
+      }
+    }
+  }
+
+  // ---- BG EVENTS ----
   for (const bg of mapJson.bg_events ?? []) {
     if (bg.type === 'hidden_item') {
       const item = items[bg.item];

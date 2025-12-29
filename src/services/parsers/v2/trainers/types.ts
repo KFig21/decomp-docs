@@ -11,6 +11,14 @@ export type TrainerPartyType =
   | 'ItemCustomMoves';
 
 export interface ParsedTrainer {
+  baseKey: string; // TRAINER_ROXANNE
+  name: string; // Roxanne
+  trainerClass: string;
+  trainerPic: string;
+  variants: ParsedTrainerVariant[]; // all rematches / forms
+}
+
+export interface ParsedTrainerVariant {
   key: string; // TRAINER_VICKY
   name: string;
   trainerClass: string;

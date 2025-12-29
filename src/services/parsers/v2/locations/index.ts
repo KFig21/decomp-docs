@@ -4,12 +4,15 @@ import { parseMapGroups } from './mapGroups';
 import { attachMapData } from './mapData';
 import { parseWildEncounters } from './wildEncounters';
 import { getFile } from '../utils';
+import type { ParsedItem } from '../items/types';
+import type { ParsedTrainer } from '../trainers/types';
+import type { ParsedPokemon } from '../pokemon/types';
 
 export function parseLocations(
   files: Map<string, string>,
-  items: Record<string, any>,
-  trainers: Record<string, any>,
-  pokemon: Record<string, any>, // 👈 required for wild encounters
+  items: Record<string, ParsedItem>,
+  trainers: Record<string, ParsedTrainer>,
+  pokemon: Record<string, ParsedPokemon>,
 ): Record<string, LocationRoot> {
   const raw = getFile(files, 'data/maps/map_groups.json');
   if (!raw) throw new Error('Missing map_groups.json');
@@ -30,11 +33,14 @@ export function parseLocations(
       const mapPath = `data/maps/${map.name}/map.json`;
       const mapRaw = getFile(files, mapPath);
       if (!mapRaw) continue;
-
       const mapJson = JSON.parse(mapRaw);
 
+      const scriptsPath = `data/maps/${map.name}/scripts.inc`;
+      const scriptsRaw = getFile(files, scriptsPath);
+      if (!scriptsRaw) continue;
+
       // trainers / items / NPCs
-      attachMapData(map, mapJson, trainers, items);
+      attachMapData(map, mapJson, trainers, items, scriptsRaw);
 
       // wild Pokémon
       const mapId = mapJson.id; // e.g. MAP_ROUTE111

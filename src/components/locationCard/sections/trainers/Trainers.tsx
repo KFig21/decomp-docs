@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import PartyCard from './components/partyCard/PartyCard';
 import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import './styles.scss';
-import type { ParsedTrainer } from '../../../../services/parsers/v2/trainers/types';
+import type { ParsedTrainerVariant } from '../../../../services/parsers/v2/trainers/types';
 
 type Props = {
-  trainers: ParsedTrainer[];
+  trainers: ParsedTrainerVariant[];
   expandAll?: boolean;
   parentOpen?: boolean;
 };
