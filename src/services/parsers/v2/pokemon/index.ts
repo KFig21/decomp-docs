@@ -10,12 +10,16 @@ import { attachLearnsets } from './attatchers/learnsets';
 
 import { attachAbilities } from './attatchers/abilites';
 import { getFile } from '../utils';
+import type { FileContent } from '../../../fileReader';
+import type { ParsedItem } from '../items/types';
+import type { ParsedAttack } from '../moves/types';
+import type { ParsedAbility } from '../abilities';
 
 export function parsePokemon(
-  files: Map<string, string>,
-  items: Record<string, any>,
-  moves: Record<string, any>,
-  abilities: Record<string, any>,
+  files: Map<string, FileContent>,
+  items: Record<string, ParsedItem>,
+  moves: Record<string, ParsedAttack>,
+  abilities: Record<string, ParsedAbility>,
 ): Record<string, any> {
   const filePaths = {
     baseStats: 'src/data/pokemon/base_stats.h',

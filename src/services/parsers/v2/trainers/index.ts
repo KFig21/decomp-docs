@@ -2,12 +2,16 @@
 import { getFile } from '../utils';
 import { parseTrainersFile } from './trainers';
 import { parseTrainerParties } from './parties';
+import type { FileContent } from '../../../fileReader';
+import type { ParsedAttack } from '../moves/types';
+import type { ParsedItem } from '../items/types';
+import type { ParsedPokemon } from '../pokemon/types';
 
 export function parseTrainers(
-  files: Map<string, string>,
-  moves: Record<string, any>,
-  items: Record<string, any>,
-  pokemon: Record<string, any>,
+  files: Map<string, FileContent>,
+  moves: Record<string, ParsedAttack>,
+  items: Record<string, ParsedItem>,
+  pokemon: Record<string, ParsedPokemon>,
 ) {
   const trainersFile = getFile(files, 'src/data/trainers.h');
   const partiesFile = getFile(files, 'src/data/trainer_parties.h');

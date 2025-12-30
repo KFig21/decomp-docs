@@ -7,13 +7,28 @@ import { getFile } from '../utils';
 import type { ParsedItem } from '../items/types';
 import type { ParsedTrainer } from '../trainers/types';
 import type { ParsedPokemon } from '../pokemon/types';
+import { generateMapImage } from '../../../mapRenderer';
+import type { FileContent } from '../../../fileReader';
 
-export function parseLocations(
-  files: Map<string, string>,
+export async function parseLocations(
+  files: Map<string, FileContent>, // Updated type
   items: Record<string, ParsedItem>,
   trainers: Record<string, ParsedTrainer>,
   pokemon: Record<string, ParsedPokemon>,
-): Record<string, LocationRoot> {
+): Promise<Record<string, LocationRoot>> {
+  // TEMPORARY: just a toggle to parse maps
+  const generateMaps = false;
+
+  // 1. Load Layouts JSON to link Map IDs to Binary Files
+  const layoutsRaw = getFile(files, 'data/layouts/layouts.json');
+  const layoutsJson = layoutsRaw ? JSON.parse(layoutsRaw) : { layouts: [] };
+
+  // Create a quick lookup: LayoutID -> LayoutData
+  const layoutLookup = new Map<string, any>();
+  for (const l of layoutsJson.layouts || []) {
+    layoutLookup.set(l.id, l);
+  }
+
   const raw = getFile(files, 'data/maps/map_groups.json');
   if (!raw) throw new Error('Missing map_groups.json');
 
@@ -46,6 +61,23 @@ export function parseLocations(
       const mapId = mapJson.id; // e.g. MAP_ROUTE111
       if (wildByMap[mapId]) {
         map.wildPokemon.push(...wildByMap[mapId]);
+      }
+
+      // only generate 1 map for now
+      if (map.name === 'RustboroCity') {
+        // GENERATE MAP IMAGE
+        if (generateMaps) {
+          if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
+            const layoutInfo = layoutLookup.get(mapJson.layout);
+
+            // Generate the image
+            const base64Image = await generateMapImage(layoutInfo, files);
+
+            if (base64Image) {
+              map.mapImage = base64Image;
+            }
+          }
+        }
       }
     }
   }

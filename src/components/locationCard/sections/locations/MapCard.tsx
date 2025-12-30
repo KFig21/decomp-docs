@@ -6,6 +6,7 @@ import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
 import type { LocationMap } from '../../../../services/parsers/v2/locations/types';
 import EncounterTable from '../encounters/EncounterTables';
 import { formatReadableName } from '../../../../utils/functions';
+import Map from './map/Map';
 
 type Props = {
   location: LocationMap;
@@ -32,6 +33,7 @@ export default function MapCard({ location, expandAll = true, isOverworld = fals
 
       {open && (
         <div className="content">
+          {location.mapImage && <Map location={location} expandAll={expandAll} parentOpen={open} />}
           {location.trainers && location.trainers.length > 0 && (
             <Trainers trainers={location.trainers} expandAll={expandAll} parentOpen={open} />
           )}

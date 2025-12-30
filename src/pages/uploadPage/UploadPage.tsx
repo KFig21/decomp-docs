@@ -43,7 +43,7 @@ export default function UploadPage({
     setLoading(true);
 
     const files = await readFolderFiles(uploadedFiles);
-    const result = parseDecompV2(files);
+    const result = await parseDecompV2(files);
 
     setLocations(result.locations);
     setPokemon(result.pokemon);

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { FileContent } from '../../../fileReader';
 import { getFile } from '../utils';
 import type { ParsedAttack, RawIdentifier } from './types';
 
 type Args = {
-  files: Map<string, string>;
+  files: Map<string, FileContent>;
 };
 
 export function parseMoves({ files }: Args): Record<RawIdentifier, ParsedAttack> {

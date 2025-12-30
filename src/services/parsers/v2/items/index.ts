@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { FileContent } from '../../../fileReader';
 import { getFile } from '../utils';
 import type { ParsedItem, RawIdentifier } from './types';
 
 type Args = {
-  files: Map<string, string>;
+  files: Map<string, FileContent>;
 };
 
 export function parseItems({ files }: Args): Record<RawIdentifier, ParsedItem> {

@@ -112,3 +112,21 @@
         justify-content: center;
     }
 }
+
+.map-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    margin-right: 16px;
+    background-color: var(--backgroundColor);
+    border: solid 1px var(--containerBorderColor);
+
+    .generated-map {
+        max-width: 100%;
+        height: auto;
+        max-height: 800px;
+        // image-rendering: pixelated;
+    }
+}

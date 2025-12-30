@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import type { FileContent } from '../../fileReader';
 import { parseAbilities } from './abilities';
 import { parseItems } from './items';
 import { attachItemLocations } from './items/attachItemLocations';
@@ -9,7 +10,7 @@ import { parseNatures } from './natures';
 import { parsePokemon } from './pokemon';
 import { parseTrainers } from './trainers';
 
-export function parseDecompV2(files: Map<string, string>): any {
+export async function parseDecompV2(files: Map<string, FileContent>): Promise<any> {
   // Parse variables that do not depend on others first
   const moves = parseMoves({ files });
   const items = parseItems({ files });
@@ -23,7 +24,7 @@ export function parseDecompV2(files: Map<string, string>): any {
   const trainers = parseTrainers(files, moves, items, pokemon);
 
   // Finally, parse locations, which may depend on trainers, moves, and items
-  const locations = parseLocations(files, items, trainers, pokemon);
+  const locations = await parseLocations(files, items, trainers, pokemon);
 
   // All data parsed, now attach references
   attachItemLocations(items, locations);

@@ -1,5 +1,6 @@
 // v2/natures/index.ts
 
+import type { FileContent } from '../../../fileReader';
 import { getFile } from '../utils';
 import { STAT_ORDER, type NatureStat, type ParsedNatures } from './types';
 
@@ -7,7 +8,7 @@ const NATURE_ROW_REGEX =
   /\[\s*(NATURE_[A-Z0-9_]+)\s*\]\s*=\s*\{\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*\}/g;
 
 type Args = {
-  files: Map<string, string>;
+  files: Map<string, FileContent>;
 };
 
 export function parseNatures({ files }: Args): ParsedNatures {

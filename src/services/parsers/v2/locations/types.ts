@@ -11,6 +11,7 @@ export type LocationMap = {
   items: ParsedMapItem[];
   npcs: ParsedNpc[];
   wildPokemon: WildEncounterTable[];
+  mapImage?: string; // Base64 encoded PNG
 };
 
 export type LocationRoot = {

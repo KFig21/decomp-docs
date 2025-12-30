@@ -1,3 +1,4 @@
+import type { FileContent } from '../../fileReader';
 import { getFile } from './utils';
 
 export type RawIdentifier = string;
@@ -9,7 +10,7 @@ export interface ParsedAbility {
 }
 
 type Args = {
-  files: Map<string, string>;
+  files: Map<string, FileContent>;
 };
 
 export function parseAbilities({ files }: Args): Record<RawIdentifier, ParsedAbility> {
