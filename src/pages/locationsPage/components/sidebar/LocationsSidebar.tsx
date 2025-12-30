@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { formatReadableName } from '../../utils/functions';
-import { toSafeId } from '../../utils/dom';
-import type { LocationRoot } from '../../services/parsers/v2/locations/types';
 import './styles.scss';
-import CollapseToggle from '../elements/collapseToggle/CollapseToggle';
+import type { LocationRoot } from '../../../../services/parsers/v2/locations/types';
+import { toSafeId } from '../../../../utils/dom';
+import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
+import { formatReadableName } from '../../../../utils/functions';
 
 type Props = {
   locations: LocationRoot[];

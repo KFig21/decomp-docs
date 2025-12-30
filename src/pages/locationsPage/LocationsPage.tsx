@@ -1,8 +1,8 @@
-import LocationCard from '../../components/locationCard/sections/locations/LocationCard';
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
-import LocationsSidebar from '../../components/sidebar/LocationsSidebar';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import './styles.scss';
+import LocationsSidebar from './components/sidebar/LocationsSidebar';
+import LocationCard from './components/locationCard/sections/locations/LocationCard';
 
 type Props = {
   locations: LocationRoot[];

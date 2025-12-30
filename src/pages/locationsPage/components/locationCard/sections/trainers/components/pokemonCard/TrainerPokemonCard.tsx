@@ -1,5 +1,5 @@
-import type { ParsedTrainerPokemon } from '../../../../../../services/parsers/v2/trainers/types';
-import PokemonSprite from '../../../../../elements/sprites/PokemonSprite';
+import type { ParsedTrainerPokemon } from '../../../../../../../../services/parsers/v2/trainers/types';
+import PokemonSprite from '../../../../../../../../components/elements/sprites/PokemonSprite';
 import './styles.scss';
 
 type Props = {
