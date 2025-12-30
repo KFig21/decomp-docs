@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import PokemonSprite from '../../../elements/sprites/PokemonSprite';
-import type { WildEncounterTable } from '../../../../services/parsers/v2/locations/types';
+import type { WildEncounterTable } from '../../../../../../services/parsers/v2/locations/types';
+import { formatReadableName } from '../../../../../../utils/functions';
+import PokemonSprite from '../../../../../../components/elements/sprites/PokemonSprite';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 import './../../styles.scss';
-import { formatReadableName } from '../../../../utils/functions';
 
 type Props = {
   table: WildEncounterTable;

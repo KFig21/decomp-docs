@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import './../../styles.scss';
 import Trainers from '../trainers/Trainers';
 import ItemsSection from '../items/Items';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import type { LocationMap } from '../../../../services/parsers/v2/locations/types';
 import EncounterTable from '../encounters/EncounterTables';
-import { formatReadableName } from '../../../../utils/functions';
 import Map from './map/Map';
+import type { LocationMap } from '../../../../../../services/parsers/v2/locations/types';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
+import { formatReadableName } from '../../../../../../utils/functions';
 
 type Props = {
   location: LocationMap;

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import './../../styles.scss';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import type { LocationMap, LocationRoot } from '../../../../services/parsers/v2/locations/types';
 import MapCard from './MapCard';
-import { formatReadableName } from '../../../../utils/functions.ts';
-import { toSafeId } from '../../../../utils/dom.ts';
+import type {
+  LocationMap,
+  LocationRoot,
+} from '../../../../../../services/parsers/v2/locations/types';
+import { toSafeId } from '../../../../../../utils/dom';
+import { formatReadableName } from '../../../../../../utils/functions';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 
 type Props = {
   locationRoot: LocationRoot;

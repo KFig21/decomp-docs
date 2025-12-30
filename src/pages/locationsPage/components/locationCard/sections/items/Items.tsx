@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import ItemSprite from '../../../elements/sprites/ItemSprite';
-import type { ParsedMapItem } from '../../../../services/parsers/v2/locations/types';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
+import type { ParsedMapItem } from '../../../../../../services/parsers/v2/locations/types';
+import ItemSprite from '../../../../../../components/elements/sprites/ItemSprite';
 
 type Props = {
   items: ParsedMapItem[];

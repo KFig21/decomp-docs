@@ -1,8 +1,8 @@
-import TrainerSprite from '../../../../../elements/sprites/TrainerSprite';
-import ItemSprite from '../../../../../elements/sprites/ItemSprite';
+import ItemSprite from '../../../../../../../../components/elements/sprites/ItemSprite';
+import TrainerSprite from '../../../../../../../../components/elements/sprites/TrainerSprite';
+import type { ParsedItem } from '../../../../../../../../services/parsers/v2/items/types';
+import type { ParsedTrainerVariant } from '../../../../../../../../services/parsers/v2/trainers/types';
 import './styles.scss';
-import type { ParsedTrainerVariant } from '../../../../../../services/parsers/v2/trainers/types';
-import type { ParsedItem } from '../../../../../../services/parsers/v2/items/types';
 
 type Props = {
   trainer: ParsedTrainerVariant;

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import PartyCard from './components/partyCard/PartyCard';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
+import type { ParsedTrainerVariant } from '../../../../../../services/parsers/v2/trainers/types';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 import './styles.scss';
-import type { ParsedTrainerVariant } from '../../../../services/parsers/v2/trainers/types';
 
 type Props = {
   trainers: ParsedTrainerVariant[];

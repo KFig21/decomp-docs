@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './../../../styles.scss';
-import type { LocationMap } from '../../../../../services/parsers/v2/locations/types';
-import CollapseToggle from '../../../../elements/collapseToggle/CollapseToggle';
+import type { LocationMap } from '../../../../../../../services/parsers/v2/locations/types';
+import CollapseToggle from '../../../../../../../components/elements/collapseToggle/CollapseToggle';
 
 type Props = {
   location: LocationMap;

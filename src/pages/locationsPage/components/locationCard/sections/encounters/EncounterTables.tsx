@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import CollapseToggle from '../../../elements/collapseToggle/CollapseToggle';
-import type { WildEncounterTable } from '../../../../services/parsers/v2/locations/types';
 import Encounters from './Encounters';
+import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
+import type { WildEncounterTable } from '../../../../../../services/parsers/v2/locations/types';
 
 type Props = {
   encounterTable: WildEncounterTable[];
