@@ -38,6 +38,10 @@ export default function PokemonPage() {
                     </div>
                   ))}
                 </div>
+
+                <div className="pokemon-bst">
+                  {Object.values(mon.baseStats).reduce((a, c) => a + c, 0)} BST
+                </div>
               </div>
             );
           })}

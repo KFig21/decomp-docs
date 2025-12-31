@@ -27,7 +27,7 @@
                 border: 1px solid var(--containerBorderColor);
                 padding: 0px 20px;
                 display: grid;
-                grid-template-columns: 48px 120px 100px;
+                grid-template-columns: 48px 120px 120px 100px;
                 align-items: center;
                 gap: 8px;
 
@@ -48,6 +48,10 @@
                         color: white;
                         font-weight: 600;
                     }
+                }
+
+                .pokemon-bst {
+                    font-size: 0.8rem;
                 }
             }
         }
