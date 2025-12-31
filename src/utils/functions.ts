@@ -20,3 +20,12 @@ export function formatReadableName(input: string): string {
       .join(' ')
   );
 }
+
+export function formatType(input: string): string {
+  if (!input) return '';
+
+  return input
+    .replace(/^TYPE_/, '') // remove TYPE_ prefix
+    .toLowerCase() // fire
+    .replace(/^\w/, (c) => c.toUpperCase()); // Fire
+}

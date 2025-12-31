@@ -1,4 +1,5 @@
-import type { PokemonMap } from './types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { PokemonMap } from '../types';
 
 export function parseSpeciesConstants(file: string): PokemonMap {
   const pokemon: PokemonMap = {};
@@ -11,6 +12,14 @@ export function parseSpeciesConstants(file: string): PokemonMap {
 
     pokemon[key] = {
       key,
+      name: '',
+      baseStats: {} as any,
+      types: undefined,
+      abilities: [],
+      levelUpLearnset: [],
+      tmhmLearnset: [],
+      locations: [],
+      trainers: [],
     };
   }
 

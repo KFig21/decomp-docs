@@ -34,6 +34,7 @@ export function parseTrainers(
         pokemon,
         learnsetPtrs,
         learnsets,
+        variant,
       );
     }
   }

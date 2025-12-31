@@ -17,6 +17,14 @@ export type TMHMEntry = {
 export type levelUpLearnset = LevelUpEntry[];
 export type tmhmLearnset = TMHMEntry[];
 
+export type PokemonLocationRef = {
+  locationKey: string;
+};
+
+export type PokemonTrainerRef = {
+  trainerKey: string;
+};
+
 export interface ParsedPokemon {
   key: RawIdentifier;
 
@@ -33,11 +41,15 @@ export interface ParsedPokemon {
 
   // TODO: Make a type for this
   types?: [RawIdentifier, RawIdentifier | null];
+
   abilities: ParsedAbility[];
 
   levelUpLearnset: levelUpLearnset;
 
   tmhmLearnset: tmhmLearnset;
+
+  locations: PokemonLocationRef[];
+  trainers: PokemonTrainerRef[];
 }
 
 export type PokemonMap = Record<RawIdentifier, ParsedPokemon>;

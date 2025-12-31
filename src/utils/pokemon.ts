@@ -1,3 +1,4 @@
+// FIX: There has to be a better way than this
 export const POKEMON_MAP: Record<string, number> = {
   // --- Gen 1 ---
   Bulbasaur: 1,

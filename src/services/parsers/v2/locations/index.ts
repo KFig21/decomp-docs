@@ -61,6 +61,19 @@ export async function parseLocations(
       const mapId = mapJson.id; // e.g. MAP_ROUTE111
       if (wildByMap[mapId]) {
         map.wildPokemon.push(...wildByMap[mapId]);
+
+        // loop through each pokemon and update their location reference
+        // loop through each encounter table (land, water, fishing, etc)
+        for (const table of wildByMap[mapId]) {
+          for (const encounter of table.encounters) {
+            const mon = encounter.pokemon;
+            if (!mon) continue;
+
+            mon.locations.push({
+              locationKey: mapId,
+            });
+          }
+        }
       }
 
       // only generate 1 map for now

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ParsedTrainerPokemon } from './types';
+import type { ParsedTrainerPokemon, ParsedTrainerVariant } from './types';
 import { getDefaultMoves } from './utils';
 
 export function parseTrainerParties(
@@ -10,6 +10,7 @@ export function parseTrainerParties(
   pokemon: Record<string, any>,
   learnsetPtrs: string,
   learnsets: string,
+  variant: ParsedTrainerVariant,
 ): ParsedTrainerPokemon[] {
   const partyRegex = new RegExp(`${partyKey}\\s*\\[\\s*\\]\\s*=\\s*\\{([\\s\\S]*?)\\n\\};`, 'm');
 
@@ -60,6 +61,13 @@ export function parseTrainerParties(
       // TODO: figure out how natures are determined, then add parsing. It looks really confusing
       nature: null,
     });
+
+    // Add the trainer to the pokemons trainer reference
+    if (speciesString) {
+      pokemon[speciesString]?.trainers.push({
+        trainerKey: variant.key,
+      });
+    }
   }
 
   return mons;

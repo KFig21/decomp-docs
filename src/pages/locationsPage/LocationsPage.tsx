@@ -1,20 +1,25 @@
-import type { LocationRoot } from '../../services/parsers/v2/locations/types';
+// src/pages/locationsPage/LocationsPage.tsx
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import './styles.scss';
+import { useData } from '../../contexts/dataContext';
 import LocationsSidebar from './components/sidebar/LocationsSidebar';
 import LocationCard from './components/locationCard/sections/locations/LocationCard';
 
 type Props = {
-  locations: LocationRoot[];
   setCurrentPage: Dispatch<SetStateAction<string>>;
 };
 
-export default function LocationsPage({ locations, setCurrentPage }: Props) {
+export default function LocationsPage({ setCurrentPage }: Props) {
+  const { locations } = useData();
   const [expandAll, setExpandAll] = useState(true);
 
   useEffect(() => {
     setCurrentPage('locations');
-  }, []);
+  }, [setCurrentPage]);
+
+  if (!locations || locations.length === 0) {
+    return <div className="locations-page">No locations loaded yet.</div>;
+  }
 
   return (
     <div className="locations-page">

@@ -5,25 +5,15 @@ import FileUploader from '../../components/fileUploader/FileUploader';
 import { readFolderFiles } from '../../services/fileReader';
 import { parseDecompV2 } from '../../services/parsers/v2';
 import './styles.scss';
+import { useData } from '../../contexts/dataContext';
 
 type Props = {
   projectName: string;
   setProjectName: (name: string) => void;
-
-  setLocations: (l: any[]) => void;
-  setPokemon: (p: any[]) => void;
-  setItems: (i: any[]) => void;
-  setTrainers: (t: any[]) => void;
 };
 
-export default function UploadPage({
-  projectName,
-  setProjectName,
-  setLocations,
-  setPokemon,
-  setItems,
-  setTrainers,
-}: Props) {
+export default function UploadPage({ projectName, setProjectName }: Props) {
+  const { setLocations, setPokemon, setItems, setTrainers } = useData();
   const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
   const [folderIsChosen, setFolderIsChosen] = useState(false);
