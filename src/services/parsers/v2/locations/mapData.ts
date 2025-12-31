@@ -12,6 +12,7 @@ export function attachMapData(
   mapJson: any,
   trainers: Record<string, ParsedTrainer>,
   items: Record<string, any>,
+  locationRoot: string,
   scripts?: string,
 ) {
   map.trainers = [];
@@ -25,6 +26,9 @@ export function attachMapData(
     const trainer = resolveTrainerFromObjectEvents(obj.script, trainers);
     if (trainer) {
       map.trainers.push(trainer);
+      // update location & map references for trainer
+      trainer.location.locationKey = locationRoot;
+      trainer.location.mapKey = map.name;
       continue;
     }
 
@@ -59,6 +63,9 @@ export function attachMapData(
     for (const trainer of scripted) {
       if (!map.trainers.some((t) => t.key === trainer.key)) {
         map.trainers.push(trainer);
+        // update location & map references for trainer
+        trainer.location.locationKey = locationRoot;
+        trainer.location.mapKey = map.name;
       }
     }
   }

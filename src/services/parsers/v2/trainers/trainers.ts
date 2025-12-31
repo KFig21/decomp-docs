@@ -67,6 +67,10 @@ export function parseTrainersFile(
       partyKey,
       partyType,
       party: [],
+      location: {
+        locationKey: '',
+        mapKey: '',
+      },
     };
 
     trainers[name].variants.push(variant);

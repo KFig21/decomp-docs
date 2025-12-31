@@ -54,8 +54,10 @@ export async function parseLocations(
       const scriptsRaw = getFile(files, scriptsPath);
       if (!scriptsRaw) continue;
 
+      const locationRoot = root.root;
+
       // trainers / items / NPCs
-      attachMapData(map, mapJson, trainers, items, scriptsRaw);
+      attachMapData(map, mapJson, trainers, items, locationRoot, scriptsRaw);
 
       // wild Pokémon
       const mapId = mapJson.id; // e.g. MAP_ROUTE111
@@ -69,9 +71,17 @@ export async function parseLocations(
             const mon = encounter.pokemon;
             if (!mon) continue;
 
-            mon.locations.push({
-              locationKey: mapId,
-            });
+            // avoid duplicate entries
+            const exists = mon.locations.some(
+              (loc) => loc.locationKey === locationRoot && loc.mapKey === mapId,
+            );
+
+            if (!exists) {
+              mon.locations.push({
+                locationKey: locationRoot,
+                mapKey: mapId,
+              });
+            }
           }
         }
       }

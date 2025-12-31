@@ -29,6 +29,10 @@ export interface ParsedTrainerVariant {
   partyType: TrainerPartyType;
   party: ParsedTrainerPokemon[];
   sprite?: string;
+  location: {
+    locationKey: string;
+    mapKey: string;
+  };
 }
 
 export interface ParsedTrainerPokemon {

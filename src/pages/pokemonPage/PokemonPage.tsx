@@ -15,8 +15,11 @@ export default function PokemonPage() {
 
         <div className="pokemon-list">
           {pokemon.length === 0 && <p>No Pokémon loaded yet.</p>}
-
           {Object.values(pokemon).map((mon) => {
+            // skip the undefined mon
+            if (mon.name === '??????????') {
+              return;
+            }
             const uniqueTypes = Array.from(new Set(mon.types ?? []));
 
             return (

@@ -19,6 +19,7 @@ export type tmhmLearnset = TMHMEntry[];
 
 export type PokemonLocationRef = {
   locationKey: string;
+  mapKey: string;
 };
 
 export type PokemonTrainerRef = {
