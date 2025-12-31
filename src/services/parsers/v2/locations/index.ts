@@ -17,7 +17,7 @@ export async function parseLocations(
   pokemon: Record<string, ParsedPokemon>,
 ): Promise<Record<string, LocationRoot>> {
   // TEMPORARY: just a toggle to parse maps
-  const generateMaps = false;
+  const generateMaps = true;
 
   // 1. Load Layouts JSON to link Map IDs to Binary Files
   const layoutsRaw = getFile(files, 'data/layouts/layouts.json');
@@ -87,21 +87,21 @@ export async function parseLocations(
       }
 
       // only generate 1 map for now
-      if (map.name === 'RustboroCity') {
-        // GENERATE MAP IMAGE
-        if (generateMaps) {
-          if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
-            const layoutInfo = layoutLookup.get(mapJson.layout);
+      // if (map.name === 'RustboroCity') {
+      // GENERATE MAP IMAGE
+      if (generateMaps) {
+        if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
+          const layoutInfo = layoutLookup.get(mapJson.layout);
 
-            // Generate the image
-            const base64Image = await generateMapImage(layoutInfo, files);
+          // Generate the image
+          const base64Image = await generateMapImage(layoutInfo, files);
 
-            if (base64Image) {
-              map.mapImage = base64Image;
-            }
+          if (base64Image) {
+            map.mapImage = base64Image;
           }
         }
       }
+      // }
     }
   }
 

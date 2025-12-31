@@ -1,6 +1,4 @@
 // src/services/fileReader.ts
-
-// Define a union type for our file content
 export type FileContent = string | ArrayBuffer | Blob;
 
 export async function readFolderFiles(files: FileList): Promise<Map<string, FileContent>> {
@@ -11,16 +9,14 @@ export async function readFolderFiles(files: FileList): Promise<Map<string, File
     const path = f.webkitRelativePath || f.name;
     const ext = path.split('.').pop()?.toLowerCase();
 
-    // Determine how to read the file based on extension
     if (ext === 'png') {
-      map.set(path, f); // Keep as File/Blob for images
+      map.set(path, f);
     } else if (ext === 'bin') {
-      const buffer = await f.arrayBuffer();
-      map.set(path, buffer);
+      // Add .pal if your project uses binary palettes
+      map.set(path, await f.arrayBuffer());
     } else {
-      // Default to text for code, json, etc.
-      const text = await f.text();
-      map.set(path, text);
+      // Default to text for json, c, h, inc, pal (JASC-PAL)
+      map.set(path, await f.text());
     }
   }
 
