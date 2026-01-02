@@ -87,7 +87,7 @@ export async function parseLocations(
       }
 
       // only generate 1 map for now
-      // if (map.name === 'RustboroCity') {
+      // if (map.name === 'PetalburgCity_Gym' || map.name === 'PetalburgCity') {
       // GENERATE MAP IMAGE
       if (generateMaps) {
         if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
