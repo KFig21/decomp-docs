@@ -222,19 +222,16 @@ export async function generateMapImage(
             const r = source.data[sIdx];
             const a = source.data[sIdx + 3];
 
+            // Calculate index first (0-15)
+            // Try BOTH (Math.floor(r / 16)) AND (15 - Math.floor(r / 16))
+            // to see which one matches Porymap's vibrant colors.
+            const palIdx = 15 - Math.floor(r / 16);
+
             // 1. Transparency Check
-            // In GBA tiles, Index 0 is ALWAYS transparent.
-            // In these PNGs, Index 0 is typically pure black (0,0,0).
-            if (a === 0 || r === 0) {
-              // If we are on the top layer, we skip drawing to show the bottom layer.
-              // If we are on the bottom layer, we usually draw palette 0, color 0 (often black or grass color).
+            // Index 0 is the universal transparency color in GBA ROMs.
+            if (a === 0 || palIdx === 0) {
               if (layer === 1) continue;
             }
-
-            // 2. Accurate Palette Index calculation
-            // We divide by 16 because 256 / 16 = 16 levels.
-            // Using Math.floor(r / 16) is the industry standard for 4bpp grayscale extraction.
-            const palIdx = Math.floor(r / 16);
 
             // 3. Palette Selection
             // "palId" comes from the metatile attributes.
