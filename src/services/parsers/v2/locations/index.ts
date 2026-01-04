@@ -94,7 +94,7 @@ export async function parseLocations(
           const layoutInfo = layoutLookup.get(mapJson.layout);
 
           // Generate the image
-          const base64Image = await generateMapImage(layoutInfo, files);
+          const base64Image = await generateMapImage(layoutInfo, files, mapJson);
 
           if (base64Image) {
             map.mapImage = base64Image;
