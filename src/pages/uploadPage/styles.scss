@@ -25,7 +25,7 @@
 
         .upload-container {
             display: inline-block;
-            padding: 1rem 1rem 2rem;
+            padding: 1rem;
             border-radius: 1rem;
             margin: auto;
 
@@ -39,6 +39,7 @@
         .button-container {
             display: flex;
             justify-content: center;
+            padding: 1rem;
 
             button {
 
@@ -69,6 +70,11 @@
                     cursor: not-allowed;
                 }
 
+                &:focus-visible {
+                    background-color: var(--primaryColorHover);
+                    border-color: var(--primaryColorHover);
+                }
+
                 .spinner {
                     display: inline-block;
                     width: 1rem;
@@ -85,6 +91,20 @@
                         transform: rotate(360deg);
                     }
                 }
+            }
+        }
+
+        .maps-checkbox-container {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+
+            .maps-checkbox {
+                display: flex;
+                flex-direction: row;
+                gap: 8px;
+                font-weight: 600;
+                color: var(--fontColor);
             }
         }
     }

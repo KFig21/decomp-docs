@@ -10,7 +10,10 @@ import { parseNatures } from './natures';
 import { parsePokemon } from './pokemon';
 import { parseTrainers } from './trainers';
 
-export async function parseDecompV2(files: Map<string, FileContent>): Promise<any> {
+export async function parseDecompV2(
+  files: Map<string, FileContent>,
+  renderMaps: boolean,
+): Promise<any> {
   // Parse variables that do not depend on others first
   const moves = parseMoves({ files });
   const items = parseItems({ files });
@@ -24,7 +27,7 @@ export async function parseDecompV2(files: Map<string, FileContent>): Promise<an
   const trainers = parseTrainers(files, moves, items, pokemon);
 
   // Finally, parse locations, which may depend on trainers, moves, and items
-  const locations = await parseLocations(files, items, trainers, pokemon);
+  const locations = await parseLocations(files, items, trainers, pokemon, renderMaps);
 
   // All data parsed, now attach references
   attachItemLocations(items, locations);

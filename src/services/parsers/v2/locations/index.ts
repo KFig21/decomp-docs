@@ -15,10 +15,8 @@ export async function parseLocations(
   items: Record<string, ParsedItem>,
   trainers: Record<string, ParsedTrainer>,
   pokemon: Record<string, ParsedPokemon>,
+  renderMaps: boolean,
 ): Promise<Record<string, LocationRoot>> {
-  // TEMPORARY: just a toggle to parse maps
-  const generateMaps = true;
-
   // 1. Load Layouts JSON to link Map IDs to Binary Files
   const layoutsRaw = getFile(files, 'data/layouts/layouts.json');
   const layoutsJson = layoutsRaw ? JSON.parse(layoutsRaw) : { layouts: [] };
@@ -89,7 +87,7 @@ export async function parseLocations(
       // only generate 1 map for now
       // if (map.name === 'PetalburgCity_Gym' || map.name === 'PetalburgCity') {
       // GENERATE MAP IMAGE
-      if (generateMaps) {
+      if (renderMaps) {
         if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
           const layoutInfo = layoutLookup.get(mapJson.layout);
 

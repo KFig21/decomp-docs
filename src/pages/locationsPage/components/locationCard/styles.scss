@@ -127,6 +127,48 @@
         max-width: 100%;
         height: auto;
         max-height: 600px;
-        // image-rendering: pixelated;
+        cursor: zoom-in;
     }
+}
+
+.generated-map.clickable {
+    cursor: zoom-in;
+}
+
+/* Modal backdrop */
+.map-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: color-mix(in srgb,
+            var(--containerBgColor),
+            var(--backgroundColor) 50%);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Modal content */
+.map-modal-content {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal image */
+.map-modal-image {
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    height: auto;
+    // max-height: 100%;
+    width: 100%;
+    min-width: 50vw;
+    max-width: 800px;
+    object-fit: contain;
+    cursor: zoom-out;
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileUploader from '../../components/fileUploader/FileUploader';
 import { readFolderFiles } from '../../services/fileReader';
@@ -18,6 +18,14 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
   const [folderIsChosen, setFolderIsChosen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [renderMaps, setRenderMaps] = useState(false);
+  const parseButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (folderIsChosen && !loading) {
+      parseButtonRef.current?.focus();
+    }
+  }, [folderIsChosen, loading]);
 
   const handleUpload = async (files: FileList) => {
     setUploadedFiles(files);
@@ -33,7 +41,8 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
     setLoading(true);
 
     const files = await readFolderFiles(uploadedFiles);
-    const result = await parseDecompV2(files);
+
+    const result = await parseDecompV2(files, renderMaps);
 
     setLocations(result.locations);
     setPokemon(result.pokemon);
@@ -47,7 +56,7 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
     <div className="upload-page">
       <div className="main-container">
         <h1>Decomp-Docs</h1>
-
+        {/* Upload container */}
         <div className="upload-container">
           <FileUploader
             onUpload={handleUpload}
@@ -55,8 +64,22 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
             folderIsChosen={folderIsChosen}
           />
         </div>
+        {/* Render maps checkbox */}
+        <div className="maps-checkbox-container">
+          <label className="maps-checkbox">
+            <input
+              type="checkbox"
+              checked={renderMaps}
+              onChange={(e) => setRenderMaps(e.target.checked)}
+              disabled={loading}
+            />
+            <div>Render map images (slow)</div>
+          </label>
+        </div>
+        {/* Parse button */}
         <div className="button-container">
           <button
+            ref={parseButtonRef}
             className={folderIsChosen ? 'enabled' : 'disabled'}
             onClick={handleParse}
             disabled={!folderIsChosen || loading}
