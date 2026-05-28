@@ -107,5 +107,29 @@
                 color: var(--fontColor);
             }
         }
+
+        .parsing-feedback-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            .cancel-button {
+                background-color: transparent;
+                color: #ff5f56;
+                border: 1px solid #ff5f56;
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background-color: #ff5f56;
+                    color: white;
+                }
+            }
+        }
     }
 }

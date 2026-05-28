@@ -64,6 +64,7 @@ export default function Map({ location, expandAll = true, parentOpen = true }: P
 
       {/* Modal */}
       {showModal && (
+        // TODO: Fix modal, does not show all of large images, they can get cutoff
         <div className="map-modal-backdrop" onClick={() => setShowModal(false)}>
           <div className="map-modal-content" onClick={() => setShowModal(false)}>
             <img src={mapImageSrc} alt={`Map of ${location.name}`} className="map-modal-image" />

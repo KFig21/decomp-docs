@@ -17,6 +17,7 @@
         .file-upload-label {
             display: inline-block;
             padding: .5rem 2rem;
+            min-width: 280px; // Ensures the border doesn't jump when text changes
             border: 2px dashed var(--containerBorderColor);
             border-radius: 1rem;
             background-color: var(--backgroundColor);
@@ -32,7 +33,20 @@
             }
 
             input[type="file"] {
-                display: none; // hide the native input
+                display: none;
+            }
+
+            .uploading-text {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                margin-left: 1rem;
+
+                .dots {
+                    display: inline-block;
+                    width: 1.5rem;
+                    text-align: left;
+                }
             }
         }
     }

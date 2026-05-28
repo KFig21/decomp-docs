@@ -11,11 +11,15 @@ import { generateMapImage } from '../../../mapRenderer';
 import type { FileContent } from '../../../fileReader';
 
 export async function parseLocations(
-  files: Map<string, FileContent>, // Updated type
+  files: Map<string, FileContent>,
   items: Record<string, ParsedItem>,
   trainers: Record<string, ParsedTrainer>,
   pokemon: Record<string, ParsedPokemon>,
   renderMaps: boolean,
+  onProgress?: (text: string, percent: number) => void,
+  progressStart: number = 70,
+  progressEnd: number = 95,
+  checkCancel?: () => boolean,
 ): Promise<Record<string, LocationRoot>> {
   // 1. Load Layouts JSON to link Map IDs to Binary Files
   const layoutsRaw = getFile(files, 'data/layouts/layouts.json');
@@ -29,25 +33,41 @@ export async function parseLocations(
 
   const raw = getFile(files, 'data/maps/map_groups.json');
   if (!raw) throw new Error('Missing map_groups.json');
-
   const mapGroups = JSON.parse(raw);
   const locations = parseMapGroups(mapGroups);
 
   // --- Wild encounters (parse once) ---
   const wildRaw = getFile(files, 'src/data/wild_encounters.json');
   if (!wildRaw) throw new Error('Missing wild_encounters.json');
-
   const wildJson = JSON.parse(wildRaw);
   const wildByMap = parseWildEncounters(wildJson, pokemon);
+
+  let totalMaps = 0;
+  for (const root of Object.values(locations)) {
+    totalMaps += Object.keys(root.maps).length;
+  }
+
+  let processedMaps = 0;
 
   // --- Walk every map ---
   for (const root of Object.values(locations)) {
     for (const map of Object.values(root.maps)) {
+      if (checkCancel?.()) throw new Error('CANCELLED'); // <-- Bail out early
+
+      // Update progress using the dynamic bounds
+      if (onProgress) {
+        const range = progressEnd - progressStart;
+        const percentage = progressStart + (processedMaps / totalMaps) * range;
+        onProgress(`Parsing map: ${map.name}`, percentage);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+      processedMaps++;
+
       const mapPath = `data/maps/${map.name}/map.json`;
       const mapRaw = getFile(files, mapPath);
       if (!mapRaw) continue;
-      const mapJson = JSON.parse(mapRaw);
 
+      const mapJson = JSON.parse(mapRaw);
       const scriptsPath = `data/maps/${map.name}/scripts.inc`;
       const scriptsRaw = getFile(files, scriptsPath);
       if (!scriptsRaw) continue;
@@ -57,23 +77,20 @@ export async function parseLocations(
       // trainers / items / NPCs
       attachMapData(map, mapJson, trainers, items, locationRoot, scriptsRaw);
 
+      const mapId = mapJson.id;
       // wild Pokémon
-      const mapId = mapJson.id; // e.g. MAP_ROUTE111
       if (wildByMap[mapId]) {
         map.wildPokemon.push(...wildByMap[mapId]);
-
         // loop through each pokemon and update their location reference
         // loop through each encounter table (land, water, fishing, etc)
         for (const table of wildByMap[mapId]) {
           for (const encounter of table.encounters) {
             const mon = encounter.pokemon;
             if (!mon) continue;
-
             // avoid duplicate entries
             const exists = mon.locations.some(
               (loc) => loc.locationKey === locationRoot && loc.mapKey === mapId,
             );
-
             if (!exists) {
               mon.locations.push({
                 locationKey: locationRoot,
@@ -84,22 +101,22 @@ export async function parseLocations(
         }
       }
 
-      // only generate 1 map for now
-      // if (map.name === 'PetalburgCity_Gym' || map.name === 'PetalburgCity') {
+      // For test purposes, quickly generate 1 map
+      const onlyGenerateOneMap = true;
+
+      // Determine if we should proceed with rendering this specific map
+      const isTestMap = map.name === 'PetalburgCity_Gym' || map.name === 'PetalburgCity';
+      const shouldRenderMap = renderMaps && (!onlyGenerateOneMap || isTestMap);
+
       // GENERATE MAP IMAGE
-      if (renderMaps) {
-        if (mapJson.layout && layoutLookup.has(mapJson.layout)) {
-          const layoutInfo = layoutLookup.get(mapJson.layout);
+      if (shouldRenderMap && mapJson.layout && layoutLookup.has(mapJson.layout)) {
+        const layoutInfo = layoutLookup.get(mapJson.layout);
+        const base64Image = await generateMapImage(layoutInfo, files, mapJson);
 
-          // Generate the image
-          const base64Image = await generateMapImage(layoutInfo, files, mapJson);
-
-          if (base64Image) {
-            map.mapImage = base64Image;
-          }
+        if (base64Image) {
+          map.mapImage = base64Image;
         }
       }
-      // }
     }
   }
 
