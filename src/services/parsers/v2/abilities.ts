@@ -9,112 +9,39 @@ export interface ParsedAbility {
   description?: string;
 }
 
-type Args = {
-  files: Map<string, FileContent>;
-};
+type Args = { files: Map<string, FileContent> };
 
 export function parseAbilities({ files }: Args): Record<RawIdentifier, ParsedAbility> {
-  const abilitiesFile = getFile(files, 'src/data/text/abilities.h');
+  // Expansion uses abilities.h in the root of the data folder now
+  const abilitiesFile =
+    getFile(files, 'src/data/abilities.h') || getFile(files, 'src/data/text/abilities.h');
   const abilities: Record<string, ParsedAbility> = {};
 
-  if (!abilitiesFile) return abilities;
+  if (!abilitiesFile) {
+    console.warn('[Parser] Could not find abilities.h');
+    return abilities;
+  }
 
-  // Step 1: parse description string constants
-  const descriptionStrings = parseAbilityDescriptionStrings(abilitiesFile);
+  // Parses the modern single-struct array format
+  const blockRegex = /\[\s*(ABILITY_[A-Z0-9_]+)\s*\]\s*=\s*\{([\s\S]*?)\n\s*\}/g;
+  let match;
 
-  // Step 2: parse ability names
-  parseAbilityNames(abilitiesFile, abilities);
+  while ((match = blockRegex.exec(abilitiesFile))) {
+    const key = match[1];
+    const body = match[2];
 
-  // Step 3: parse description pointer table
-  parseAbilityDescriptionPointers(abilitiesFile, abilities, descriptionStrings);
+    // Match .name = _("Stench")
+    const nameMatch = body.match(/\.name\s*=\s*_\("([^"]+)"\)/);
+
+    // Match .description = COMPOUND_STRING("...") or _("...")
+    const descMatch = body.match(/\.description\s*=\s*(?:COMPOUND_STRING|_)\("([^"]+)"\)/);
+
+    abilities[key] = {
+      key,
+      name: nameMatch ? nameMatch[1] : key.replace('ABILITY_', ''),
+      description: descMatch ? descMatch[1].replace(/\\n/g, ' ') : '', // clean up newline characters
+    };
+  }
 
   return abilities;
-}
-
-/* ---------------- HELPER FUNCTIONS ---------------- */
-
-/* ---------------- ability names ---------------- */
-
-function parseAbilityNames(content: string, abilities: Record<string, ParsedAbility>) {
-  /**
-   * [ABILITY_STENCH] = _("Stench"),
-   */
-  const nameBlockMatch = content.match(/gAbilityNames\[ABILITIES_COUNT\][\s\S]*?\{([\s\S]*?)\};/);
-
-  if (!nameBlockMatch) return;
-
-  const block = nameBlockMatch[1];
-
-  const entryRegex = /\[(ABILITY_[A-Z0-9_]+)\]\s*=\s*_\("([^"]+)"\)/g;
-
-  let match: RegExpExecArray | null;
-
-  while ((match = entryRegex.exec(block)) !== null) {
-    const key = match[1];
-    const name = match[2];
-
-    if (!abilities[key]) {
-      abilities[key] = { key };
-    }
-
-    abilities[key].name = name;
-  }
-}
-
-/* ---------------- ability descriptions ---------------- */
-
-function parseAbilityDescriptionStrings(content: string): Record<string, string> {
-  /**
-   * static const u8 sStenchDescription[] = _("May cause a foe to flinch.");
-   */
-  const map: Record<string, string> = {};
-
-  const regex = /static const u8\s+(s[A-Za-z0-9_]+Description)\[\]\s*=\s*_\("([^"]+)"\);/g;
-
-  let match: RegExpExecArray | null;
-
-  while ((match = regex.exec(content)) !== null) {
-    const key = match[1];
-    const text = match[2];
-    map[key] = text;
-  }
-
-  return map;
-}
-
-/* ---------------- ability description pointers ---------------- */
-
-function parseAbilityDescriptionPointers(
-  content: string,
-  abilities: Record<string, ParsedAbility>,
-  descriptionStrings: Record<string, string>,
-) {
-  /**
-   * [ABILITY_STENCH] = sStenchDescription,
-   */
-  const pointerBlockMatch = content.match(
-    /gAbilityDescriptionPointers\[ABILITIES_COUNT\][\s\S]*?\{([\s\S]*?)\};/,
-  );
-
-  if (!pointerBlockMatch) return;
-
-  const block = pointerBlockMatch[1];
-
-  const entryRegex = /\[(ABILITY_[A-Z0-9_]+)\]\s*=\s*(s[A-Za-z0-9_]+Description)/g;
-
-  let match: RegExpExecArray | null;
-
-  while ((match = entryRegex.exec(block)) !== null) {
-    const abilityKey = match[1];
-    const descriptionKey = match[2];
-
-    const description = descriptionStrings[descriptionKey];
-    if (!description) continue;
-
-    if (!abilities[abilityKey]) {
-      abilities[abilityKey] = { key: abilityKey };
-    }
-
-    abilities[abilityKey].description = description;
-  }
 }

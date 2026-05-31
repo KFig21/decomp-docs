@@ -2,8 +2,9 @@ export type FileContent = string | ArrayBuffer | Blob;
 
 // Folders we definitely don't need to read into memory
 const IGNORED_FOLDERS = ['.git', 'build', 'sound', 'tools', 'asm'];
-// Allowed extensions (png for maps, bin for palettes, json/h/c/inc for text/data, pal for color palettes)
-const ALLOWED_EXTENSIONS = ['h', 'c', 'json', 'inc', 'png', 'bin', 'pal'];
+
+// Allowed extensions (png for maps, bin for palettes, json/h/c/inc for text/data, pal for color palettes, party for trainer parties)
+const ALLOWED_EXTENSIONS = ['h', 'c', 'json', 'inc', 'png', 'bin', 'pal', 'party'];
 
 export async function readFolderFiles(
   files: FileList,
