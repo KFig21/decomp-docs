@@ -4,6 +4,7 @@ import { useData } from '../../contexts/dataContext';
 import LocationsSidebar from './components/sidebar/LocationsSidebar';
 import LocationCard from './components/locationCard/sections/locations/LocationCard';
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
+import { TrainerTabProvider } from '../../contexts/trainerTabContext';
 
 type Props = {
   setCurrentPage: Dispatch<SetStateAction<string>>;
@@ -35,7 +36,7 @@ export default function LocationsPage({ setCurrentPage }: Props) {
             map.wildPokemon.length > 0 ||
             map.items.length > 0 ||
             (map.staticEncounters && map.staticEncounters.length > 0) ||
-            (isOverworld && !!map.mapImage) // Force true ONLY if it's an overworld map
+            (isOverworld && !!map.mapImage)
           );
         });
       })
@@ -49,20 +50,22 @@ export default function LocationsPage({ setCurrentPage }: Props) {
   }
 
   return (
-    <div className="locations-page">
-      <div className="page-content">
-        <LocationsSidebar
-          locations={sortedLocations}
-          expandAll={expandAll}
-          setExpandAll={setExpandAll}
-        />
+    <TrainerTabProvider>
+      <div className="locations-page">
+        <div className="page-content">
+          <LocationsSidebar
+            locations={sortedLocations}
+            expandAll={expandAll}
+            setExpandAll={setExpandAll}
+          />
 
-        <div className="locations-page-content">
-          {sortedLocations.map((location) => (
-            <LocationCard key={location.root} locationRoot={location} expandAll={expandAll} />
-          ))}
+          <div className="locations-page-content">
+            {sortedLocations.map((location) => (
+              <LocationCard key={location.root} locationRoot={location} expandAll={expandAll} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </TrainerTabProvider>
   );
 }

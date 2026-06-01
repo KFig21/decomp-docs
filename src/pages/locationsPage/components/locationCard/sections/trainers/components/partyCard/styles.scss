@@ -9,9 +9,45 @@
     border-left: solid 1px var(--containerBorderColor);
     background-color: var(--containerBgColor);
 
-    .trainer-party {
+    .trainer-party-area {
         display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
+        flex-direction: column;
+        flex: 1;
+
+        .trainer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+
+            .tab-button {
+                background-color: var(--backgroundColor);
+                border: 1px solid var(--containerBorderColor);
+                color: var(--fadedFont);
+                padding: 4px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                font-weight: 600;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    color: var(--fontColor);
+                    border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
+                }
+
+                &.active {
+                    background-color: var(--primaryColor);
+                    color: #fff;
+                    border-color: var(--primaryColor);
+                }
+            }
+        }
+
+        .trainer-party {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
     }
 }
