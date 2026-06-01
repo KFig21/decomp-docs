@@ -3,6 +3,12 @@ import type { ParsedTrainerVariant } from '../trainers/types';
 import type { ParsedPokemon } from '../pokemon/types';
 import type { ParsedItem } from '../items/types';
 
+export type StaticEncounter = {
+  species: ParsedPokemon;
+  level: number;
+  method: 'Gift' | 'Interaction';
+};
+
 export type LocationMap = {
   name: string;
   type: 'outdoor' | 'indoor' | 'special' | 'dungeon' | 'other';
@@ -11,12 +17,14 @@ export type LocationMap = {
   items: ParsedMapItem[];
   npcs: ParsedNpc[];
   wildPokemon: WildEncounterTable[];
+  staticEncounters: StaticEncounter[];
   mapImage?: string; // Base64 encoded PNG
 };
 
 export type LocationRoot = {
   root: string;
   maps: Record<string, LocationMap>;
+  order?: number; // Global sorting integer
 };
 
 export type MapGroupsJson = {

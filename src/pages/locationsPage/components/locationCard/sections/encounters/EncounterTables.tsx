@@ -1,16 +1,23 @@
+// src/pages/locationsPage/components/locationCard/sections/encounters/EncounterTables.tsx
 import { useEffect, useState } from 'react';
 import Encounters from './Encounters';
+import StaticEncounters from './StaticEncounters';
 import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
-import type { WildEncounterTable } from '../../../../../../services/parsers/v2/locations/types';
+import type {
+  WildEncounterTable,
+  StaticEncounter,
+} from '../../../../../../services/parsers/v2/locations/types';
 
 type Props = {
   encounterTable: WildEncounterTable[];
+  staticEncounters?: StaticEncounter[];
   expandAll?: boolean;
   parentOpen?: boolean;
 };
 
 export default function EncounterTable({
   encounterTable,
+  staticEncounters = [],
   expandAll = true,
   parentOpen = true,
 }: Props) {
@@ -30,11 +37,22 @@ export default function EncounterTable({
         <span>Encounters</span>
       </div>
 
-      {open && encounterTable.length > 0 && (
+      {open && (
         <div className="content">
-          {encounterTable.map((table, i) => {
-            return <Encounters key={i} table={table} expandAll={expandAll} parentOpen={open} />;
-          })}
+          {/* Render standard wild encounter tables (Land, Surf, etc) */}
+          {encounterTable &&
+            encounterTable.map((table, i) => {
+              return <Encounters key={i} table={table} expandAll={expandAll} parentOpen={open} />;
+            })}
+
+          {/* Render static encounters directly underneath */}
+          {staticEncounters && staticEncounters.length > 0 && (
+            <StaticEncounters
+              encounters={staticEncounters}
+              expandAll={expandAll}
+              parentOpen={open}
+            />
+          )}
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocationMap } from './types';
 import type { ParsedTrainer } from '../trainers/types';
+import type { ParsedPokemon } from '../pokemon/types';
 import {
   resolveItemFromScript,
   resolveTrainerFromObjectEvents,
@@ -12,6 +13,7 @@ export function attachMapData(
   mapJson: any,
   trainers: Record<string, ParsedTrainer>,
   items: Record<string, any>,
+  pokemon: Record<string, ParsedPokemon>,
   locationRoot: string,
   scripts?: string,
 ) {
@@ -19,6 +21,7 @@ export function attachMapData(
   map.items = [];
   map.npcs = [];
   map.wildPokemon = [];
+  map.staticEncounters = [];
 
   // ---- OBJECT EVENTS ----
   for (const obj of mapJson.object_events ?? []) {
@@ -66,6 +69,31 @@ export function attachMapData(
         // update location & map references for trainer
         trainer.location.locationKey = locationRoot;
         trainer.location.mapKey = map.name;
+      }
+    }
+
+    // Parse setwildbattle (e.g., setwildbattle SPECIES_GROUDON, 70)
+    const wildBattleRegex = /setwildbattle\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
+    let match;
+    while ((match = wildBattleRegex.exec(scripts))) {
+      const speciesStr = match[1];
+      const level = parseInt(match[2], 10);
+      const species = pokemon[speciesStr];
+
+      if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
+        map.staticEncounters.push({ species, level, method: 'Interaction' });
+      }
+    }
+
+    // Parse givemon (e.g., givemon SPECIES_TREECKO, 5)
+    const givemonRegex = /givemon\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
+    while ((match = givemonRegex.exec(scripts))) {
+      const speciesStr = match[1];
+      const level = parseInt(match[2], 10);
+      const species = pokemon[speciesStr];
+
+      if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
+        map.staticEncounters.push({ species, level, method: 'Gift' });
       }
     }
   }

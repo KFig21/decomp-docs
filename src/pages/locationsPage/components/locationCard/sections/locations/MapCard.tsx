@@ -1,3 +1,4 @@
+// src/pages/locationsPage/components/locationCard/sections/locations/MapCard.tsx
 import { useEffect, useState } from 'react';
 import './../../styles.scss';
 import Trainers from '../trainers/Trainers';
@@ -17,10 +18,14 @@ type Props = {
 export default function MapCard({ location, expandAll = true, isOverworld = false }: Props) {
   const [open, setOpen] = useState(true);
 
-  // Sync local state with parent expand/collapse
   useEffect(() => {
     setOpen(expandAll);
   }, [expandAll]);
+
+  // Combine the check for any type of encounter
+  const hasEncounters =
+    (location.wildPokemon && location.wildPokemon.length > 0) ||
+    (location.staticEncounters && location.staticEncounters.length > 0);
 
   return (
     <div className="map-card container-style">
@@ -34,16 +39,20 @@ export default function MapCard({ location, expandAll = true, isOverworld = fals
       {open && (
         <div className="content">
           {location.mapImage && <Map location={location} expandAll={expandAll} parentOpen={open} />}
+
           {location.trainers && location.trainers.length > 0 && (
             <Trainers trainers={location.trainers} expandAll={expandAll} parentOpen={open} />
           )}
-          {location.wildPokemon && location.wildPokemon.length > 0 && (
+
+          {hasEncounters && (
             <EncounterTable
               encounterTable={location.wildPokemon}
+              staticEncounters={location.staticEncounters}
               expandAll={expandAll}
               parentOpen={open}
             />
           )}
+
           {location.items && location.items.length > 0 && (
             <ItemsSection items={location.items} expandAll={expandAll} parentOpen={open} />
           )}

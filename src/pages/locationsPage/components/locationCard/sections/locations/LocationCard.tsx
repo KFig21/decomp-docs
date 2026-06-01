@@ -17,7 +17,6 @@ type Props = {
 export default function LocationCard({ locationRoot, expandAll = true }: Props) {
   const [open, setOpen] = useState(true);
 
-  // Sync local state with parent expand/collapse
   useEffect(() => {
     setOpen(expandAll);
   }, [expandAll]);
@@ -32,11 +31,16 @@ export default function LocationCard({ locationRoot, expandAll = true }: Props) 
       {open && (
         <div>
           {Object.values(locationRoot.maps).map((locationMap: LocationMap, i: number) => {
+            const isOverworld = locationMap.name === locationRoot.root;
+
+            // STRICT FILTER: Must have interactions, OR be an overworld map with an image
             const hasContent =
               locationMap.trainers.length > 0 ||
               locationMap.wildPokemon.length > 0 ||
-              locationMap.items.length > 0;
-            const isOverworld = locationMap.name === locationRoot.root;
+              locationMap.items.length > 0 ||
+              (locationMap.staticEncounters && locationMap.staticEncounters.length > 0) ||
+              (isOverworld && !!locationMap.mapImage);
+
             return (
               hasContent && (
                 <div key={i} className="map-section content">

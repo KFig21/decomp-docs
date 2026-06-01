@@ -36,6 +36,29 @@ export async function parseLocations(
   const mapGroups = JSON.parse(raw);
   const locations = parseMapGroups(mapGroups);
 
+  // ==========================================
+  // NEW: APPLY DOCS CONFIG (STRICT ALLOWLIST & ORDER)
+  // ==========================================
+  const configRaw = getFile(files, 'docs.config.json');
+  const customConfig = configRaw ? JSON.parse(configRaw) : null;
+
+  if (customConfig && customConfig.navigation && Array.isArray(customConfig.navigation)) {
+    // 1. Assign sorting order based on array index
+    customConfig.navigation.forEach((rootName: string, index: number) => {
+      if (locations[rootName]) {
+        locations[rootName].order = index;
+      }
+    });
+
+    // 2. STRICT ALLOWLIST: Delete any location that wasn't in the navigation array
+    for (const root of Object.keys(locations)) {
+      if (locations[root].order === undefined) {
+        delete locations[root];
+      }
+    }
+  }
+  // ==========================================
+
   // --- Wild encounters (parse once) ---
   const wildRaw = getFile(files, 'src/data/wild_encounters.json');
   if (!wildRaw) throw new Error('Missing wild_encounters.json');
@@ -75,7 +98,7 @@ export async function parseLocations(
       const locationRoot = root.root;
 
       // trainers / items / NPCs
-      attachMapData(map, mapJson, trainers, items, locationRoot, scriptsRaw);
+      attachMapData(map, mapJson, trainers, items, pokemon, locationRoot, scriptsRaw);
 
       const mapId = mapJson.id;
       // wild Pokémon
@@ -102,7 +125,8 @@ export async function parseLocations(
       }
 
       // For test purposes, quickly generate 1 map
-      const onlyGenerateOneMap = true;
+      // IMPORTANT: True = only petalburg will generate a map
+      const onlyGenerateOneMap = false;
 
       // Determine if we should proceed with rendering this specific map
       const isTestMap = map.name === 'PetalburgCity_Gym' || map.name === 'PetalburgCity';
