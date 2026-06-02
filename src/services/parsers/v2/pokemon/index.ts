@@ -5,6 +5,7 @@ import type { FileContent } from '../../../fileReader';
 import type { ParsedItem } from '../items/types';
 import type { ParsedAttack } from '../moves/types';
 import type { ParsedAbility } from '../abilities';
+import { parseTMHMLearnsets } from './parsers/tmhmLearnsets';
 
 export function parsePokemon(
   files: Map<string, FileContent>,
@@ -52,6 +53,9 @@ export function parsePokemon(
     }
   }
 
+  // Parse TM/HM learnsets
+  const tmhmLearnsets = parseTMHMLearnsets(files, items, moves);
+
   const infoFiles = Array.from(files.entries())
     .filter(([path]) => path.includes('src/data/pokemon/species_info'))
     .map(([, content]) => (typeof content === 'string' ? content : ''));
@@ -60,6 +64,7 @@ export function parsePokemon(
     const macros: Record<string, string> = {};
     const macroRegex = /#define\s+([A-Z0-9_]+)\s+([^/\n]+)/g;
     let macroMatch;
+
     while ((macroMatch = macroRegex.exec(file))) {
       if (!macros[macroMatch[1]]) {
         macros[macroMatch[1]] = macroMatch[2].trim();
@@ -67,6 +72,7 @@ export function parsePokemon(
     }
 
     const matches = [...file.matchAll(/\[\s*(SPECIES_[A-Z0-9_]+)\s*\]\s*=\s*\{/g)];
+
     for (let i = 0; i < matches.length; i++) {
       const speciesKey = matches[i][1];
       if (!pokemon[speciesKey]) continue;
@@ -78,12 +84,10 @@ export function parsePokemon(
       const nameMatch = body.match(/\.speciesName\s*=\s*_\("([^"]+)"\)/);
       if (nameMatch) pokemon[speciesKey].name = nameMatch[1];
 
-      // =====================================
-      // NEW: ENHANCED POKEDEX PARSING
-      // =====================================
       const descCompoundMatch = body.match(
         /\.description\s*=\s*COMPOUND_STRING\(\s*((?:"[^"]*"\s*)+)\)/,
       );
+
       if (descCompoundMatch) {
         pokemon[speciesKey].pokedexEntry = descCompoundMatch[1]
           .replace(/"/g, '')
@@ -153,6 +157,11 @@ export function parsePokemon(
         pokemon[speciesKey].levelUpLearnset = levelUpLearnsets[pointer];
       }
 
+      // NEW: Attach TM/HM learnsets
+      if (tmhmLearnsets[speciesKey]) {
+        pokemon[speciesKey].tmhmLearnset = tmhmLearnsets[speciesKey];
+      }
+
       const evosMatch = body.match(/\.evolutions\s*=\s*EVOLUTION\(([\s\S]*?)\)(?:,|\s*\n)/);
       if (evosMatch) {
         const evoDetails = [
@@ -160,7 +169,6 @@ export function parsePokemon(
             /\{\s*(EVO_[A-Z0-9_]+)\s*,\s*([^,]+)\s*,\s*(SPECIES_[A-Z0-9_]+)\s*\}/g,
           ),
         ];
-
         pokemon[speciesKey].evolutions = evoDetails.map((m) => ({
           method: m[1],
           param: m[2].trim(),

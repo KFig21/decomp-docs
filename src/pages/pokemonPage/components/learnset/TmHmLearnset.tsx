@@ -9,7 +9,7 @@ type Props = {
   learnset: any[];
 };
 
-export default function Learnset({ learnset }: Props) {
+export default function TmHmLearnset({ learnset }: Props) {
   const [isOpen, setIsOpen] = useState(true);
 
   // UPDATED: Support both the old SPLIT_ and new DAMAGE_CATEGORY_ syntax
@@ -27,7 +27,7 @@ export default function Learnset({ learnset }: Props) {
     <div className="section pokemon-card-style">
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
-        <span>Level Up Moves</span>
+        <span>Teachable Moves</span>
       </div>
       {isOpen && (
         <div className="table-container content" style={{ overflowX: 'auto' }}>
@@ -35,7 +35,7 @@ export default function Learnset({ learnset }: Props) {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th className="center">Level</th>
+                  <th className="left">Method</th>
                   <th className="left">Move</th>
                   <th className="center">Type</th>
                   <th className="center">Cat.</th>
@@ -47,26 +47,29 @@ export default function Learnset({ learnset }: Props) {
               <tbody>
                 {learnset.map((learnData: any, i: number) => {
                   const move = learnData.move;
-                  const moveName = move.name || formatReadableName(move);
-                  const moveType = move.type ? move.type.replace('type_', '') : '';
+                  const item = learnData.tm;
+
+                  const moveName = move?.name || formatReadableName(move);
+                  const itemName = item?.name || 'TM / Tutor';
+                  const moveType = move?.type ? move.type.replace('type_', '') : '';
 
                   return (
                     <tr key={i}>
-                      <td className="center">{learnData.lvl === 0 ? 'Evo' : learnData.lvl}</td>
+                      <td style={{ color: !item ? 'var(--fadedFont)' : 'inherit' }}>{itemName}</td>
                       <td>{moveName}</td>
                       <td className="center">{moveType ? <TypeBadge type={moveType} /> : '—'}</td>
                       {/* UPDATED: Check for category first, fallback to split */}
-                      <td className="center">{formatCategory(move.category || move.split)}</td>
-                      <td className="center">{formatNumber(move.power)}</td>
-                      <td className="center">{move.accuracy ? `${move.accuracy}%` : '—'}</td>
-                      <td className="center">{formatNumber(move.pp)}</td>
+                      <td className="center">{formatCategory(move?.category || move?.split)}</td>
+                      <td className="center">{formatNumber(move?.power)}</td>
+                      <td className="center">{move?.accuracy ? `${move.accuracy}%` : '—'}</td>
+                      <td className="center">{formatNumber(move?.pp)}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
           ) : (
-            <p className="empty-state">No level-up moves parsed.</p>
+            <p className="empty-state">No teachable moves parsed.</p>
           )}
         </div>
       )}

@@ -12,5 +12,6 @@ export interface ParsedAttack {
   effect?: RawIdentifier;
   target?: RawIdentifier;
   split?: RawIdentifier;
+  category?: RawIdentifier;
   flags?: RawIdentifier[];
 }

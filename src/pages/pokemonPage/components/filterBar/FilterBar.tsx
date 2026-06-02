@@ -54,7 +54,7 @@ const ENCOUNTERS = [
 export default function FilterBar(props: Props) {
   return (
     <div className="pokemon-filter-bar">
-      {/* ROW 1: General Search & Sort */}
+      {/* Name search */}
       <div className="filter-row">
         <div className="input-group search-group">
           <input
@@ -64,7 +64,7 @@ export default function FilterBar(props: Props) {
             onChange={(e) => props.setSearchTerm(e.target.value)}
           />
         </div>
-
+        {/* Sort by */}
         <div className="input-group">
           <label>Sort By</label>
           <select value={props.sortBy} onChange={(e) => props.setSortBy(e.target.value)}>
@@ -74,7 +74,7 @@ export default function FilterBar(props: Props) {
             <option value="type">Primary Type</option>
           </select>
         </div>
-
+        {/* Obtainable toggle */}
         <div className="input-group checkbox-group">
           <label className="toggle-label">
             <input
@@ -85,10 +85,7 @@ export default function FilterBar(props: Props) {
             Obtainable Only
           </label>
         </div>
-        {/* </div> */}
-
-        {/* ROW 2: Deep Filters */}
-        {/* <div className="filter-row"> */}
+        {/* Type filter */}
         <div className="input-group">
           <label>Type</label>
           <select value={props.typeFilter} onChange={(e) => props.setTypeFilter(e.target.value)}>
@@ -99,7 +96,7 @@ export default function FilterBar(props: Props) {
             ))}
           </select>
         </div>
-
+        {/* Encounter type filter */}
         <div className="input-group">
           <label>Encounter</label>
           <select
@@ -113,7 +110,7 @@ export default function FilterBar(props: Props) {
             ))}
           </select>
         </div>
-
+        {/* BST range filter */}
         <div className="input-group bst-group">
           <label>BST Range</label>
           <input
@@ -130,7 +127,7 @@ export default function FilterBar(props: Props) {
             onChange={(e) => props.setMaxBst(e.target.value)}
           />
         </div>
-
+        {/* Move search */}
         <div className="input-group">
           <label>Move</label>
           <input

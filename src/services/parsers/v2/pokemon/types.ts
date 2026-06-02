@@ -10,7 +10,7 @@ export type LevelUpEntry = {
 };
 
 export type TMHMEntry = {
-  tm: ParsedItem;
+  tm?: ParsedItem;
   move: ParsedAttack;
 };
 

@@ -5,6 +5,7 @@ import HeaderCard from './components/headerCard/HeaderCard';
 import EvolutionFamily from './components/evolutionFamily/EvolutionFamily';
 import BaseStats from './components/baseStats/BaseStats';
 import Learnset from './components/learnset/Learnset';
+import TmHmLearnset from './components/learnset/TmHmLearnset'; // <-- ADDED IMPORT
 import WildLocations from './components/wildLocations/WildLocations';
 import TrainersBlock from './components/trainersBlock/TrainersBlock';
 
@@ -27,6 +28,7 @@ export default function PokemonDetailPage() {
       <EvolutionFamily selected={selected} />
       <BaseStats stats={selected.baseStats} bst={bst as number} />
       <Learnset learnset={selected.levelUpLearnset} />
+      <TmHmLearnset learnset={selected.tmhmLearnset} />
       <WildLocations selectedKey={selected.key} />
       <TrainersBlock selectedKey={selected.key} />
     </div>
