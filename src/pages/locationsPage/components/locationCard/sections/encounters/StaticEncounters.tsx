@@ -1,5 +1,5 @@
-// src/pages/locationsPage/components/locationCard/sections/encounters/StaticEncounters.tsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { StaticEncounter } from '../../../../../../services/parsers/v2/locations/types';
 import PokemonSprite from '../../../../../../components/elements/sprites/PokemonSprite';
 import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
@@ -17,6 +17,7 @@ export default function StaticEncounters({
   parentOpen = true,
 }: Props) {
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (expandAll || parentOpen) {
@@ -49,7 +50,10 @@ export default function StaticEncounters({
                 {encounters.map((enc, i) => (
                   <tr key={i}>
                     <td>
-                      <div className="encounter-mon">
+                      <div
+                        className="encounter-mon clickable"
+                        onClick={() => navigate(`/pokemon/${enc.species.key}`)}
+                      >
                         <PokemonSprite name={enc.species.name} size={32} />
                         <span>{enc.species.name}</span>
                       </div>

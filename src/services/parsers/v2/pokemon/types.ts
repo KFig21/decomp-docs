@@ -26,10 +26,16 @@ export type PokemonTrainerRef = {
   trainerKey: string;
 };
 
+export type EvolutionInfo = {
+  method: string;
+  param: string;
+  targetSpecies: RawIdentifier;
+};
+
 export interface ParsedPokemon {
   key: RawIdentifier;
-
   name: string;
+  pokedexEntry?: string;
 
   baseStats: {
     hp: number;
@@ -51,6 +57,11 @@ export interface ParsedPokemon {
 
   locations: PokemonLocationRef[];
   trainers: PokemonTrainerRef[];
+
+  evolutions: EvolutionInfo[];
+  preEvolutions: RawIdentifier[];
+  isObtainable?: boolean;
+  isSeen?: boolean;
 }
 
 export type PokemonMap = Record<RawIdentifier, ParsedPokemon>;

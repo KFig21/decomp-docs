@@ -1,0 +1,76 @@
+// src/pages/pokemonPage/components/trainersBlock/styles.scss
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.pokemon-detail-trainers {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 16px;
+
+    .trainer-usage-row {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 24px;
+        padding: 16px;
+        background-color: var(--backgroundColor);
+        border: 1px solid var(--containerBorderColor);
+        border-radius: 8px;
+        overflow-x: hidden;
+
+        .trainer-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 150px;
+
+            .trainer-card-container {
+                margin-right: 0;
+            }
+
+            .trainer-location-info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                color: var(--fadedFont);
+                font-size: 0.85rem;
+                text-align: center;
+                background-color: var(--containerBgColor);
+                border: 1px solid var(--containerBorderColor);
+                border-radius: 6px;
+                padding: 6px;
+
+                .location-name {
+                    font-weight: 700;
+                    color: var(--fontColor);
+                    font-size: 0.95rem;
+                }
+            }
+        }
+
+        .trainer-party-full {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 4px;
+            flex: 1;
+
+            &::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: color-mix(in srgb, var(--containerBgColor), transparent 50%);
+                border-radius: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: var(--containerBorderColor);
+                border-radius: 4px;
+            }
+        }
+    }
+}

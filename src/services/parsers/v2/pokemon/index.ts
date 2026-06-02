@@ -12,94 +12,61 @@ export function parsePokemon(
   moves: Record<string, ParsedAttack>,
   abilities: Record<string, ParsedAbility>,
 ): Record<string, any> {
-  // 1. Setup base pokemon keys
   const pokemonSpeciesFile = getFile(files, 'include/constants/species.h')!;
   const pokemon = parseSpeciesConstants(pokemonSpeciesFile);
 
-  // 2. Pre-parse all Level-Up Learnsets into a pointer map
+  const pokedexDict: Record<string, string> = {};
+  const pokedexTextFile = getFile(files, 'src/data/pokemon/pokedex_text.h');
+  if (pokedexTextFile) {
+    const descRegex = /const\s+u8\s+([A-Za-z0-9_]+)\[\]\s*=\s*_\(\s*((?:"[^"]*"\s*)+)\)/g;
+    let m;
+    while ((m = descRegex.exec(pokedexTextFile))) {
+      const key = m[1];
+      const text = m[2].replace(/"/g, '').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim();
+      pokedexDict[key] = text;
+    }
+  }
+
   const levelUpLearnsets: Record<string, any[]> = {};
-
-  // LOOSE REGEX: Matches `sBagonLevelUpLearnset[] = { ... };` regardless of struct types or u16 modifiers
   const learnsetRegex = /(s[A-Za-z0-9_]+LevelUpLearnset)\[\]\s*=\s*\{([\s\S]*?)\};/g;
-
-  // LOOSE REGEX: Matches the LEVEL_UP_MOVE macro and handles spaces natively
   const moveRegex = /LEVEL_UP_MOVE\s*\(\s*(\d+)\s*,\s*([A-Z0-9_]+)\s*\)/g;
 
-  // Scan all data files to catch learnsets across all gen_X.h files
   const pokemonDataFiles = Array.from(files.entries())
     .filter(([path]) => path.includes('src/data/pokemon'))
     .map(([path, content]) => ({ path, content: typeof content === 'string' ? content : '' }));
 
-  console.log(`[Learnset Debug] Found ${pokemonDataFiles.length} files in src/data/pokemon`);
-
-  let totalLearnsetsFound = 0;
-  let totalMovesMapped = 0;
-  const missedMoves = new Set<string>();
-
-  for (const { path, content } of pokemonDataFiles) {
+  for (const { content } of pokemonDataFiles) {
     let learnsetMatch;
-    let fileLearnsetCount = 0;
-
     while ((learnsetMatch = learnsetRegex.exec(content))) {
-      fileLearnsetCount++;
-      totalLearnsetsFound++;
-
       const pointerName = learnsetMatch[1];
       const body = learnsetMatch[2];
       const entries = [];
-
       let moveMatch;
       while ((moveMatch = moveRegex.exec(body))) {
         const lvl = Number(moveMatch[1]);
         let moveKey = moveMatch[2];
-
-        // Ensure MOVE_ prefix exists just in case the macro omits it
-        if (!moveKey.startsWith('MOVE_')) {
-          moveKey = `MOVE_${moveKey}`;
-        }
-
-        if (moves[moveKey]) {
-          entries.push({ lvl, move: moves[moveKey] });
-          totalMovesMapped++;
-        } else {
-          missedMoves.add(moveKey);
-        }
+        if (!moveKey.startsWith('MOVE_')) moveKey = `MOVE_${moveKey}`;
+        if (moves[moveKey]) entries.push({ lvl, move: moves[moveKey] });
       }
-
       levelUpLearnsets[pointerName] = entries;
-
-      // Specifically track Bagon to see if it's being parsed correctly
-      if (pointerName.includes('Bagon')) {
-        console.log(
-          `[Learnset Debug] Parsed ${pointerName} from ${path} with ${entries.length} moves.`,
-        );
-      }
-    }
-
-    if (fileLearnsetCount > 0) {
-      console.log(`[Learnset Debug] Parsed ${fileLearnsetCount} learnsets from ${path}`);
     }
   }
 
-  console.log(`[Learnset Debug] Total Learnsets Found: ${totalLearnsetsFound}`);
-  console.log(`[Learnset Debug] Total Moves Successfully Mapped: ${totalMovesMapped}`);
-
-  if (missedMoves.size > 0) {
-    console.warn(
-      `[Learnset Debug] Some moves were found in learnsets but NOT in the parsed moves dictionary:`,
-      Array.from(missedMoves).slice(0, 15),
-    );
-  }
-
-  // 3. Scan all files inside the species_info directory
   const infoFiles = Array.from(files.entries())
     .filter(([path]) => path.includes('src/data/pokemon/species_info'))
     .map(([, content]) => (typeof content === 'string' ? content : ''));
 
-  // 4. Extract consolidated data from species_info blocks
   for (const file of infoFiles) {
-    const matches = [...file.matchAll(/\[\s*(SPECIES_[A-Z0-9_]+)\s*\]\s*=\s*\{/g)];
+    const macros: Record<string, string> = {};
+    const macroRegex = /#define\s+([A-Z0-9_]+)\s+([^/\n]+)/g;
+    let macroMatch;
+    while ((macroMatch = macroRegex.exec(file))) {
+      if (!macros[macroMatch[1]]) {
+        macros[macroMatch[1]] = macroMatch[2].trim();
+      }
+    }
 
+    const matches = [...file.matchAll(/\[\s*(SPECIES_[A-Z0-9_]+)\s*\]\s*=\s*\{/g)];
     for (let i = 0; i < matches.length; i++) {
       const speciesKey = matches[i][1];
       if (!pokemon[speciesKey]) continue;
@@ -108,30 +75,59 @@ export function parsePokemon(
       const end = i + 1 < matches.length ? matches[i + 1].index! : file.length;
       const body = file.slice(start, end);
 
-      // Name
       const nameMatch = body.match(/\.speciesName\s*=\s*_\("([^"]+)"\)/);
       if (nameMatch) pokemon[speciesKey].name = nameMatch[1];
 
-      // Base Stats
-      const readStat = (stat: string) =>
-        Number(body.match(new RegExp(`\\.${stat}\\s*=\\s*(\\d+)`))?.[1] || 0);
+      // =====================================
+      // NEW: ENHANCED POKEDEX PARSING
+      // =====================================
+      const descCompoundMatch = body.match(
+        /\.description\s*=\s*COMPOUND_STRING\(\s*((?:"[^"]*"\s*)+)\)/,
+      );
+      if (descCompoundMatch) {
+        pokemon[speciesKey].pokedexEntry = descCompoundMatch[1]
+          .replace(/"/g, '')
+          .replace(/\\n/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      } else {
+        const descMatch = body.match(/\.description\s*=\s*([A-Za-z0-9_]+)/);
+        if (descMatch && pokedexDict[descMatch[1]]) {
+          pokemon[speciesKey].pokedexEntry = pokedexDict[descMatch[1]];
+        }
+      }
+
+      const readStat = (stat: string, altStat?: string) => {
+        const regex = altStat
+          ? `\\.(?:${stat}|${altStat})\\s*=\\s*([^,\\n]+)`
+          : `\\.${stat}\\s*=\\s*([^,\\n]+)`;
+        let valStr = body.match(new RegExp(regex))?.[1]?.trim();
+        if (!valStr) return 0;
+        if (macros[valStr]) valStr = macros[valStr];
+        if (valStr.includes('?')) {
+          const afterQuestion = valStr.split('?')[1];
+          const match = afterQuestion.match(/\d+/);
+          return match ? Number(match[0]) : 0;
+        }
+        const match = valStr.match(/\d+/);
+        return match ? Number(match[0]) : 0;
+      };
+
       pokemon[speciesKey].baseStats = {
         hp: readStat('baseHP'),
         attack: readStat('baseAttack'),
         defense: readStat('baseDefense'),
-        spAttack: readStat('baseSpAttack'),
-        spDefense: readStat('baseSpDefense'),
+        spAttack: readStat('baseSpAttack', 'baseSpAtk'),
+        spDefense: readStat('baseSpDefense', 'baseSpDef'),
         speed: readStat('baseSpeed'),
       };
 
-      // Typings
       const typesMatch = body.match(/\.types\s*=\s*MON_TYPES\(([^)]+)\)/);
       if (typesMatch) {
         const t = typesMatch[1].split(',').map((s) => s.trim());
         pokemon[speciesKey].types = [t[0], t[1] || null] as any;
       }
 
-      // Abilities
       const abilitiesMatch = body.match(/\.abilities\s*=\s*\{([^}]+)\}/);
       if (abilitiesMatch) {
         const abilityKeys = abilitiesMatch[1]
@@ -141,11 +137,9 @@ export function parsePokemon(
         pokemon[speciesKey].abilities = abilityKeys.map((k) => abilities[k]).filter(Boolean);
       }
 
-      // Attach Level Up Learnsets
       const explicitLearnsetMatch = body.match(/\.levelUpLearnset\s*=\s*([a-zA-Z0-9_]+)/);
       let pointer = explicitLearnsetMatch ? explicitLearnsetMatch[1] : null;
 
-      // Dynamically generate the fallback pointer
       if (!pointer) {
         const camelCase = speciesKey
           .replace('SPECIES_', '')
@@ -155,21 +149,31 @@ export function parsePokemon(
         pointer = `s${camelCase}LevelUpLearnset`;
       }
 
-      // Link the learnset to the Pokémon
       if (levelUpLearnsets[pointer]) {
         pokemon[speciesKey].levelUpLearnset = levelUpLearnsets[pointer];
+      }
 
-        if (speciesKey === 'SPECIES_BAGON') {
-          console.log(
-            `[Learnset Debug] Successfully linked ${levelUpLearnsets[pointer].length} moves to SPECIES_BAGON via pointer: ${pointer}`,
-          );
-        }
-      } else {
-        if (speciesKey === 'SPECIES_BAGON' || speciesKey === 'SPECIES_BULBASAUR') {
-          console.warn(
-            `[Learnset Debug] MISSING LEARNSET! Could not find pointer: "${pointer}" for ${speciesKey}`,
-          );
-        }
+      const evosMatch = body.match(/\.evolutions\s*=\s*EVOLUTION\(([\s\S]*?)\)(?:,|\s*\n)/);
+      if (evosMatch) {
+        const evoDetails = [
+          ...evosMatch[1].matchAll(
+            /\{\s*(EVO_[A-Z0-9_]+)\s*,\s*([^,]+)\s*,\s*(SPECIES_[A-Z0-9_]+)\s*\}/g,
+          ),
+        ];
+
+        pokemon[speciesKey].evolutions = evoDetails.map((m) => ({
+          method: m[1],
+          param: m[2].trim(),
+          targetSpecies: m[3],
+        }));
+      }
+    }
+  }
+
+  for (const mon of Object.values(pokemon)) {
+    for (const evo of mon.evolutions) {
+      if (pokemon[evo.targetSpecies]) {
+        pokemon[evo.targetSpecies].preEvolutions.push(mon.key);
       }
     }
   }

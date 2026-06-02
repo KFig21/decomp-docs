@@ -1,0 +1,89 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.evolution-family-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    padding: 24px 16px;
+    gap: 16px;
+
+    .evo-tree-node {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .evo-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        background-color: var(--backgroundColor);
+        border: 1px solid var(--containerBorderColor);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 120px;
+
+        &:hover {
+            border-color: var(--primaryColor);
+            transform: translateY(-2px);
+        }
+
+        &.active {
+            border-color: var(--primaryColor);
+            background-color: color-mix(in srgb, var(--primaryColor), transparent 90%);
+            cursor: default;
+            transform: none;
+        }
+
+        .evo-name {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--fontColor);
+        }
+    }
+
+    .evo-arrow {
+        font-size: 1.5rem;
+        color: var(--fadedFont);
+        font-weight: bold;
+    }
+
+    .evo-branches {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center;
+
+        .evo-branch {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+
+            .evo-arrow-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                width: 100px;
+
+                .evo-method-text {
+                    font-size: 0.75rem;
+                    color: var(--primaryColor);
+                    font-weight: 600;
+                    text-align: center;
+                    background-color: color-mix(in srgb, var(--primaryColor), transparent 85%);
+                    padding: 2px 6px;
+                    border-radius: 12px;
+                }
+            }
+        }
+    }
+}

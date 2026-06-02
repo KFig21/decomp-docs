@@ -9,6 +9,22 @@
     overflow: hidden;
     width: 130px;
     min-width: 130px;
+    outline: 1px solid var(--containerBorderColor);
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        outline: 1px solid var(--primaryColor);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px color-mix(in srgb, var(--containerBgColor), transparent 50%);
+    }
+
+    &.highlighted {
+        outline: 3px solid var(--primaryColor);
+        outline-offset: -1px;
+        box-shadow: 0 0 12px color-mix(in srgb, var(--primaryColor), transparent 50%);
+        transform: translateY(-2px);
+    }
 
     .sprite-wrapper {
         background-color: var(--backgroundColor);
@@ -39,7 +55,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding-top: 1px; // may be unnecessary
+            padding-top: 1px;
             gap: 8px;
             background-color: var(--containerBorderColor);
 

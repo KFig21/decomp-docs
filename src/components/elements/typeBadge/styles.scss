@@ -1,0 +1,87 @@
+@use './../../../styles/index.scss' as *;
+@use './../../../styles/colors.scss' as *;
+
+.type-badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: monospace;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+    display: inline-block;
+
+    // types
+    &.type-type_normal {
+        background-color: var(--normalType);
+    }
+
+    &.type-type_fire {
+        background-color: var(--fireType);
+    }
+
+    &.type-type_water {
+        background-color: var(--waterType);
+    }
+
+    &.type-type_electric {
+        background-color: var(--electricType);
+    }
+
+    &.type-type_grass {
+        background-color: var(--grassType);
+    }
+
+    &.type-type_ice {
+        background-color: var(--iceType);
+    }
+
+    &.type-type_fighting {
+        background-color: var(--fightingType);
+    }
+
+    &.type-type_poison {
+        background-color: var(--poisonType);
+    }
+
+    &.type-type_ground {
+        background-color: var(--groundType);
+    }
+
+    &.type-type_flying {
+        background-color: var(--flyingType);
+    }
+
+    &.type-type_psychic {
+        background-color: var(--psychicType);
+    }
+
+    &.type-type_bug {
+        background-color: var(--bugType);
+    }
+
+    &.type-type_rock {
+        background-color: var(--rockType);
+    }
+
+    &.type-type_ghost {
+        background-color: var(--ghostType);
+    }
+
+    &.type-type_dragon {
+        background-color: var(--dragonType);
+    }
+
+    &.type-type_dark {
+        background-color: var(--darkType);
+    }
+
+    &.type-type_steel {
+        background-color: var(--steelType);
+    }
+
+    &.type-type_fairy {
+        background-color: var(--fairyType);
+    }
+}

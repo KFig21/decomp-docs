@@ -1,0 +1,40 @@
+// src/pages/pokemonPage/components/baseStats/styles.scss
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.stats-container {
+    padding-bottom: 16px;
+
+    .stat-row {
+        display: grid;
+        grid-template-columns: 60px 40px 1fr;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+
+        .stat-label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--fadedFont);
+        }
+
+        .stat-value {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .stat-bar-wrapper {
+            width: 100%;
+            height: 12px;
+            background-color: var(--backgroundColor);
+            border-radius: 6px;
+            overflow: hidden;
+
+            .stat-bar {
+                height: 100%;
+                background-color: var(--primaryColor);
+                border-radius: 6px;
+            }
+        }
+    }
+}

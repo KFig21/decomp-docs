@@ -1,59 +1,110 @@
 @use './../../styles/index.scss' as *;
 @use './../../styles/colors.scss' as *;
 
+// -- POKEMON MASTER/DETAIL LAYOUT --
 .pokemon-page {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--backgroundColor);
+}
 
-    .page-content {
+.pokemon-page-content {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    flex: 1;
+    overflow: hidden;
+}
+
+// -- POKEMON DETAIL AREA --
+.pokemon-detail-area {
+    height: 100%;
+    overflow-y: auto;
+    background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    position: relative;
+
+    .empty-selection {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 100%;
+        height: 100%;
+        color: var(--fadedFont);
 
-        .pokemon-list {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            flex-direction: column;
-            width: 100%;
-            max-width: 800px;
-            height: calc(100vh - $topbarHeight);
-            overflow-y: scroll;
-
-            .pokemon-list-item {
-                width: 100%;
-                cursor: pointer;
-                border: 1px solid var(--containerBorderColor);
-                padding: 0px 20px;
-                display: grid;
-                grid-template-columns: 48px 120px 120px 100px;
-                align-items: center;
-                gap: 8px;
-
-                .pokemon-name {
-                    font-weight: bold;
-                }
-
-                .pokemon-types {
-                    gap: 8px;
-                    display: flex;
-                    flex-direction: row;
-
-                    .type-badge {
-                        background-color: gray;
-                        font-size: .75rem;
-                        padding: 0px 8px;
-                        border-radius: 20px;
-                        color: white;
-                        font-weight: 600;
-                    }
-                }
-
-                .pokemon-bst {
-                    font-size: 0.8rem;
-                }
-            }
+        h2 {
+            margin: 16px 0 8px 0;
+            color: var(--fontColor);
         }
+
+        img {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+    }
+}
+
+// -- POKEMON DETAIL PANE COMPONENTS --
+.pokemon-detail-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 36px;
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
+// -- SHARED SUBCOMPONENT STYLES --
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+
+    th,
+    td {
+        border: 1px solid var(--containerBorderColor);
+        padding: 6px 12px;
+        text-align: left;
+        background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    }
+
+    th {
+        background-color: color-mix(in srgb, var(--backgroundColor), black 40%);
+
+        &.center {
+            text-align: center;
+        }
+    }
+
+    td.center {
+        text-align: center;
+    }
+}
+
+.empty-state {
+    color: rgba(255, 255, 255, 0.35);
+    font-style: italic;
+    font-size: 0.9rem;
+    padding-bottom: 16px;
+}
+
+.pokemon-card-style {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        padding: 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+    }
+
+    .content {
+        padding: 16px;
     }
 }

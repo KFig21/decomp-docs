@@ -102,6 +102,42 @@ export async function parseDecompV2(
   if (checkCancel?.()) throw new Error('CANCELLED');
   attachItemLocations(items, locations);
 
+  // Determine obtainability
+  if (onProgress) onProgress('Determining Pokemon obtainability...', m.attach + 1);
+  await delay(100);
+
+  // A Set to track visited nodes so we don't infinitely loop on branching evos
+  const visitedFamilies = new Set<string>();
+
+  // A recursive graph traversal function
+  const markFamilyAsObtainable = (speciesKey: string) => {
+    if (visitedFamilies.has(speciesKey)) return;
+    visitedFamilies.add(speciesKey);
+
+    const mon = pokemon[speciesKey];
+    if (!mon) return;
+
+    mon.isObtainable = true;
+
+    // Traverse upwards (evolutions) - UPDATED TO USE TARGETSPECIES
+    (mon.evolutions || []).forEach((evo: any) => markFamilyAsObtainable(evo.targetSpecies));
+
+    // Traverse downwards (pre-evolutions)
+    (mon.preEvolutions || []).forEach(markFamilyAsObtainable);
+  };
+
+  // Find any Pokémon that has an encounter or trainer, and light up its whole family! - Separate Seen vs Obtainable
+  for (const mon of Object.values(pokemon)) {
+    // 1. Is it in the game at all? (Wild, Gift, OR Trainer)
+    mon.isSeen =
+      (mon.locations && mon.locations.length > 0) || (mon.trainers && mon.trainers.length > 0);
+
+    // 2. Only trigger family traversal if the PLAYER can obtain it (Wild or Gift)
+    if (mon.locations && mon.locations.length > 0) {
+      markFamilyAsObtainable(mon.key);
+    }
+  }
+
   if (onProgress) onProgress('Complete!', m.complete);
   await delay(500);
 

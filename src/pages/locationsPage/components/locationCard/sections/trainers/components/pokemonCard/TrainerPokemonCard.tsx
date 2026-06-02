@@ -1,24 +1,29 @@
+import { useNavigate } from 'react-router-dom';
 import type { ParsedTrainerPokemon } from '../../../../../../../../services/parsers/v2/trainers/types';
 import PokemonSprite from '../../../../../../../../components/elements/sprites/PokemonSprite';
 import './styles.scss';
 
 type Props = {
   pokemon: ParsedTrainerPokemon;
+  highlight?: boolean;
 };
 
 const MAX_MOVES = 4;
 
-export default function TrainerPokemonCard({ pokemon }: Props) {
+export default function TrainerPokemonCard({ pokemon, highlight }: Props) {
   const { species, level, moves = [] } = pokemon;
+  const navigate = useNavigate();
 
   return (
-    <div className="trainer-pokemon-container">
+    <div
+      className={`trainer-pokemon-container ${highlight ? 'highlighted' : ''}`}
+      onClick={() => navigate(`/pokemon/${species.key}`)}
+    >
       <div className="sprite-wrapper">
         <div className="sprite-container">
           <PokemonSprite name={species.name} />
         </div>
       </div>
-
       <div className="mon-info">
         {/* Name */}
         <div className="name-container">
@@ -30,18 +35,9 @@ export default function TrainerPokemonCard({ pokemon }: Props) {
           <div className="mon-info-detail">Level {level}</div>
         </div>
 
-        {/* Nature */}
-        {/* TODO: Figure out how NATURES are determined */}
-        {/* <div className="nature-container">
-          <div className="mon-info-detail">{pokemon.nature ? pokemon.nature.name : 'Nature'}</div>
-        </div> */}
-
         {/* Ability */}
         <div className="ability-container">
-          <div className="mon-info-detail">
-            {/* FIX: Safely chain into the array index */}
-            {species.abilities?.[0]?.name ?? 'None'}
-          </div>
+          <div className="mon-info-detail">{species.abilities?.[0]?.name ?? 'None'}</div>
         </div>
 
         {/* Moves */}

@@ -122,6 +122,21 @@ export async function parseLocations(
             }
           }
         }
+
+        // Attach Static Encounters (Gifts/Legendaries) to the Pokemon's locations!
+        for (const enc of map.staticEncounters) {
+          const mon = enc.species;
+          if (!mon) continue;
+          const exists = mon.locations.some(
+            (loc) => loc.locationKey === locationRoot && loc.mapKey === mapId,
+          );
+          if (!exists) {
+            mon.locations.push({
+              locationKey: locationRoot,
+              mapKey: mapId,
+            });
+          }
+        }
       }
 
       // For test purposes, quickly generate 1 map

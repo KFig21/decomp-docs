@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { WildEncounterTable } from '../../../../../../services/parsers/v2/locations/types';
 import { formatReadableName } from '../../../../../../utils/functions';
 import PokemonSprite from '../../../../../../components/elements/sprites/PokemonSprite';
@@ -13,6 +14,7 @@ type Props = {
 
 export default function Encounters({ table, expandAll = true, parentOpen = true }: Props) {
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (expandAll || parentOpen) {
@@ -23,16 +25,12 @@ export default function Encounters({ table, expandAll = true, parentOpen = true 
 
   const formatEncounterTableName = (name: string) => {
     let formattedName = formatReadableName(name);
-    // Additional formatting rules
-    // remove 'Mons' suffix
     if (formattedName.includes(' Mons')) {
       formattedName = formattedName.replace(' Mons', '');
     }
-    // if name is 'Water' change to 'Surfing'
     if (formattedName === 'Water') {
       formattedName = 'Surfing';
     }
-    // if name includes 'Fishing' , remove 'Fishing'
     if (formattedName.includes('Fishing')) {
       formattedName = formattedName.replace('Fishing', '');
     }
@@ -63,10 +61,16 @@ export default function Encounters({ table, expandAll = true, parentOpen = true 
                 {table.encounters.map((mon, i) => {
                   const { minLevel, maxLevel, rate } = mon;
                   const species = mon.pokemon?.name || 'Unknown';
+
                   return (
                     <tr key={i}>
                       <td>
-                        <div className="encounter-mon">
+                        <div
+                          className="encounter-mon clickable"
+                          onClick={() =>
+                            mon.pokemon?.key && navigate(`/pokemon/${mon.pokemon.key}`)
+                          }
+                        >
                           <PokemonSprite name={species} size={32} />
                           <span>{species}</span>
                         </div>
