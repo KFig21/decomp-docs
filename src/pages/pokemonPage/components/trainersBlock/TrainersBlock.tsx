@@ -60,16 +60,18 @@ export default function TrainersBlock({ selectedKey }: Props) {
                         {formatReadableName(item.trainer.location?.mapKey || 'Unknown')}
                       </div>
                     </div>
-                    <TrainerCard trainer={item.trainer} />
                   </div>
-                  <div className="trainer-party-full">
-                    {item.trainer.party.map((mon: any, idx: number) => (
-                      <TrainerPokemonCard
-                        key={idx}
-                        pokemon={mon}
-                        highlight={mon.species?.key === selectedKey}
-                      />
-                    ))}
+                  <div className="trainer-party-container">
+                    <div className="trainer-party-full">
+                      <TrainerCard trainer={item.trainer} />
+                      {item.trainer.party.map((mon: any, idx: number) => (
+                        <TrainerPokemonCard
+                          key={idx}
+                          pokemon={mon}
+                          highlight={mon.species?.key === selectedKey}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
