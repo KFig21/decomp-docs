@@ -20,7 +20,7 @@ export function parseTrainersFile(
     if (enumKey === 'TRAINER_NONE') continue;
 
     const blockContent = blocks[i + 1].trim();
-    const lines = blockContent.split('\n').map((l) => l.trim());
+    const lines = blockContent.split('\n');
 
     let currentSection = 'TRAINER';
     let rawName = enumKey.replace('TRAINER_', '');
@@ -32,12 +32,10 @@ export function parseTrainersFile(
     let currentMon: any = null;
 
     for (let j = 0; j < lines.length; j++) {
-      const line = lines[j];
+      // Strip inline comments and trim whitespace
+      const line = lines[j].split('//')[0].trim();
 
-      // Skip single line C-comments
-      if (line.startsWith('//')) continue;
-
-      // An empty line dictates a switch to the Pokémon section, or the next Pokémon
+      // An empty line dictates a switch to the next Pokémon
       if (!line) {
         if (currentSection === 'TRAINER') {
           currentSection = 'POKEMON';
@@ -50,11 +48,18 @@ export function parseTrainersFile(
       }
 
       if (currentSection === 'TRAINER') {
-        if (line.startsWith('Name:')) rawName = line.split(':')[1].trim();
-        else if (line.startsWith('Class:')) trainerClassRaw = line.split(':')[1].trim();
-        else if (line.startsWith('Pic:')) trainerPicRaw = line.split(':')[1].trim();
-        else if (line.startsWith('Double Battle:'))
-          doubleBattle = line.split(':')[1].trim().toLowerCase() === 'yes';
+        // Trainer attributes always have a colon.
+        if (line.includes(':')) {
+          if (line.startsWith('Name:')) rawName = line.split(':')[1].trim();
+          else if (line.startsWith('Class:')) trainerClassRaw = line.split(':')[1].trim();
+          else if (line.startsWith('Pic:')) trainerPicRaw = line.split(':')[1].trim();
+          else if (line.startsWith('Double Battle:'))
+            doubleBattle = line.split(':')[1].trim().toLowerCase() === 'yes';
+        } else {
+          // If we hit text without a colon, it's a Pokemon (The decomp forgot the blank line!)
+          currentSection = 'POKEMON';
+          currentMon = parseSpeciesLine(line, items);
+        }
       } else {
         // POKEMON PARSING
         if (!currentMon) {
@@ -78,7 +83,7 @@ export function parseTrainersFile(
       }
     }
 
-    // Catch the final Pokémon if the file ends without a trailing newline
+    // Catch the final Pokémon if the file ends abruptly
     if (currentMon) {
       const finalized = finalizeMon(currentMon, pokemon);
       if (finalized) party.push(finalized);
@@ -131,11 +136,9 @@ export function parseTrainersFile(
 function parseSpeciesLine(line: string, items: Record<string, any>) {
   const mon = { speciesKey: '', level: 100, iv: 31, heldItem: undefined, moves: [] as any[] };
 
-  // Format: Nickname (Species) (M) @ Item OR Species (F) @ Item OR Species
   const parts = line.split('@');
   if (parts.length > 1) {
     const itemStr = parts[1].trim();
-    // Sanitizes names like "King's Rock" -> "KINGS_ROCK"
     const safeItem = itemStr
       .toUpperCase()
       .replace(/[^A-Z0-9]/g, '_')
@@ -146,14 +149,11 @@ function parseSpeciesLine(line: string, items: Record<string, any>) {
   }
 
   let speciesPart = parts[0].trim();
-  // Strip gender markers (M) or (F)
   speciesPart = speciesPart.replace(/\s*\([MF]\)\s*$/, '').trim();
 
-  // Strip nicknames if present to get the base species
   const nicknameMatch = speciesPart.match(/^(.*?)\s*\((.*?)\)$/);
   const speciesStr = nicknameMatch ? nicknameMatch[2].trim() : speciesPart;
 
-  // Sanitizes names like "Ho-Oh" -> "HO_OH" or "Mime Jr." -> "MIME_JR"
   const safeSpecies = speciesStr
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '_')
@@ -165,15 +165,22 @@ function parseSpeciesLine(line: string, items: Record<string, any>) {
 }
 
 function parseIVs(line: string) {
-  // Grab the first numerical value as an approximation of IVs for the engine
   const match = line.match(/\d+/);
   return match ? parseInt(match[0], 10) : 31;
 }
 
 function finalizeMon(monDraft: any, pokemon: Record<string, any>): ParsedTrainerPokemon | null {
-  const species = pokemon[monDraft.speciesKey];
+  let species = pokemon[monDraft.speciesKey];
 
-  // SAFETY GUARD: If the lookup fails, drop the Pokémon gracefully instead of crashing the UI
+  // Provide fallbacks if the parsed species key doesn't exactly match the decomp constants
+  if (!species) {
+    species = pokemon[`${monDraft.speciesKey}_NORMAL`];
+  }
+
+  if (!species && monDraft.speciesKey.endsWith('_NORMAL')) {
+    species = pokemon[monDraft.speciesKey.replace('_NORMAL', '')];
+  }
+
   if (!species) {
     console.warn(
       `[Parser] Could not find species for key: "${monDraft.speciesKey}". Skipping this Pokémon.`,
@@ -181,13 +188,11 @@ function finalizeMon(monDraft: any, pokemon: Record<string, any>): ParsedTrainer
     return null;
   }
 
-  // Assign Default Moves if none were explicitly written in the `.party` file
   if (monDraft.moves.length === 0 && species.levelUpLearnset) {
     const validMoves = species.levelUpLearnset
       .filter((m: any) => m.lvl <= monDraft.level)
       .map((m: any) => m.move);
 
-    // The engine automatically assigns the 4 most recently learned moves
     monDraft.moves = validMoves.slice(-4);
   }
 

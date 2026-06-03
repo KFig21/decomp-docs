@@ -13,26 +13,19 @@ export function parseMapGroups(mapGroups: MapGroupsJson): Record<string, Locatio
   const locations: Record<string, LocationRoot> = {};
 
   for (const [groupName, maps] of Object.entries(mapGroups)) {
-    // Skip the ordering metadata
-    if (groupName === 'group_order') continue;
-    // Skip non-array map definitions
-    if (!Array.isArray(maps)) continue;
+    if (groupName === 'group_order' || !Array.isArray(maps)) continue;
 
     const mapType = getMapType(groupName);
 
     for (const mapName of maps) {
-      const root = getRootName(mapName);
+      // Pass the groupName context here!
+      const root = getRootName(mapName, groupName);
 
       if (!locations[root]) {
-        locations[root] = {
-          root,
-          maps: {},
-        };
+        locations[root] = { root, maps: {} };
       }
-
       locations[root].maps[mapName] = createEmptyLocationMap(mapName, mapType);
     }
   }
-
   return locations;
 }

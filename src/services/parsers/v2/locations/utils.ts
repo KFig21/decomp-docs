@@ -11,7 +11,6 @@ export function resolveTrainerFromObjectEvents(
   // EventScript_Drew_1 → DREW_1
   const match = script.match(/EventScript_([A-Za-z0-9_]+)/);
   if (!match) return null;
-
   const scriptKey = match[1].toUpperCase();
 
   // Search ALL variants
@@ -24,8 +23,9 @@ export function resolveTrainerFromObjectEvents(
         return variant;
       }
 
-      // Fallback: script omits suffix (_1, _2, etc)
-      if (enumKey.startsWith(scriptKey + '_')) {
+      // Fallback: script omits suffix, but the trainer has a NUMBERED suffix (_1, _2)
+      // FIX: Using regex ^..._[0-9]+$ prevents EventScript_Fisherman from hijacking FISHERMAN_CHIP
+      if (enumKey.match(new RegExp(`^${scriptKey}_[0-9]+$`))) {
         return variant;
       }
     }
@@ -41,12 +41,12 @@ export function resolveTrainersFromScripts(
 ): ParsedTrainerVariant[] {
   const found: ParsedTrainerVariant[] = [];
 
-  const battleRegex = /trainerbattle[\s\S]*?(TRAINER_[A-Z0-9_]+)/g;
+  // FIX: Use [^\n]*? instead of [\s\S]*? to strictly prevent regex bleeding across newlines
+  const battleRegex = /trainerbattle[^\n]*?(TRAINER_[A-Z0-9_]+)/g;
 
   let match: RegExpExecArray | null;
   while ((match = battleRegex.exec(scripts))) {
     const trainerKey = match[1];
-
     for (const trainer of Object.values(trainers)) {
       const variant = trainer.variants.find((v) => v.key === trainerKey);
       if (variant && !found.some((f) => f.key === variant.key)) {
@@ -60,18 +60,19 @@ export function resolveTrainersFromScripts(
 
 export function resolveItemFromScript(script: string | null, items: Record<string, any>) {
   if (!script) return null;
-
   // Route111_EventScript_ItemSitrusBerry2
   const match = script.match(/Item([A-Za-z0-9_]+)/);
   if (!match) return null;
-
   const itemKey = `ITEM_${match[1].toUpperCase()}`;
   return items[itemKey] ?? null;
 }
 
-export function getRootName(mapName: string): string {
-  // DewfordTown_House1 → DewfordTown
-  // Route111_WinstrateHouse → Route111
+export function getRootName(mapName: string, groupName: string): string {
+  // If the group has an FRLG suffix, we force the root to include it.
+  // This cleanly separates "VictoryRoad" (Emerald) from "VictoryRoad_Frlg" (Kanto)
+  if (groupName.endsWith('_Frlg')) {
+    return `${mapName.split('_')[0]}_Frlg`;
+  }
   return mapName.split('_')[0];
 }
 
@@ -86,5 +87,6 @@ export function createEmptyLocationMap(
     items: [],
     npcs: [],
     wildPokemon: [],
+    staticEncounters: [],
   };
 }
