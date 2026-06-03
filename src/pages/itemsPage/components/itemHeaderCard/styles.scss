@@ -1,0 +1,65 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.item-header-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 24px;
+    gap: 32px;
+
+    .sprite-showcase {
+        background-color: var(--backgroundColor);
+        border-radius: 8px;
+        padding: 16px;
+        border: 1px solid var(--containerBorderColor);
+        min-width: 130px;
+        max-width: 130px;
+        display: flex;
+        justify-content: center;
+
+        .sprite-wrapper {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            image-rendering: pixelated;
+        }
+    }
+
+    .header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .item-name {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--fontColor);
+            text-transform: capitalize;
+        }
+
+        .price-info {
+            color: var(--fadedFont);
+            font-size: 0.95rem;
+
+            strong {
+                color: var(--fontColor);
+            }
+        }
+
+        .item-description {
+            display: flex;
+            margin: 0;
+            color: var(--fontColor);
+            font-size: 0.9rem;
+            font-style: italic;
+            background-color: color-mix(in srgb, var(--backgroundColor), white 2%);
+            padding: 12px;
+            border-left: 3px solid var(--primaryColor);
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+    }
+}

@@ -1,0 +1,128 @@
+@use '../../styles/index.scss' as *;
+@use '../../styles/colors.scss' as *;
+
+// -- ITEMS MASTER/DETAIL LAYOUT --
+.items-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--backgroundColor);
+}
+
+.items-filter-bar {
+    padding: 16px;
+    background-color: var(--containerBgColor);
+    border-bottom: 1px solid var(--containerBorderColor);
+    flex-shrink: 0; // Prevents the search bar from squishing
+
+    .items-search-input {
+        width: 100%;
+        padding: 10px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--containerBorderColor);
+        background: var(--backgroundColor);
+        color: var(--fontColor);
+    }
+}
+
+.items-page-content {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0; // Crucial fix: forces grid to respect parent boundaries
+}
+
+// -- ITEMS DETAIL AREA --
+.items-detail-area {
+    height: 100%;
+    overflow-y: auto;
+    background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    position: relative;
+
+    .empty-selection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--fadedFont);
+
+        h2 {
+            margin: 16px 0 8px 0;
+            color: var(--fontColor);
+        }
+    }
+}
+
+// -- ITEMS DETAIL PANE --
+.items-detail-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 36px;
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
+// -- SHARED ITEM COMPONENTS --
+.item-card-style {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        padding: 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+
+    th,
+    td {
+        border: 1px solid var(--containerBorderColor);
+        padding: 6px 12px;
+        text-align: left;
+        background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    }
+
+    th {
+        background-color: color-mix(in srgb, var(--backgroundColor), black 40%);
+
+        &.center {
+            text-align: center;
+        }
+    }
+
+    td.center {
+        text-align: center;
+    }
+
+    td.capitalize {
+        text-transform: capitalize;
+    }
+
+    .location-link {
+        color: var(--fontColor);
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

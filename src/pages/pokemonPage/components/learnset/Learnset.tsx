@@ -55,7 +55,6 @@ export default function Learnset({ learnset }: Props) {
                       <td className="center">{learnData.lvl === 0 ? 'Evo' : learnData.lvl}</td>
                       <td>{moveName}</td>
                       <td className="center">{moveType ? <TypeBadge type={moveType} /> : '—'}</td>
-                      {/* UPDATED: Check for category first, fallback to split */}
                       <td className="center">{formatCategory(move.category || move.split)}</td>
                       <td className="center">{formatNumber(move.power)}</td>
                       <td className="center">{move.accuracy ? `${move.accuracy}%` : '—'}</td>

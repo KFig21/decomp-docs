@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 import type { ParsedMapItem } from '../../../../../../services/parsers/v2/locations/types';
 import ItemSprite from '../../../../../../components/elements/sprites/ItemSprite';
@@ -42,12 +43,17 @@ export default function ItemsSection({ items, expandAll = true, parentOpen = tru
                   return (
                     <tr key={i}>
                       <td>
-                        <div className="encounter-item">
-                          <ItemSprite item={item} />
-                          <span>{item.name}</span>
-                        </div>
+                        {/* WRAPPED IN LINK AND STYLED */}
+                        <Link
+                          to={`/items/${item.key}`}
+                          style={{ textDecoration: 'none', color: 'var(--fontColor)' }}
+                        >
+                          <div className="encounter-item">
+                            <ItemSprite item={item} />
+                            <span>{item.name}</span>
+                          </div>
+                        </Link>
                       </td>
-                      {/* TODO: Fix whatever this hard-coded value is */}
                       <td>
                         <div className="encounter-rate">{mappedItem.quantity || 1}</div>
                       </td>

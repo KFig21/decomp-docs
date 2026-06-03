@@ -9,13 +9,18 @@ type Props = {
 };
 
 export default function TrainerCard({ trainer }: Props) {
-  const { name, trainerClass, sprite, items } = trainer;
+  const { name, trainerClass, trainerPic, items } = trainer;
+  console.log('trainer', trainer);
   return (
     <div className="trainer-card-container">
       <div className="trainer-sprite-wrapper">
         <div className="trainer-sprite-container">
-          {/* If we have a sprite name from the parser, pass it to TrainerSprite */}
-          <TrainerSprite trainerClass={sprite ?? trainerClass} size={64} />
+          <TrainerSprite
+            name={name}
+            trainerClass={trainerPic ?? trainerClass}
+            sprite={trainerPic}
+            size={64}
+          />
         </div>
       </div>
 

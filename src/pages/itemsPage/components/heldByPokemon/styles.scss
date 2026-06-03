@@ -1,0 +1,28 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.held-by-grid {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+
+    .held-by-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--fontColor);
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+
+        .pokemon-name {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+    }
+}

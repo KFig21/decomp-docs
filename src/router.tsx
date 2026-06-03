@@ -10,6 +10,7 @@ import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
 import type { ParsedItem } from './services/parsers/v2/items/types';
 import type { ParsedTrainerVariant } from './services/parsers/v2/trainers/types';
 import { useState } from 'react';
+import ItemsPage from './pages/itemsPage/ItemsPage';
 
 type RouterArgs = {
   projectName: string;
@@ -39,6 +40,8 @@ export function CreateRouter({ projectName, setProjectName }: RouterArgs) {
         { path: '/locations/:id', element: <LocationDetailPage /> },
         { path: '/pokemon', element: <PokemonPage /> },
         { path: '/pokemon/:id', element: <PokemonPage /> },
+        { path: '/items', element: <ItemsPage /> },
+        { path: '/items/:id', element: <ItemsPage /> },
       ],
     },
   ]);

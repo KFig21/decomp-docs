@@ -1,32 +1,41 @@
-import { POKEMON_MAP } from '../../../utils/pokemon';
+import { useState } from 'react';
+import { getShowdownSlug } from '../../../utils/pokemon';
 
 type Props = {
   name: string;
   size?: number;
 };
 
-export default function PokemonSprite({ name, size = 48 }: Props) {
-  // normalize the name
-  let safeName = name.toLowerCase().replace('species_', '').replaceAll('_', '');
-  // capitalize first letter
-  safeName = safeName.charAt(0).toUpperCase() + safeName.slice(1);
+export default function PokemonSprite({ name, size = 64 }: Props) {
+  const [imgError, setImgError] = useState(false);
 
-  const pokemonId = POKEMON_MAP[safeName] ?? 0; // fallback to 0 if not found
+  // Format the name using our new Showdown rule
+  const slug = getShowdownSlug(name);
 
-  const src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+  // Hit the highly reliable Pokemon Showdown sprite repository
+  const spriteUrl = `https://play.pokemonshowdown.com/sprites/dex/${slug}.png`;
 
   return (
-    <img
-      src={src}
-      alt={name}
-      width={size}
-      height={size}
-      loading="lazy"
-      onError={(e) => {
-        // fallback if sprite doesn't exist
-        (e.target as HTMLImageElement).src =
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png';
+    <div
+      style={{
+        width: size,
+        height: size,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
-    />
+    >
+      {!imgError ? (
+        <img
+          src={spriteUrl}
+          alt={name}
+          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        // Fallback rendering if the sprite is completely missing
+        <div style={{ fontSize: '0.7rem', color: 'var(--fadedFont)', textAlign: 'center' }}>?</div>
+      )}
+    </div>
   );
 }
