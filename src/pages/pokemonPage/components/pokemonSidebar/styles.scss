@@ -50,6 +50,11 @@
                 color: var(--fontColor);
                 overflow: hidden;
                 text-overflow: ellipsis;
+
+                .sidebar-dex-num {
+                    color: var(--fadedFont);
+                    font-size: 0.85em;
+                }
             }
 
             .pokemon-types {

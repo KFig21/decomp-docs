@@ -14,7 +14,7 @@ export default function BaseStats({ stats, bst }: Props) {
   if (!stats) return null;
 
   return (
-    <div className="section pokemon-card-style">
+    <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
         <span>Base Stats ({bst} BST)</span>

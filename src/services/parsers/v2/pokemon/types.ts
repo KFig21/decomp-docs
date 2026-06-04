@@ -36,6 +36,9 @@ export interface ParsedPokemon {
   key: RawIdentifier;
   name: string;
   pokedexEntry?: string;
+  natDexNum?: string | number;
+  baseSpeciesKey?: string;
+  variants?: ParsedPokemon[];
 
   baseStats: {
     hp: number;

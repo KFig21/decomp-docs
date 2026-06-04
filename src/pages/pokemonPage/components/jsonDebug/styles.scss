@@ -1,0 +1,73 @@
+@use '../../../../styles/index.scss' as *;
+
+.json-debug-container {
+    margin-top: 24px;
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .section-header-title {
+            padding-left: 8px;
+        }
+
+        .copy-btn {
+            background-color: var(--primaryColor);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+
+    .content {
+        // background-color: #272822;
+        padding: 16px;
+        border-radius: 0 0 8px 8px;
+        overflow-x: auto;
+    }
+}
+
+.json-view {
+    color: #4d4d4d;
+    background-color: transparent;
+    --json-property: #009033;
+    --json-index: #676dff;
+    --json-number: #676dff;
+    --json-string: #b2762e;
+    --json-boolean: #dc155e;
+    --json-null: #dc155e;
+}
+
+.json-view .json-view--property {
+    color: var(--json-property);
+}
+
+.json-view .json-view--index {
+    color: var(--json-index);
+}
+
+.json-view .json-view--number {
+    color: var(--json-number);
+}
+
+.json-view .json-view--string {
+    color: var(--json-string);
+}
+
+.json-view .json-view--boolean {
+    color: var(--json-boolean);
+}
+
+.json-view .json-view--null {
+    color: var(--json-null);
+}

@@ -24,7 +24,7 @@ export default function TmHmLearnset({ learnset }: Props) {
   };
 
   return (
-    <div className="section pokemon-card-style">
+    <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
         <span>Teachable Moves</span>

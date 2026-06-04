@@ -49,7 +49,14 @@ export default function PokemonSidebar({ filteredPokemon, activeId }: Props) {
               <div className="sprite-wrapper">
                 <PokemonSprite name={mon.name} />
               </div>
-              <div className="pokemon-name">{mon.name}</div>
+              <div className="pokemon-name">
+                {typeof mon.natDexNum === 'number' && (
+                  <span className="sidebar-dex-num">
+                    #{String(mon.natDexNum).padStart(3, '0')}{' '}
+                  </span>
+                )}
+                {mon.name}
+              </div>
               <div className="pokemon-types">
                 {uniqueTypes.map((type) => (
                   <TypeBadge key={type} type={type} />

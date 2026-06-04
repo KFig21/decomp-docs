@@ -65,7 +65,7 @@ export default function WildLocations({ selectedKey }: Props) {
   }, [locations, selectedKey]);
 
   return (
-    <div className="section pokemon-card-style">
+    <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
         <span>Wild Locations ({resolvedLocations.length})</span>

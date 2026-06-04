@@ -22,6 +22,10 @@
     .header-info {
         display: flex;
         flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%; // Ensure it takes the remaining space
+        min-height: 130px;
 
         .header-info-left {
             display: flex;
@@ -29,12 +33,19 @@
             align-items: center;
             justify-content: flex-start;
             gap: 1rem;
+            flex-wrap: wrap; // Prevents overflow on smaller screens
         }
 
         .pokemon-name {
             font-size: 2rem;
             font-weight: 900;
             color: var(--fontColor);
+
+            .dex-num {
+                color: var(--fadedFont);
+                font-weight: 700;
+                margin-right: 4px;
+            }
         }
 
         .pokemon-types {
@@ -53,9 +64,32 @@
             }
         }
 
+        // NEW DROPDOWN STYLES
+        .variant-selector {
+            margin-left: auto; // Pushes the dropdown to the far right
+
+            select {
+                background-color: color-mix(in srgb, var(--backgroundColor), white 5%);
+                color: var(--fontColor);
+                border: 1px solid var(--containerBorderColor);
+                padding: 6px 12px;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 0.9rem;
+                cursor: pointer;
+                outline: none;
+                transition: border-color 0.2s;
+
+                &:focus,
+                &:hover {
+                    border-color: var(--primaryColor);
+                }
+            }
+        }
+
         .pokedex-entry {
             display: flex;
-            margin: 0;
+            margin: 12px 0 0 0; // Adjusted margin to space away from the header row
             color: var(--fontColor);
             font-size: 0.9rem;
             font-style: italic;

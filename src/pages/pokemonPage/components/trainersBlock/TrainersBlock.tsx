@@ -40,7 +40,7 @@ export default function TrainersBlock({ selectedKey }: Props) {
   }, [trainers, pokemon, selectedKey]);
 
   return (
-    <div className="section pokemon-card-style">
+    <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
         <span>Used By Trainers ({trainersUsingMon.length})</span>

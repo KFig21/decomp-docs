@@ -10,7 +10,7 @@ type Props = {
 
 export default function TrainerCard({ trainer }: Props) {
   const { name, trainerClass, trainerPic, items } = trainer;
-  console.log('trainer', trainer);
+
   return (
     <div className="trainer-card-container">
       <div className="trainer-sprite-wrapper">

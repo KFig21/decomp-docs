@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
 import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
 import './styles.scss';
 
@@ -12,6 +14,7 @@ type Props = {
 export default function EvolutionFamily({ selected }: Props) {
   const { pokemon, items } = useData();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(true);
 
   const formatEvoMethod = (evo: any) => {
     const method = evo.method.replace('EVO_', '');
@@ -49,7 +52,9 @@ export default function EvolutionFamily({ selected }: Props) {
           className={`evo-node ${isSelected ? 'active' : ''}`}
           onClick={() => navigate(`/pokemon/${mon.key}`)}
         >
-          <PokemonSprite name={mon.name} size={64} />
+          {/* 🚀 ADDED speciesKey={mon.key} HERE */}
+          <PokemonSprite name={mon.name} speciesKey={mon.key} size={64} />
+
           <div className="evo-name">{mon.name}</div>
         </div>
 
@@ -73,11 +78,15 @@ export default function EvolutionFamily({ selected }: Props) {
   if (selected.preEvolutions.length === 0 && selected.evolutions.length === 0) return null;
 
   return (
-    <div className="section pokemon-card-style">
-      <div className="section-header">
+    <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
         <span>Evolution Family</span>
       </div>
-      <div className="content evolution-family-container">{renderEvoTree(rootEvoKey)}</div>
+
+      {isOpen && (
+        <div className="content evolution-family-container">{renderEvoTree(rootEvoKey)}</div>
+      )}
     </div>
   );
 }

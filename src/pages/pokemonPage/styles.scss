@@ -104,6 +104,12 @@
         border-bottom: 1px solid var(--containerBorderColor);
     }
 
+    &.collapsed {
+        .section-header {
+            border-bottom: none;
+        }
+    }
+
     .content {
         padding: 16px;
     }
