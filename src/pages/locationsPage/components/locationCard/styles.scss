@@ -119,9 +119,7 @@
 
         &.clickable {
             cursor: pointer;
-            padding: 4px;
-            margin: -4px;
-            border-radius: 6px;
+            margin: 0px -4px;
             transition: background-color 0.2s ease;
 
             &:hover {

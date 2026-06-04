@@ -8,6 +8,7 @@ import { parseMoves } from './moves/moves';
 import { parseNatures } from './natures';
 import { markItemsPlaced, markPokemonObtainable } from './obtainability';
 import { parsePokemon } from './pokemon';
+import { attachWildHeldItems } from './pokemon/attatchers/heldItems';
 import { parseTrainers } from './trainers';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,8 +19,6 @@ export async function parseDecompV2(
   onProgress?: (text: string, percent: number) => void,
   checkCancel?: () => boolean,
 ): Promise<any> {
-  // DYNAMIC MILESTONES: Compress the standard parsing steps to the first 7%
-  // if we know locations map rendering is going to take several minutes.
   const m = renderMaps
     ? {
         moves: 1,
@@ -46,7 +45,6 @@ export async function parseDecompV2(
         complete: 100,
       };
 
-  // Parse variables that do not depend on others first (moves, items, abilities, natures)
   if (onProgress) onProgress('Parsing moves...', m.moves);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
@@ -67,25 +65,22 @@ export async function parseDecompV2(
   if (checkCancel?.()) throw new Error('CANCELLED');
   const natures = parseNatures({ files });
 
-  // Then parse Pokémon, which depends on moves, items, and abilities
   if (onProgress) onProgress('Parsing Pokémon...', m.pokemon);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
   const pokemon = parsePokemon(files, items, moves, abilities);
 
-  // Then parse trainers, which depends on moves
   if (onProgress) onProgress('Parsing trainers...', m.trainers);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
   const trainers = parseTrainers(files, moves, items, pokemon);
 
-  // Finally, parse locations, which may depend on trainers, moves, and items
   if (onProgress) onProgress('Parsing locations...', m.locStart);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
 
-  // Pass the dynamic start and end percentages into the location parser
-  const locations = await parseLocations(
+  // ── Destructure the new return shape ──────────────────────────────────────
+  const { locations, scriptsByMap } = await parseLocations(
     files,
     items,
     trainers,
@@ -97,17 +92,26 @@ export async function parseDecompV2(
     checkCancel,
   );
 
-  // All data parsed, now attach references
+  // ── Attach item locations (overworld, hidden, mart, npc) ──────────────────
   if (onProgress) onProgress('Attaching item locations...', m.attach);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
-  attachItemLocations(items, locations);
+  attachItemLocations(items, locations, scriptsByMap);
 
-  // Determine obtainability
-  if (onProgress) onProgress('Determining Pokemon obtainability...', m.attach + 1);
+  // ── Attach wild held items (.itemCommon / .itemRare / .itemUncommon) ──────
+  if (onProgress) onProgress('Attaching wild held items...', m.attach + 1);
   await delay(100);
 
-  if (onProgress) onProgress('Determining obtainability...', m.attach + 1);
+  const speciesInfoContent = Array.from(files.entries())
+    .filter(([path]) => path.includes('src/data/pokemon/species_info'))
+    .map(([, content]) => (typeof content === 'string' ? content : ''))
+    .join('\n');
+
+  attachWildHeldItems(pokemon, items, speciesInfoContent);
+
+  // ── Obtainability ─────────────────────────────────────────────────────────
+  if (onProgress) onProgress('Determining Pokémon obtainability...', m.attach + 2);
+  await delay(100);
   markPokemonObtainable(pokemon, trainers);
   markItemsPlaced(items, pokemon, trainers, files);
 
@@ -122,12 +126,5 @@ export async function parseDecompV2(
   console.log('Parsed trainers:', trainers);
   console.log('Parsed locations:', locations);
 
-  return {
-    moves,
-    items,
-    abilities,
-    pokemon,
-    trainers,
-    locations,
-  };
+  return { moves, items, abilities, pokemon, trainers, locations };
 }

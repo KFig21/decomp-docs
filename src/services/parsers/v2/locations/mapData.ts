@@ -1,3 +1,5 @@
+// decomp-docs/src/services/parsers/v2/locations/mapData.ts
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocationMap } from './types';
 import type { ParsedTrainer } from '../trainers/types';
@@ -16,6 +18,7 @@ export function attachMapData(
   pokemon: Record<string, ParsedPokemon>,
   locationRoot: string,
   scripts?: string,
+  starters: string[] = [],
 ) {
   map.trainers = [];
   map.items = [];
@@ -32,8 +35,7 @@ export function attachMapData(
       // update location & map references for trainer
       trainer.location.locationKey = locationRoot;
       trainer.location.mapKey = map.name;
-
-      trainer.isPlaced = true; // 🚀 ADDED: This is what was missing!
+      trainer.isPlaced = true;
       continue;
     }
 
@@ -62,7 +64,7 @@ export function attachMapData(
     }
   }
 
-  // ---- SCRIPT-DRIVEN TRAINERS (ONCE PER MAP) ----
+  // ---- SCRIPT-DRIVEN TRAINERS & EVENTS (ONCE PER MAP) ----
   if (scripts) {
     const scripted = resolveTrainersFromScripts(scripts, trainers);
     for (const trainer of scripted) {
@@ -71,8 +73,18 @@ export function attachMapData(
         // update location & map references for trainer
         trainer.location.locationKey = locationRoot;
         trainer.location.mapKey = map.name;
-
         trainer.isPlaced = true;
+      }
+    }
+
+    // Catch the ChooseStarter special event
+    if (scripts.includes('special ChooseStarter')) {
+      for (const speciesStr of starters) {
+        const species = pokemon[speciesStr];
+        // Only push if it doesn't already exist on this map
+        if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
+          map.staticEncounters.push({ species, level: 5, method: 'Gift' });
+        }
       }
     }
 

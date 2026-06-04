@@ -17,17 +17,22 @@ export function parsePokemon(
   const pokemon = parseSpeciesConstants(pokemonSpeciesFile);
 
   const pokedexDict: Record<string, string> = {};
-  const pokedexTextFile = getFile(files, 'src/data/pokemon/pokedex_text.h');
+  const pokedexTextFiles = [
+    getFile(files, 'src/data/pokemon/pokedex_text.h'),
+    getFile(files, 'src/data/pokemon/species_info/shared_dex_text.h'), // Grab the shared fallback file!
+  ];
 
-  if (pokedexTextFile) {
-    // Make the _( or COMPOUND_STRING( completely optional so raw strings don't fail
-    const descRegex =
-      /const\s+u8\s+([A-Za-z0-9_]+)\[\]\s*=\s*(?:(?:_|\bCOMPOUND_STRING\b)\(\s*)?((?:"[^"]*"\s*)+)/g;
-    let m;
-    while ((m = descRegex.exec(pokedexTextFile))) {
-      const key = m[1];
-      const text = m[2].replace(/"/g, '').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim();
-      pokedexDict[key] = text;
+  for (const textFile of pokedexTextFiles) {
+    if (textFile) {
+      // Make the _( or COMPOUND_STRING( completely optional so raw strings don't fail
+      const descRegex =
+        /const\s+u8\s+([A-Za-z0-9_]+)\[\]\s*=\s*(?:(?:_|\bCOMPOUND_STRING\b)\(\s*)?((?:"[^"]*"\s*)+)/g;
+      let m;
+      while ((m = descRegex.exec(textFile))) {
+        const key = m[1];
+        const text = m[2].replace(/"/g, '').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim();
+        pokedexDict[key] = text;
+      }
     }
   }
 
