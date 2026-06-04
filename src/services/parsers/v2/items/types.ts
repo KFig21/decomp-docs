@@ -19,6 +19,7 @@ export interface ParsedItem {
   secondaryId?: string;
 
   locations: ItemLocationRef[];
+  isPlaced?: boolean;
 }
 export type ItemLocation = {
   location: string;

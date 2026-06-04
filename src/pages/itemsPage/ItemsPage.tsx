@@ -18,6 +18,7 @@ export default function ItemsPage() {
   const filteredItems = useMemo(() => {
     return itemsArray.filter((item) => {
       if (item.name === '??????????' || item.key === 'ITEM_NONE') return false;
+      if (!item.isPlaced) return false;
       if (searchTerm && !item.name?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       return true;
     });

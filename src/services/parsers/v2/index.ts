@@ -6,6 +6,7 @@ import { attachItemLocations } from './items/attachItemLocations';
 import { parseLocations } from './locations';
 import { parseMoves } from './moves/moves';
 import { parseNatures } from './natures';
+import { markItemsPlaced, markPokemonObtainable } from './obtainability';
 import { parsePokemon } from './pokemon';
 import { parseTrainers } from './trainers';
 
@@ -106,45 +107,9 @@ export async function parseDecompV2(
   if (onProgress) onProgress('Determining Pokemon obtainability...', m.attach + 1);
   await delay(100);
 
-  // A Set to track visited nodes so we don't infinitely loop on branching evos
-  const visitedFamilies = new Set<string>();
-
-  // A recursive graph traversal function
-  const markFamilyAsObtainable = (speciesKey: string) => {
-    if (visitedFamilies.has(speciesKey)) return;
-    visitedFamilies.add(speciesKey);
-
-    const mon = pokemon[speciesKey];
-    if (!mon) return;
-
-    mon.isObtainable = true;
-
-    // Traverse upwards (evolutions) - UPDATED TO USE TARGETSPECIES
-    (mon.evolutions || []).forEach((evo: any) => markFamilyAsObtainable(evo.targetSpecies));
-
-    // Traverse downwards (pre-evolutions)
-    (mon.preEvolutions || []).forEach(markFamilyAsObtainable);
-  };
-
-  // Find any Pokémon that has an encounter or trainer, and light up its whole family! - Separate Seen vs Obtainable
-  for (const mon of Object.values(pokemon)) {
-    // 🚀 Strictly check if any attached trainer is actually placed in the game
-    const isSeenFromTrainer = (mon.trainers || []).some((tRef: any) => {
-      for (const tGroup of Object.values(trainers) as any[]) {
-        const v = tGroup.variants.find((variant: any) => variant.key === tRef.trainerKey);
-        if (v && v.isPlaced) return true;
-      }
-      return false;
-    });
-
-    // 1. Is it in the game at all? (Wild, Gift, OR Placed Trainer)
-    mon.isSeen = (mon.locations && mon.locations.length > 0) || isSeenFromTrainer;
-
-    // 2. Only trigger family traversal if the PLAYER can obtain it (Wild or Gift)
-    if (mon.locations && mon.locations.length > 0) {
-      markFamilyAsObtainable(mon.key);
-    }
-  }
+  if (onProgress) onProgress('Determining obtainability...', m.attach + 1);
+  markPokemonObtainable(pokemon, trainers);
+  markItemsPlaced(items, pokemon, trainers, files);
 
   if (onProgress) onProgress('Complete!', m.complete);
   await delay(500);
