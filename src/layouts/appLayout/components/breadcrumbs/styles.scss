@@ -1,0 +1,112 @@
+// decomp-docs/src/layouts/appLayout/components/breadcrumbs/styles.scss
+
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.footer-bar {
+    height: 38px;
+    background-color: var(--containerBgColor);
+    border-top: 1px solid var(--containerBorderColor);
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    position: relative;
+    padding: 0;
+
+    .scroll-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bgColor);
+        border: none;
+        color: var(--fadedFont);
+        cursor: pointer;
+        padding: 0 12px;
+        height: 100%;
+        z-index: 2;
+        transition: color 0.15s, background-color 0.15s;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+
+        &:hover {
+            color: var(--primaryColor);
+            background-color: var(--containerBorderColor);
+        }
+
+        &.left {
+            border-right: 1px solid var(--containerBorderColor);
+        }
+
+        &.right {
+            border-left: 1px solid var(--containerBorderColor);
+        }
+    }
+
+    .breadcrumbs-scroll-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        flex: 1;
+        overflow-x: auto;
+        padding: 0 16px;
+        scroll-behavior: smooth;
+
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .breadcrumb-item-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .breadcrumb-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 8px 4px 4px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.15s ease-in-out;
+
+                &:hover {
+                    background-color: color-mix(in srgb, var(--fontColor), transparent 92%);
+
+                    .breadcrumb-link {
+                        color: var(--primaryColor);
+                    }
+                }
+
+                .breadcrumb-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 24px;
+                    height: 24px;
+                    color: var(--fadedFont);
+
+                    svg {
+                        width: 14px;
+                        height: 14px;
+                        fill: currentColor;
+                    }
+                }
+
+                .breadcrumb-link {
+                    color: var(--fontColor);
+                    font-weight: 500;
+                    transition: color 0.15s ease-in-out;
+                }
+            }
+
+            .separator {
+                color: color-mix(in srgb, var(--fontColor), transparent 70%);
+                user-select: none;
+            }
+        }
+    }
+}

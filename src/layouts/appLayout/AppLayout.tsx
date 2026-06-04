@@ -7,6 +7,7 @@ import { uploadIcon } from '../../components/elements/svgIcon/icons/uploadIcon';
 import { locationsIcon } from '../../components/elements/svgIcon/icons/locationsIcon';
 import { pokemonIcon } from '../../components/elements/svgIcon/icons/pokemonIcon';
 import { itemsIcon } from '../../components/elements/svgIcon/icons/itemsIcon';
+import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
 
 type Props = {
   projectName: string;
@@ -81,6 +82,9 @@ export default function AppLayout({ projectName, currentPage }: Props) {
       <main className="page-wrapper">
         <Outlet />
       </main>
+
+      {/* Footer Breadcrumbs */}
+      <Breadcrumbs currentPage={currentPage} />
 
       {/* Theme drawer */}
       <ThemeDrawer open={themeOpen} onClose={() => setThemeOpen(false)} />
