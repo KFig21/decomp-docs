@@ -138,11 +138,23 @@ export function parsePokemon(
       };
 
       // 2. TYPES FIX: Check the macros dictionary before assigning the type
-      const typesMatch = body.match(/\.types\s*=\s*MON_TYPES\(([^)]+)\)/);
-      if (typesMatch) {
-        const t = typesMatch[1].split(',').map((s) => s.trim());
+      // Now matches either MON_TYPES(...) OR a raw macro identifier like JIGGLYPUFF_FAMILY_TYPES
+      const typesMatch = body.match(/\.types\s*=\s*(?:MON_TYPES\(([^)]+)\)|([A-Z0-9_]+))/);
 
-        // If t[0] or t[1] is a macro (like RALTS_FAMILY_TYPE2), use the resolved macro value
+      if (typesMatch) {
+        let typeStr = typesMatch[1] || typesMatch[2];
+
+        // If the entire type string is a macro (e.g., JIGGLYPUFF_FAMILY_TYPES), resolve it
+        if (macros[typeStr]) {
+          typeStr = macros[typeStr];
+        }
+
+        // Clean up any curly braces returned by the macro (e.g., "{ TYPE_NORMAL, TYPE_FAIRY }")
+        typeStr = typeStr.replace(/[{}]/g, '');
+
+        const t = typeStr.split(',').map((s) => s.trim());
+
+        // If t[0] or t[1] is a sub-macro (like RALTS_FAMILY_TYPE2), use the resolved value
         const type1 = macros[t[0]] || t[0];
         const type2 = t[1] ? macros[t[1]] || t[1] : null;
 
