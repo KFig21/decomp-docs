@@ -32,6 +32,8 @@ export function attachMapData(
       // update location & map references for trainer
       trainer.location.locationKey = locationRoot;
       trainer.location.mapKey = map.name;
+
+      trainer.isPlaced = true; // 🚀 ADDED: This is what was missing!
       continue;
     }
 
@@ -69,6 +71,8 @@ export function attachMapData(
         // update location & map references for trainer
         trainer.location.locationKey = locationRoot;
         trainer.location.mapKey = map.name;
+
+        trainer.isPlaced = true;
       }
     }
 
@@ -79,7 +83,6 @@ export function attachMapData(
       const speciesStr = match[1];
       const level = parseInt(match[2], 10);
       const species = pokemon[speciesStr];
-
       if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
         map.staticEncounters.push({ species, level, method: 'Interaction' });
       }
@@ -91,7 +94,6 @@ export function attachMapData(
       const speciesStr = match[1];
       const level = parseInt(match[2], 10);
       const species = pokemon[speciesStr];
-
       if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
         map.staticEncounters.push({ species, level, method: 'Gift' });
       }

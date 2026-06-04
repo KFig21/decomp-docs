@@ -33,6 +33,7 @@ export interface ParsedTrainerVariant {
     locationKey: string;
     mapKey: string;
   };
+  isPlaced?: boolean;
 }
 
 export interface ParsedTrainerPokemon {

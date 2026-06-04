@@ -116,6 +116,7 @@ export function parseTrainersFile(
       partyType: 'NoItemCustomMoves',
       party,
       location: { locationKey: '', mapKey: '' },
+      isPlaced: false,
     };
 
     // Attach trainer key reference back to the species

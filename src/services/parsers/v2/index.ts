@@ -128,9 +128,17 @@ export async function parseDecompV2(
 
   // Find any Pokémon that has an encounter or trainer, and light up its whole family! - Separate Seen vs Obtainable
   for (const mon of Object.values(pokemon)) {
-    // 1. Is it in the game at all? (Wild, Gift, OR Trainer)
-    mon.isSeen =
-      (mon.locations && mon.locations.length > 0) || (mon.trainers && mon.trainers.length > 0);
+    // 🚀 Strictly check if any attached trainer is actually placed in the game
+    const isSeenFromTrainer = (mon.trainers || []).some((tRef: any) => {
+      for (const tGroup of Object.values(trainers) as any[]) {
+        const v = tGroup.variants.find((variant: any) => variant.key === tRef.trainerKey);
+        if (v && v.isPlaced) return true;
+      }
+      return false;
+    });
+
+    // 1. Is it in the game at all? (Wild, Gift, OR Placed Trainer)
+    mon.isSeen = (mon.locations && mon.locations.length > 0) || isSeenFromTrainer;
 
     // 2. Only trigger family traversal if the PLAYER can obtain it (Wild or Gift)
     if (mon.locations && mon.locations.length > 0) {

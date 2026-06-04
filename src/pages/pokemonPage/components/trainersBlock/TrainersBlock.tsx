@@ -23,8 +23,11 @@ export default function TrainersBlock({ selectedKey }: Props) {
     (selected.trainers || []).forEach((tRef: any) => {
       for (const group of Object.values(trainers) as any[]) {
         const variant = group.variants.find((v: any) => v.key === tRef.trainerKey);
-        if (variant) {
+
+        // ONLY process trainers that were successfully placed by the parser
+        if (variant && variant.isPlaced) {
           const monInParty = variant.party.find((m: any) => m.species?.key === selectedKey);
+
           if (monInParty) {
             const isDuplicate = results.some(
               (item) => item.trainer.key === variant.key && item.mon.level === monInParty.level,
