@@ -12,19 +12,18 @@ export type StaticEncounter = {
 export type LocationMap = {
   name: string;
   type: 'outdoor' | 'indoor' | 'special' | 'dungeon' | 'other';
-
   trainers: ParsedTrainerVariant[];
   items: ParsedMapItem[];
   npcs: ParsedNpc[];
   wildPokemon: WildEncounterTable[];
   staticEncounters: StaticEncounter[];
-  mapImage?: string; // Base64 encoded PNG
+  mapImage?: string;
 };
 
 export type LocationRoot = {
   root: string;
   maps: Record<string, LocationMap>;
-  order?: number; // Global sorting integer
+  order?: number;
 };
 
 export type MapGroupsJson = {
@@ -36,7 +35,8 @@ export type ParsedMapItem = {
   item: ParsedItem;
   x: number;
   y: number;
-  source: 'item_ball' | 'hidden_item' | 'npc';
+  // ── extended: berry_tree added ──
+  source: 'item_ball' | 'hidden_item' | 'npc' | 'berry_tree';
   quantity?: number;
 };
 
@@ -51,7 +51,6 @@ export type ParsedNpc = {
 };
 
 // --- Wild encounters types ---
-
 export interface WildPokemonEntry {
   pokemon: ParsedPokemon;
   minLevel: number;
@@ -60,12 +59,10 @@ export interface WildPokemonEntry {
 }
 
 export interface WildEncounterTable {
-  method: string; // land, water, fishing_old_rod, etc
-  encounterRate: number; // map-level rate
+  method: string;
+  encounterRate: number;
   encounters: WildPokemonEntry[];
 }
-
-// --- Wild encounters data parsed from JSON ('src/data/wild_encounters.json') ---
 
 export type WildEncounterPokemon_fromJson = {
   species: string;

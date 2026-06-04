@@ -1,35 +1,25 @@
-// decomp-docs/src/services/parsers/v2/items/attachItemLocations.ts
-//
-// Merges ALL item location sources into item.locations[]:
-//
-//   overworld  – item ball objects on the map
-//   hidden     – bg_event hidden_item tiles
-//   mart       – sold at a PokéMart counter  (.2byte lists in scripts.inc)
-//   npc        – given directly by an NPC    (giveitem / additem commands)
-//
-// Wild held items are NOT stored in item.locations – they live on
-// item.wildHolders[] (attached by attachWildHeldItems in heldItems.ts)
-// because they're Pokemon-centric, not map-centric.
-//
-// The ItemLocation type is extended with the new methods below.
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ItemLocation } from './types';
 import type { LocationRoot } from '../locations/types';
 import { parseMartItems } from '../locations/parseMartItems';
 import { parseNpcItems } from '../locations/parseNpcItems';
 
+// Maps map.items[].source -> ItemLocation method
+const SOURCE_TO_METHOD: Record<string, ItemLocation['method']> = {
+  item_ball: 'overworld',
+  hidden_item: 'hidden',
+  npc: 'npc',
+  berry_tree: 'berry_tree',
+};
+
 export function attachItemLocations(
   items: Record<string, any>,
   locations: Record<string, LocationRoot>,
-  // Raw scripts map: mapName -> scripts.inc content
-  // Pass this in from parseLocations where you already have it.
   scriptsByMap: Record<string, string>,
 ): void {
-  // ─── 1. OVERWORLD + HIDDEN (existing logic, unchanged) ───────────────────
-  // itemKey -> (dedupeKey -> ItemLocation)
   const byItem: Record<string, Record<string, ItemLocation>> = {};
 
+  // ─── 1. OVERWORLD + HIDDEN + BERRY TREE (from map.items[]) ───────────────
   for (const locationRoot of Object.values(locations)) {
     for (const map of Object.values(locationRoot.maps)) {
       if (!map.items) continue;
@@ -39,8 +29,7 @@ export function attachItemLocations(
         if (!itemKey) continue;
         if (!byItem[itemKey]) byItem[itemKey] = {};
 
-        const method: ItemLocation['method'] =
-          itemEvent.source === 'hidden_item' ? 'hidden' : 'overworld';
+        const method: ItemLocation['method'] = SOURCE_TO_METHOD[itemEvent.source] ?? 'overworld';
 
         const dedupeKey = `${locationRoot.root}|${map.name}|${method}`;
         const existing = byItem[itemKey][dedupeKey];
@@ -59,17 +48,16 @@ export function attachItemLocations(
     }
   }
 
-  // ─── 2. MART + NPC GIFTS (new – scan scripts per map) ────────────────────
+  // ─── 2. MART + NPC GIFTS (from scripts.inc) ───────────────────────────────
   for (const locationRoot of Object.values(locations)) {
     for (const map of Object.values(locationRoot.maps)) {
       const scripts = scriptsByMap[map.name];
       if (!scripts) continue;
 
-      // --- Mart items ---
+      // Mart
       const martEntries = parseMartItems(scripts, map.name, locationRoot.root, items);
       for (const [itemKey, entries] of Object.entries(martEntries)) {
         if (!byItem[itemKey]) byItem[itemKey] = {};
-
         for (const entry of entries) {
           const dedupeKey = `${entry.locationRoot}|${entry.mapName}|mart`;
           if (!byItem[itemKey][dedupeKey]) {
@@ -77,17 +65,16 @@ export function attachItemLocations(
               location: entry.locationRoot,
               map: entry.mapName,
               method: 'mart',
-              quantity: 1, // sold items have no fixed qty
+              quantity: 1,
             };
           }
         }
       }
 
-      // --- NPC gift items ---
+      // NPC gifts
       const npcEntries = parseNpcItems(scripts, map.name, locationRoot.root, items);
       for (const [itemKey, entries] of Object.entries(npcEntries)) {
         if (!byItem[itemKey]) byItem[itemKey] = {};
-
         for (const entry of entries) {
           const dedupeKey = `${entry.locationRoot}|${entry.mapName}|npc`;
           const existing = byItem[itemKey][dedupeKey];
@@ -106,7 +93,7 @@ export function attachItemLocations(
     }
   }
 
-  // ─── 3. Write merged locations back onto each item ────────────────────────
+  // ─── 3. Write back ────────────────────────────────────────────────────────
   for (const [itemKey, item] of Object.entries(items)) {
     const merged = byItem[itemKey];
     item.locations = merged ? Object.values(merged) : [];

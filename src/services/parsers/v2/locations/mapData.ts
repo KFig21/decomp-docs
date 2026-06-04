@@ -1,5 +1,3 @@
-// decomp-docs/src/services/parsers/v2/locations/mapData.ts
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LocationMap } from './types';
 import type { ParsedTrainer } from '../trainers/types';
@@ -9,6 +7,7 @@ import {
   resolveTrainerFromObjectEvents,
   resolveTrainersFromScripts,
 } from './utils';
+import { resolveBerryTreeItems } from './parseBerryTrees';
 
 export function attachMapData(
   map: LocationMap,
@@ -19,6 +18,8 @@ export function attachMapData(
   locationRoot: string,
   scripts?: string,
   starters: string[] = [],
+  // ── NEW: pass in the pre-built berry-tree lookup ──
+  berryTreeLookup: Map<string, string> = new Map(),
 ) {
   map.trainers = [];
   map.items = [];
@@ -32,7 +33,6 @@ export function attachMapData(
     const trainer = resolveTrainerFromObjectEvents(obj.script, trainers);
     if (trainer) {
       map.trainers.push(trainer);
-      // update location & map references for trainer
       trainer.location.locationKey = locationRoot;
       trainer.location.mapKey = map.name;
       trainer.isPlaced = true;
@@ -43,14 +43,14 @@ export function attachMapData(
     if (obj.graphics_id === 'OBJ_EVENT_GFX_ITEM_BALL') {
       const item = resolveItemFromScript(obj.script, items);
       if (item) {
-        map.items.push({
-          item,
-          x: obj.x,
-          y: obj.y,
-          source: 'item_ball',
-          quantity: 1,
-        });
+        map.items.push({ item, x: obj.x, y: obj.y, source: 'item_ball', quantity: 1 });
       }
+      continue;
+    }
+
+    // 🫐 BERRY TREES – resolved separately below (after loop)
+    if (obj.graphics_id === 'OBJ_EVENT_GFX_BERRY_TREE') {
+      continue; // handled in batch below
     }
 
     // 🧍 NPCs
@@ -64,48 +64,50 @@ export function attachMapData(
     }
   }
 
-  // ---- SCRIPT-DRIVEN TRAINERS & EVENTS (ONCE PER MAP) ----
+  // 🫐 Resolve all berry trees for this map in one pass
+  if (berryTreeLookup.size > 0) {
+    const berryItems = resolveBerryTreeItems(mapJson.object_events ?? [], berryTreeLookup, items);
+    map.items.push(...berryItems);
+  }
+
+  // ---- SCRIPT-DRIVEN TRAINERS & EVENTS ----
   if (scripts) {
     const scripted = resolveTrainersFromScripts(scripts, trainers);
     for (const trainer of scripted) {
       if (!map.trainers.some((t) => t.key === trainer.key)) {
         map.trainers.push(trainer);
-        // update location & map references for trainer
         trainer.location.locationKey = locationRoot;
         trainer.location.mapKey = map.name;
         trainer.isPlaced = true;
       }
     }
 
-    // Catch the ChooseStarter special event
+    // Starters
     if (scripts.includes('special ChooseStarter')) {
       for (const speciesStr of starters) {
         const species = pokemon[speciesStr];
-        // Only push if it doesn't already exist on this map
         if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
           map.staticEncounters.push({ species, level: 5, method: 'Gift' });
         }
       }
     }
 
-    // Parse setwildbattle (e.g., setwildbattle SPECIES_GROUDON, 70)
+    // setwildbattle
     const wildBattleRegex = /setwildbattle\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
     let match;
     while ((match = wildBattleRegex.exec(scripts))) {
-      const speciesStr = match[1];
+      const species = pokemon[match[1]];
       const level = parseInt(match[2], 10);
-      const species = pokemon[speciesStr];
       if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
         map.staticEncounters.push({ species, level, method: 'Interaction' });
       }
     }
 
-    // Parse givemon (e.g., givemon SPECIES_TREECKO, 5)
+    // givemon
     const givemonRegex = /givemon\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
     while ((match = givemonRegex.exec(scripts))) {
-      const speciesStr = match[1];
+      const species = pokemon[match[1]];
       const level = parseInt(match[2], 10);
-      const species = pokemon[speciesStr];
       if (species && !map.staticEncounters.some((e) => e.species.key === species.key)) {
         map.staticEncounters.push({ species, level, method: 'Gift' });
       }
@@ -117,12 +119,7 @@ export function attachMapData(
     if (bg.type === 'hidden_item') {
       const item = items[bg.item];
       if (item) {
-        map.items.push({
-          item,
-          x: bg.x,
-          y: bg.y,
-          source: 'hidden_item',
-        });
+        map.items.push({ item, x: bg.x, y: bg.y, source: 'hidden_item' });
       }
     }
   }

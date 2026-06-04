@@ -17,16 +17,8 @@ export interface ParsedItem {
   battleUseFunc?: RawIdentifier;
   flingPower?: number;
   secondaryId?: string;
-
-  /** Map/overworld/NPC/mart locations where this item can be obtained */
   locations: ItemLocationRef[];
-
-  /**
-   * Wild Pokémon that hold this item.
-   * Populated by attachWildHeldItems() in heldItems.ts.
-   */
   wildHolders?: WildHolderRef[];
-
   isPlaced?: boolean;
 }
 
@@ -36,9 +28,8 @@ export interface WildHolderRef {
 }
 
 export type ItemLocation = {
-  location: string; // LocationRoot key  e.g. "MauvilleCity"
-  map: string; // LocationMap key   e.g. "MauvilleCity_Mart"
+  location: string;
+  map: string;
   quantity: number;
-  method: 'overworld' | 'hidden' | 'npc' | 'mart';
-  // repeatable?: boolean;  // may add later
+  method: 'overworld' | 'hidden' | 'npc' | 'mart' | 'berry_tree';
 };

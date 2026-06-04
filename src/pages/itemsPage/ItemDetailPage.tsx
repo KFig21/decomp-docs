@@ -13,12 +13,12 @@ export default function ItemDetailPage() {
   const selected = itemsArray.find((i) => i.key === id);
 
   if (!selected) return <div className="items-detail-pane">Item not found!</div>;
-  console.log('selected:', selected);
+
   return (
     <div className="items-detail-pane">
       <ItemHeaderCard selected={selected} />
       <ItemLocations locations={selected.locations} />
-      <HeldByPokemon itemKey={selected.key} />
+      <HeldByPokemon item={selected} />
     </div>
   );
 }

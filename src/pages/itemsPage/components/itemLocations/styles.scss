@@ -1,0 +1,98 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+// ── Method badge palette ─────────────────────────────────────────────────────
+// Each method gets a distinct hue. We use CSS color-mix so it adapts to
+// both light and dark themes automatically.
+
+$method-colors: (
+    overworld: #3baf6a,
+    hidden: #8a63d2,
+    mart: #d4862f,
+    npc: #3a9bd4,
+    berry-tree: #d43a6e,
+    other: #7a8a9a,
+);
+
+// ── Section header with summary chips ───────────────────────────────────────
+.item-locations {
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .method-summary {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+}
+
+// ── Method chip (header summary) ─────────────────────────────────────────────
+.method-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+
+    @each $name, $color in $method-colors {
+        &--#{$name} {
+            background-color: color-mix(in srgb, #{$color}, transparent 82%);
+            color: #{$color};
+            border: 1px solid color-mix(in srgb, #{$color}, transparent 60%);
+        }
+    }
+}
+
+// ── Method badge (table cell) ─────────────────────────────────────────────────
+.method-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+
+    &__icon {
+        font-size: 0.85rem;
+        line-height: 1;
+    }
+
+    @each $name, $color in $method-colors {
+        &--#{$name} {
+            background-color: color-mix(in srgb, #{$color}, transparent 85%);
+            color: #{$color};
+            border: 1px solid color-mix(in srgb, #{$color}, transparent 55%);
+        }
+    }
+}
+
+// ── Table tweaks ──────────────────────────────────────────────────────────────
+.locations-table {
+    .map-name {
+        font-size: 0.85rem;
+        color: var(--fadedFont);
+        font-family: 'Courier New', monospace;
+    }
+
+    .qty-cell {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    // Subtle left accent per row method
+    @each $name, $color in $method-colors {
+        .loc-row--#{$name} td:first-child {
+            border-left: 3px solid color-mix(in srgb, #{$color}, transparent 40%);
+        }
+    }
+}
