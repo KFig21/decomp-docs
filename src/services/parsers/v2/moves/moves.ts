@@ -34,12 +34,11 @@ export function parseMoves({ files }: Args): Record<RawIdentifier, ParsedAttack>
     extractNumber(body, 'pp', attack);
     extractNumber(body, 'priority', attack);
     extractNumber(body, 'secondaryEffectChance', attack);
-
     extractIdentifier(body, 'type', attack);
     extractIdentifier(body, 'effect', attack);
     extractIdentifier(body, 'target', attack);
     extractIdentifier(body, 'split', attack);
-    extractIdentifier(body, 'category', attack); // <-- ADDED THIS
+    extractIdentifier(body, 'category', attack);
 
     const flagsMatch = body.match(/\.flags\s*=\s*([^,\n]+)/);
     if (flagsMatch) {
@@ -55,12 +54,32 @@ export function parseMoves({ files }: Args): Record<RawIdentifier, ParsedAttack>
   return attacks;
 }
 
+// --- HELPER FIXES FOR TERNARIES ---
+
 function extractNumber(body: string, field: keyof ParsedAttack, target: ParsedAttack) {
-  const m = body.match(new RegExp(`\\.${field}\\s*=\\s*(-?\\d+)`));
-  if (m) (target as any)[field] = Number(m[1]);
+  const regex = new RegExp(`\\.${field}\\s*=\\s*([^,\\n]+)`);
+  const m = body.match(regex);
+  if (m) {
+    let valStr = m[1].trim();
+    // If a ternary is found, take the left side of the colon (the modern/true branch)
+    if (valStr.includes('?')) {
+      valStr = valStr.split('?')[1].split(':')[0].trim();
+    }
+    const match = valStr.match(/-?\d+/);
+    if (match) (target as any)[field] = Number(match[0]);
+  }
 }
 
 function extractIdentifier(body: string, field: keyof ParsedAttack, target: ParsedAttack) {
-  const m = body.match(new RegExp(`\\.${field}\\s*=\\s*([A-Z0-9_]+)`));
-  if (m) (target as any)[field] = m[1];
+  const regex = new RegExp(`\\.${field}\\s*=\\s*([^,\\n]+)`);
+  const m = body.match(regex);
+  if (m) {
+    let valStr = m[1].trim();
+    // If a ternary is found, take the left side of the colon (the modern/true branch)
+    if (valStr.includes('?')) {
+      valStr = valStr.split('?')[1].split(':')[0].trim();
+    }
+    const idMatch = valStr.match(/([A-Z0-9_]+)/);
+    if (idMatch) (target as any)[field] = idMatch[1];
+  }
 }

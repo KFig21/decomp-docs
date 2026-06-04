@@ -65,9 +65,17 @@ export function parsePokemon(
     const macroRegex = /#define\s+([A-Z0-9_]+)\s+([^/\n]+)/g;
     let macroMatch;
 
+    // 1. MACRO FIX: Resolve ternaries while building the macro dictionary
     while ((macroMatch = macroRegex.exec(file))) {
+      let valStr = macroMatch[2].trim();
+
+      if (valStr.includes('?')) {
+        // Ex: (P_UPDATED_TYPES >= GEN_6 ? TYPE_FAIRY : TYPE_PSYCHIC) -> TYPE_FAIRY
+        valStr = valStr.split('?')[1].split(':')[0].replace(/[()]/g, '').trim();
+      }
+
       if (!macros[macroMatch[1]]) {
-        macros[macroMatch[1]] = macroMatch[2].trim();
+        macros[macroMatch[1]] = valStr;
       }
     }
 
@@ -106,8 +114,11 @@ export function parsePokemon(
           ? `\\.(?:${stat}|${altStat})\\s*=\\s*([^,\\n]+)`
           : `\\.${stat}\\s*=\\s*([^,\\n]+)`;
         let valStr = body.match(new RegExp(regex))?.[1]?.trim();
+
         if (!valStr) return 0;
         if (macros[valStr]) valStr = macros[valStr];
+
+        // Backup ternary catch for inline stats
         if (valStr.includes('?')) {
           const afterQuestion = valStr.split('?')[1];
           const match = afterQuestion.match(/\d+/);
@@ -126,10 +137,16 @@ export function parsePokemon(
         speed: readStat('baseSpeed'),
       };
 
+      // 2. TYPES FIX: Check the macros dictionary before assigning the type
       const typesMatch = body.match(/\.types\s*=\s*MON_TYPES\(([^)]+)\)/);
       if (typesMatch) {
         const t = typesMatch[1].split(',').map((s) => s.trim());
-        pokemon[speciesKey].types = [t[0], t[1] || null] as any;
+
+        // If t[0] or t[1] is a macro (like RALTS_FAMILY_TYPE2), use the resolved macro value
+        const type1 = macros[t[0]] || t[0];
+        const type2 = t[1] ? macros[t[1]] || t[1] : null;
+
+        pokemon[speciesKey].types = [type1, type2] as any;
       }
 
       const abilitiesMatch = body.match(/\.abilities\s*=\s*\{([^}]+)\}/);
