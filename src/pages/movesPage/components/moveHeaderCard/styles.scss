@@ -1,0 +1,124 @@
+// decomp-docs/src/pages/movesPage/components/moveHeaderCard/styles.scss
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.move-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--fontColor);
+    margin: 0;
+  }
+
+  &__badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 0;
+    background: color-mix(in srgb, var(--backgroundColor), black 4%);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  &__effect {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: color-mix(in srgb, var(--backgroundColor), white 2%);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+  }
+
+  &__effect-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fadedFont);
+  }
+
+  &__effect-value {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--fontColor);
+  }
+
+  &__flags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Stat cell ─────────────────────────────────────────────────────────────────
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 20px;
+  gap: 2px;
+  border-right: 1px solid var(--containerBorderColor);
+
+  &:last-child { border-right: none; }
+
+  &__label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fadedFont);
+    white-space: nowrap;
+  }
+
+  &__value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--fontColor);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Category badge ────────────────────────────────────────────────────────────
+.move-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--cat-color, #7a8a9a), transparent 82%);
+  color: var(--cat-color, #7a8a9a);
+  border: 1px solid color-mix(in srgb, var(--cat-color, #7a8a9a), transparent 55%);
+}
+
+// ── Flag chips ────────────────────────────────────────────────────────────────
+.move-flag-chip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--fontColor), transparent 88%);
+  color: var(--fadedFont);
+  border: 1px solid var(--containerBorderColor);
+}

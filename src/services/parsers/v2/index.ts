@@ -127,5 +127,6 @@ export async function parseDecompV2(
   console.log('Parsed trainers:', trainers);
   console.log('Parsed locations:', locations);
 
-  return { moves, items, abilities, pokemon, trainers, locations };
+  // ── Return ALL parsed data including abilities and natures ────────────────
+  return { moves, items, abilities, natures, pokemon, trainers, locations };
 }

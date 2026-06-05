@@ -1,0 +1,65 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import { normalizeMoveCategory, normalizeTypeName } from '../../MovesPage';
+import './styles.scss';
+
+type Props = {
+  filteredMoves: any[];
+  activeId?: string;
+  tmByMove: Record<string, any>;
+};
+
+const CATEGORY_ICON: Record<string, string> = {
+  Physical: '⚔️',
+  Special: '✨',
+  Status: '🔮',
+};
+
+export default function MoveSidebar({ filteredMoves, activeId, tmByMove }: Props) {
+  const activeRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (activeRef.current) {
+      activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [activeId]);
+
+  return (
+    <div className="moves-sidebar">
+      {filteredMoves.length === 0 && (
+        <p className="moves-sidebar__empty">No moves match your filters.</p>
+      )}
+      {filteredMoves.map((move: any) => {
+        const isActive = move.key === activeId;
+        const typeName = normalizeTypeName(move.type);
+        const category = normalizeMoveCategory(move.category || move.split);
+        const hasTm = !!tmByMove[move.key];
+
+        return (
+          <Link
+            key={move.key}
+            ref={isActive ? activeRef : null}
+            to={`/moves/${move.key}`}
+            className={`moves-sidebar-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="move-type-col">
+              {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} />}
+            </div>
+            <div className="move-name-col">
+              <span className="move-name">{move.name}</span>
+              {hasTm && <span className="tm-badge">TM</span>}
+            </div>
+            <div className="move-meta-col">
+              <span className="move-cat-icon" title={category}>
+                {CATEGORY_ICON[category] ?? '🔮'}
+              </span>
+              <span className="move-power">{move.power ? `${move.power}` : '—'}</span>
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}

@@ -1,0 +1,22 @@
+// decomp-docs/src/pages/movesPage/components/moveFilterBar/styles.scss
+// Inherits all .ms-dropdown, .active-pill, .filter-bar__* from the pokemon filter bar's
+// global styles. Only move-specific overrides live here.
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.moves-filter-bar {
+    background-color: var(--containerBgColor);
+    border-bottom: 1px solid var(--containerBorderColor);
+    padding: 8px 16px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+// Re-use the shared classes from pokemonFilterBar/styles.scss –
+// since they live in the global scope once the page renders,
+// .filter-bar__controls, .ms-dropdown, .active-pill, .bst-range,
+// .obtainable-toggle, .filter-clear-all, .filter-bar__pills,
+// and .items-search-input are already available.
+// Nothing extra needed unless you want move-specific overrides.

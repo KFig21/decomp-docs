@@ -1,0 +1,51 @@
+@use '../../../../styles/index.scss' as *;
+
+.move-tm-info {
+  .tm-meta-row {
+    display: flex;
+    gap: 0;
+    background: color-mix(in srgb, var(--backgroundColor), black 4%);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    overflow: hidden;
+    width: fit-content;
+    margin-bottom: 16px;
+  }
+
+  .tm-price-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 20px;
+    gap: 2px;
+
+    &+& {
+      border-left: 1px solid var(--containerBorderColor);
+    }
+  }
+
+  .tm-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fadedFont);
+  }
+
+  .tm-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--fontColor);
+    font-variant-numeric: tabular-nums;
+
+    &.sell {
+      color: #3baf6a;
+    }
+  }
+
+  .map-name {
+    font-size: 0.83rem;
+    color: var(--fadedFont);
+    font-family: 'Courier New', monospace;
+  }
+}

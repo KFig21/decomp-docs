@@ -1,0 +1,56 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.app-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 0;
+}
+
+.app-nav__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 100%;
+    padding: 0 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--fadedFont);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.18s, background-color 0.18s, border-color 0.18s;
+    white-space: nowrap;
+
+    &:hover {
+        background-color: var(--containerBorderColor);
+        color: var(--fontColor);
+    }
+
+    &--active {
+        color: var(--primaryColor);
+        border-bottom-color: var(--primaryColor);
+        background-color: color-mix(in srgb, var(--primaryColor), transparent 92%);
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--primaryColor), transparent 85%);
+        }
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        opacity: 0.85;
+    }
+
+    &__label {
+        line-height: 1;
+    }
+}

@@ -1,32 +1,21 @@
-// src/router.tsx
+// decomp-docs/src/router.tsx
+import { useState } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from './layouts/appLayout/AppLayout';
 import UploadPage from './pages/uploadPage/UploadPage';
 import LocationsPage from './pages/locationsPage/LocationsPage';
 import LocationDetailPage from './pages/locationsPage/LocationDetailPage';
 import PokemonPage from './pages/pokemonPage/PokemonPage';
-import type { LocationRoot } from './services/parsers/v2/locations/types';
-import type { ParsedPokemon } from './services/parsers/v2/pokemon/types';
-import type { ParsedItem } from './services/parsers/v2/items/types';
-import type { ParsedTrainerVariant } from './services/parsers/v2/trainers/types';
-import { useState } from 'react';
 import ItemsPage from './pages/itemsPage/ItemsPage';
+import MovesPage from './pages/movesPage/MovesPage';
 
-type RouterArgs = {
-  projectName: string;
-  setProjectName: (n: string) => void;
-  locations: LocationRoot[];
-  setLocations: (l: LocationRoot[]) => void;
-  pokemon: ParsedPokemon[];
-  setPokemon: (p: ParsedPokemon[]) => void;
-  items: ParsedItem[];
-  setItems: (i: ParsedItem[]) => void;
-  trainers: ParsedTrainerVariant[];
-  setTrainers: (t: ParsedTrainerVariant[]) => void;
-};
+// UploadPage sets the project name + calls setXxx on the DataContext.
+// We still thread projectName / setProjectName through the router so the
+// topbar can display the rom hack name.
 
-export function CreateRouter({ projectName, setProjectName }: RouterArgs) {
-  const [currentPage, SetCurrentPage] = useState('upload');
+export function CreateRouter() {
+  const [projectName, setProjectName] = useState('');
+  const [currentPage, setCurrentPage] = useState('upload');
 
   return createBrowserRouter([
     {
@@ -34,14 +23,22 @@ export function CreateRouter({ projectName, setProjectName }: RouterArgs) {
       children: [
         {
           path: '/',
-          element: <UploadPage projectName={projectName} setProjectName={setProjectName} />,
+          element: (
+            <UploadPage
+              projectName={projectName}
+              setProjectName={setProjectName}
+              setCurrentPage={setCurrentPage} // error: Type '{ projectName: string; setProjectName: Dispatch<SetStateAction<string>>; setCurrentPage: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & Props'.  Property 'setCurrentPage' does not exist on type 'IntrinsicAttributes & Props'.
+            />
+          ),
         },
-        { path: '/locations', element: <LocationsPage setCurrentPage={SetCurrentPage} /> },
+        { path: '/locations', element: <LocationsPage setCurrentPage={setCurrentPage} /> },
         { path: '/locations/:id', element: <LocationDetailPage /> },
         { path: '/pokemon', element: <PokemonPage /> },
         { path: '/pokemon/:id', element: <PokemonPage /> },
         { path: '/items', element: <ItemsPage /> },
         { path: '/items/:id', element: <ItemsPage /> },
+        { path: '/moves', element: <MovesPage /> },
+        { path: '/moves/:id', element: <MovesPage /> },
       ],
     },
   ]);

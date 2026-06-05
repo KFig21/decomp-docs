@@ -5,19 +5,27 @@ import { useData } from '../../contexts/dataContext';
 import PokemonSprite from '../../components/elements/sprites/PokemonSprite';
 import PokemonDetailPage from './PokemonDetailPage';
 import PokemonSidebar from './components/pokemonSidebar/PokemonSidebar';
-import FilterBar from './components/filterBar/FilterBar';
+import PokemonFilterBar from './components/pokemonFilterBar/PokemonFilterBar';
 import './styles.scss';
+
+export type PokemonActiveFilters = {
+  types1: string[]; // first type constraint (OR within set)
+  types2: string[]; // second type constraint (OR within set, AND with types1)
+  encounters: string[]; // encounter method filter (OR within set)
+};
 
 export default function PokemonPage() {
   const { pokemon, locations } = useData();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  // States
   const [searchTerm, setSearchTerm] = useState('');
   const [showObtainableOnly, setShowObtainableOnly] = useState(false);
-  const [typeFilter, setTypeFilter] = useState('All');
-  const [encounterFilter, setEncounterFilter] = useState('All');
+  const [activeFilters, setActiveFilters] = useState<PokemonActiveFilters>({
+    types1: [],
+    types2: [],
+    encounters: [],
+  });
   const [minBst, setMinBst] = useState('');
   const [maxBst, setMaxBst] = useState('');
   const [moveFilter, setMoveFilter] = useState('');
@@ -25,11 +33,10 @@ export default function PokemonPage() {
 
   const pokemonArray = (Array.isArray(pokemon) ? pokemon : Object.values(pokemon)) as any[];
 
-  // Pre-calculate encounter methods for performance
+  // Pre-calculate encounter methods per pokemon
   const encounterMethodsByMon = useMemo(() => {
     const map = new Map<string, Set<string>>();
     const locationsArray = Array.isArray(locations) ? locations : Object.values(locations);
-
     locationsArray.forEach((locRoot: any) => {
       Object.values(locRoot.maps || {}).forEach((mapObj: any) => {
         (mapObj.wildPokemon || []).forEach((table: any) => {
@@ -54,27 +61,41 @@ export default function PokemonPage() {
     return map;
   }, [locations]);
 
-  // Apply Filters & Sorting
   const filteredPokemon = useMemo(() => {
     const result = pokemonArray.filter((mon) => {
       if (mon.name === '??????????') return false;
 
-      // 1. Obtainability
+      // Obtainability
       if (showObtainableOnly && !mon.isObtainable) return false;
       if (!showObtainableOnly && !mon.isSeen && !mon.isObtainable) return false;
 
-      // 2. Name Search
+      // Name search
       if (searchTerm && !mon.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
 
-      // 3. Type Filter
-      if (typeFilter !== 'All') {
-        const hasType = mon.types?.some(
-          (t: string | null) => t && t.toLowerCase().includes(typeFilter.toLowerCase()),
+      // Type filter
+      // mon.types is [primaryType, secondaryType | null]
+      // Normalise to a Set of the mon's actual types (lowercased, filtered)
+      if (activeFilters.types1.length > 0 || activeFilters.types2.length > 0) {
+        const monTypes = new Set<string>(
+          (mon.types ?? [])
+            .filter((t: any) => t && typeof t === 'string')
+            .map((t: string) => t.replace('TYPE_', '').toLowerCase()),
         );
-        if (!hasType) return false;
+
+        // Normalise filter arrays to lowercase bare type names
+        const norm = (arr: string[]) => arr.map((t) => t.toLowerCase());
+
+        if (activeFilters.types1.length > 0) {
+          const t1 = norm(activeFilters.types1);
+          if (!t1.some((t) => monTypes.has(t))) return false;
+        }
+        if (activeFilters.types2.length > 0) {
+          const t2 = norm(activeFilters.types2);
+          if (!t2.some((t) => monTypes.has(t))) return false;
+        }
       }
 
-      // 4. BST Filter
+      // BST
       const bst = mon.baseStats
         ? (Object.values(mon.baseStats).reduce(
             (a: any, c: any) => Number(a) + Number(c),
@@ -84,7 +105,7 @@ export default function PokemonPage() {
       if (minBst && bst < Number(minBst)) return false;
       if (maxBst && bst > Number(maxBst)) return false;
 
-      // 5. Move Filter
+      // Move search
       if (moveFilter) {
         const term = moveFilter.toLowerCase();
         const hasLevelUp = mon.levelUpLearnset?.some((l: any) => {
@@ -98,58 +119,63 @@ export default function PokemonPage() {
         if (!hasLevelUp && !hasTmHm) return false;
       }
 
-      // 6. Encounter Filter
-      if (encounterFilter !== 'All') {
+      // Encounter filter (multi-select, OR within)
+      if (activeFilters.encounters.length > 0) {
         const methods = encounterMethodsByMon.get(mon.key);
         if (!methods) return false;
 
-        const eFilter = encounterFilter.toLowerCase();
-        let match = false;
-        if (eFilter === 'surfing') {
-          match = Array.from(methods).some((m) => m.includes('water'));
-        } else if (eFilter === 'fishing') {
-          match = Array.from(methods).some((m) => m.includes('fishing') || m.includes('rod'));
-        } else {
-          match = Array.from(methods).some((m) => m.includes(eFilter));
-        }
-
-        if (!match) return false;
+        const methodArr = Array.from(methods);
+        const hasAny = activeFilters.encounters.some((ef) => {
+          const e = ef.toLowerCase();
+          if (e === 'surfing') return methodArr.some((m) => m.includes('water'));
+          if (e === 'rock smash') return methodArr.some((m) => m.includes('rock_smash'));
+          if (e === 'old rod')
+            return methodArr.some(
+              (m) => m.includes('old_rod') || (m.includes('fishing') && m.includes('old')),
+            );
+          if (e === 'good rod')
+            return methodArr.some(
+              (m) => m.includes('good_rod') || (m.includes('fishing') && m.includes('good')),
+            );
+          if (e === 'super rod')
+            return methodArr.some(
+              (m) => m.includes('super_rod') || (m.includes('fishing') && m.includes('super')),
+            );
+          if (e === 'fishing')
+            return methodArr.some((m) => m.includes('fishing') || m.includes('rod'));
+          if (e === 'static') return methodArr.some((m) => m === 'static');
+          if (e === 'land') return methodArr.some((m) => m.includes('land'));
+          return methodArr.some((m) => m.includes(e));
+        });
+        if (!hasAny) return false;
       }
 
       return true;
     });
 
-    // 7. Sort
-    if (sortBy === 'alpha') {
-      result.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === 'bst') {
+    // Sort
+    if (sortBy === 'alpha') result.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortBy === 'bst') {
       result.sort((a, b) => {
-        const bstA = Object.values(a.baseStats || {}).reduce(
-          (sum: any, val: any) => Number(sum) + Number(val),
+        const bA = Object.values(a.baseStats || {}).reduce(
+          (s: any, v: any) => Number(s) + Number(v),
           0,
         ) as number;
-        const bstB = Object.values(b.baseStats || {}).reduce(
-          (sum: any, val: any) => Number(sum) + Number(val),
+        const bB = Object.values(b.baseStats || {}).reduce(
+          (s: any, v: any) => Number(s) + Number(v),
           0,
         ) as number;
-        return bstB - bstA;
+        return bB - bA;
       });
     } else if (sortBy === 'type') {
-      result.sort((a, b) => {
-        const typeA = a.types?.[0] || '';
-        const typeB = b.types?.[0] || '';
-        return typeA.localeCompare(typeB);
-      });
+      result.sort((a, b) => (a.types?.[0] ?? '').localeCompare(b.types?.[0] ?? ''));
     }
-    // default 'pokedex' relies on the array's original parser order
-
     return result;
   }, [
     pokemonArray,
     searchTerm,
     showObtainableOnly,
-    typeFilter,
-    encounterFilter,
+    activeFilters,
     minBst,
     maxBst,
     moveFilter,
@@ -163,17 +189,38 @@ export default function PokemonPage() {
     }
   }, [id, filteredPokemon, navigate]);
 
+  // If selected mon falls outside filter, navigate to first result
+  useEffect(() => {
+    if (id && filteredPokemon.length > 0 && !filteredPokemon.find((p) => p.key === id)) {
+      navigate(`/pokemon/${filteredPokemon[0].key}`, { replace: true });
+    }
+  }, [filteredPokemon, id, navigate]);
+
+  const removeFilter = (cat: keyof PokemonActiveFilters, value: string) => {
+    setActiveFilters((prev) => ({ ...prev, [cat]: prev[cat].filter((v) => v !== value) }));
+  };
+
+  const clearAll = () => {
+    setSearchTerm('');
+    setShowObtainableOnly(false);
+    setActiveFilters({ types1: [], types2: [], encounters: [] });
+    setMinBst('');
+    setMaxBst('');
+    setMoveFilter('');
+    setSortBy('pokedex');
+  };
+
   return (
     <div className="pokemon-page">
-      <FilterBar
+      <PokemonFilterBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         showObtainableOnly={showObtainableOnly}
         setShowObtainableOnly={setShowObtainableOnly}
-        typeFilter={typeFilter}
-        setTypeFilter={setTypeFilter}
-        encounterFilter={encounterFilter}
-        setEncounterFilter={setEncounterFilter}
+        activeFilters={activeFilters}
+        setActiveFilters={setActiveFilters}
+        removeFilter={removeFilter}
+        clearAll={clearAll}
         minBst={minBst}
         setMinBst={setMinBst}
         maxBst={maxBst}
@@ -183,7 +230,6 @@ export default function PokemonPage() {
         sortBy={sortBy}
         setSortBy={setSortBy}
       />
-
       <div className="pokemon-page-content">
         <PokemonSidebar filteredPokemon={filteredPokemon} activeId={id} />
         <div className="pokemon-detail-area">

@@ -1,0 +1,95 @@
+// decomp-docs/src/pages/movesPage/components/moveLearners/styles.scss
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.move-learners {
+  &__header {
+    justify-content: space-between;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__tab {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--containerBorderColor);
+    background: none;
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover { color: var(--fontColor); }
+
+    &.active {
+      background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+      color: var(--primaryColor);
+      border-color: color-mix(in srgb, var(--primaryColor), transparent 45%);
+    }
+  }
+
+  &__count {
+    font-size: 0.8rem;
+    color: var(--fadedFont);
+    font-weight: 500;
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+.learner-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px 8px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--backgroundColor), white 2%);
+  text-decoration: none;
+  color: var(--fontColor);
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+  min-width: 72px;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--containerBorderColor);
+    background: color-mix(in srgb, var(--primaryColor), transparent 88%);
+  }
+
+  &__sprite {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    image-rendering: pixelated;
+  }
+
+  &__name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: capitalize;
+    line-height: 1.2;
+  }
+
+  &__level {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--primaryColor);
+    background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+    border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
+    padding: 1px 6px;
+    border-radius: 999px;
+  }
+}

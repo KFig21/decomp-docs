@@ -1,0 +1,96 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.moves-sidebar {
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--containerBgColor);
+  border-right: 1px solid var(--containerBorderColor);
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  max-width: 320px;
+
+  &__empty {
+    padding: 20px 16px;
+    color: var(--fadedFont);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+}
+
+.moves-sidebar-item {
+  display: grid;
+  grid-template-columns: 68px 1fr 56px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--fontColor);
+  border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 55%);
+  background-color: var(--backgroundColor);
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--containerBgColor), white 4%);
+  }
+
+  &.active {
+    background-color: var(--containerBgColor);
+    border-left: 4px solid var(--primaryColor);
+    padding-left: 8px;
+  }
+
+  .move-type-col {
+    display: flex;
+    align-items: center;
+  }
+
+  .move-name-col {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .move-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tm-badge {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--primaryColor), transparent 78%);
+    color: var(--primaryColor);
+    border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
+    flex-shrink: 0;
+  }
+
+  .move-meta-col {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .move-cat-icon {
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+
+  .move-power {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--fadedFont);
+    font-variant-numeric: tabular-nums;
+    min-width: 26px;
+    text-align: right;
+  }
+}

@@ -1,0 +1,217 @@
+// decomp-docs/src/pages/movesPage/components/moveFilterBar/MoveFilterBar.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef, useState, useEffect } from 'react';
+import type { MoveActiveFilters, MoveSortOption } from '../../MovesPage';
+import { MOVE_SORT_OPTIONS } from '../../MovesPage';
+import { TYPE_COLORS, TYPE_OPTIONS } from '../../../pokemonPage/components/pokemonFilterBar/PokemonFilterBar';
+import './styles.scss';
+
+const CATEGORY_OPTIONS = [
+  { value: 'Physical', label: 'Physical', icon: '⚔️' },
+  { value: 'Special',  label: 'Special',  icon: '✨' },
+  { value: 'Status',   label: 'Status',   icon: '🔮' },
+];
+
+const CATEGORY_COLORS: Record<string, string> = {
+  Physical: '#c03028',
+  Special:  '#6890f0',
+  Status:   '#a040a0',
+};
+
+// ── Shared dropdown ───────────────────────────────────────────────────────────
+function MultiDropdown({
+  label, options, selected, onToggle, accentColor, maxHeight,
+}: {
+  label: string;
+  options: { value: string; label: string; icon?: string; color?: string }[];
+  selected: string[];
+  onToggle: (v: string) => void;
+  accentColor?: string;
+  maxHeight?: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  return (
+    <div className={`ms-dropdown ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
+      <button
+        className={`ms-dropdown__trigger ${selected.length > 0 ? 'ms-dropdown__trigger--active' : ''}`}
+        style={selected.length > 0 && accentColor ? { '--trigger-color': accentColor } as any : {}}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span>{label}</span>
+        {selected.length > 0 && <span className="ms-dropdown__count">{selected.length}</span>}
+        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="ms-dropdown__menu" style={maxHeight ? { maxHeight } : {}}>
+          {options.map((opt) => {
+            const isSelected = selected.includes(opt.value);
+            const color = opt.color ?? accentColor;
+            return (
+              <button
+                key={opt.value}
+                className={`ms-dropdown__option ${isSelected ? 'ms-dropdown__option--selected' : ''}`}
+                style={isSelected && color ? { '--opt-color': color } as any : {}}
+                onClick={() => onToggle(opt.value)}
+              >
+                <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
+                {opt.icon && <span className="ms-dropdown__icon">{opt.icon}</span>}
+                <span>{opt.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SortDropdown({ value, onChange }: { value: MoveSortOption; onChange: (v: MoveSortOption) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  const label = MOVE_SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Sort';
+  return (
+    <div className={`ms-dropdown ms-dropdown--sort ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
+      <button className="ms-dropdown__trigger" onClick={() => setOpen((v) => !v)}>
+        <span>↕ {label}</span>
+        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="ms-dropdown__menu">
+          {MOVE_SORT_OPTIONS.map((opt) => (
+            <button key={opt.value}
+              className={`ms-dropdown__option ${value === opt.value ? 'ms-dropdown__option--selected' : ''}`}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+            >
+              <span className="ms-dropdown__checkbox">{value === opt.value ? '✓' : ''}</span>
+              <span>{opt.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilterPill({ label, color, onRemove }: { label: string; color?: string; onRemove: () => void }) {
+  return (
+    <span className="active-pill" style={color ? { '--pill-color': color } as any : {}}>
+      {label}
+      <button className="active-pill__close" onClick={onRemove}>×</button>
+    </span>
+  );
+}
+
+// ── MoveFilterBar ─────────────────────────────────────────────────────────────
+interface Props {
+  searchTerm:    string; setSearchTerm:    (v: string) => void;
+  activeFilters: MoveActiveFilters; setActiveFilters: React.Dispatch<React.SetStateAction<MoveActiveFilters>>;
+  sortBy:        MoveSortOption; setSortBy: (v: MoveSortOption) => void;
+  hasTmOnly:     boolean; setHasTmOnly: (v: boolean) => void;
+  minPower:      string; setMinPower: (v: string) => void;
+  maxPower:      string; setMaxPower: (v: string) => void;
+  allEffects:    string[];
+  removeFilter:  (cat: keyof MoveActiveFilters, value: string) => void;
+  clearAll:      () => void;
+}
+
+export default function MoveFilterBar({
+  searchTerm, setSearchTerm,
+  activeFilters, setActiveFilters,
+  sortBy, setSortBy,
+  hasTmOnly, setHasTmOnly,
+  minPower, setMinPower, maxPower, setMaxPower,
+  allEffects, removeFilter, clearAll,
+}: Props) {
+  const toggle = (cat: keyof MoveActiveFilters) => (v: string) =>
+    setActiveFilters((prev) => ({
+      ...prev,
+      [cat]: prev[cat].includes(v) ? prev[cat].filter((x) => x !== v) : [...prev[cat], v],
+    }));
+
+  const typeOptions = TYPE_OPTIONS.map((t) => ({ value: t, label: t, color: TYPE_COLORS[t.toLowerCase()] }));
+  const catOptions  = CATEGORY_OPTIONS.map((c) => ({ ...c, color: CATEGORY_COLORS[c.value] }));
+  const fxOptions   = allEffects.map((e) => ({ value: e, label: e }));
+
+  const hasAnyFilter =
+    searchTerm || hasTmOnly ||
+    activeFilters.types.length > 0 || activeFilters.categories.length > 0 || activeFilters.effects.length > 0 ||
+    minPower || maxPower || sortBy !== 'alpha-asc';
+
+  return (
+    <div className="moves-filter-bar">
+      <div className="filter-bar__controls">
+        <input
+          className="items-search-input"
+          type="text" placeholder="Search moves…"
+          value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <MultiDropdown label="Type" options={typeOptions} selected={activeFilters.types}
+          onToggle={toggle('types')} accentColor="#6890f0" maxHeight={280} />
+
+        <MultiDropdown label="Category" options={catOptions} selected={activeFilters.categories}
+          onToggle={toggle('categories')} accentColor="#c03028" />
+
+        <MultiDropdown label="Effect" options={fxOptions} selected={activeFilters.effects}
+          onToggle={toggle('effects')} accentColor="#a8b820" maxHeight={280} />
+
+        <SortDropdown value={sortBy} onChange={setSortBy} />
+
+        {/* Power range */}
+        <div className="bst-range">
+          <span className="bst-range__label">Power</span>
+          <input type="number" placeholder="Min" value={minPower}
+            onChange={(e) => setMinPower(e.target.value)} className="bst-range__input" />
+          <span className="bst-range__sep">–</span>
+          <input type="number" placeholder="Max" value={maxPower}
+            onChange={(e) => setMaxPower(e.target.value)} className="bst-range__input" />
+        </div>
+
+        <label className="obtainable-toggle">
+          <input type="checkbox" checked={hasTmOnly} onChange={(e) => setHasTmOnly(e.target.checked)} />
+          TM / HM only
+        </label>
+
+        {hasAnyFilter && (
+          <button className="filter-clear-all" onClick={clearAll}>Clear all</button>
+        )}
+      </div>
+
+      {hasAnyFilter && (
+        <div className="filter-bar__pills">
+          {searchTerm && <FilterPill label={`"${searchTerm}"`} onRemove={() => setSearchTerm('')} />}
+          {hasTmOnly  && <FilterPill label="TM / HM only" onRemove={() => setHasTmOnly(false)} />}
+          {activeFilters.types.map((v) => (
+            <FilterPill key={v} label={v} color={TYPE_COLORS[v.toLowerCase()]} onRemove={() => removeFilter('types', v)} />
+          ))}
+          {activeFilters.categories.map((v) => (
+            <FilterPill key={v} label={v} color={CATEGORY_COLORS[v]} onRemove={() => removeFilter('categories', v)} />
+          ))}
+          {activeFilters.effects.map((v) => (
+            <FilterPill key={v} label={v} color="#a8b820" onRemove={() => removeFilter('effects', v)} />
+          ))}
+          {(minPower || maxPower) && (
+            <FilterPill label={`Power ${minPower || '0'} – ${maxPower || '∞'}`}
+              onRemove={() => { setMinPower(''); setMaxPower(''); }} />
+          )}
+          {sortBy !== 'alpha-asc' && (
+            <FilterPill label={`Sort: ${MOVE_SORT_OPTIONS.find((o) => o.value === sortBy)?.label}`}
+              onRemove={() => setSortBy('alpha-asc')} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

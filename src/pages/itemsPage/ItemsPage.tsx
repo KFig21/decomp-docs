@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
 import ItemDetailPage from './ItemDetailPage';
 import ItemSidebar from './components/itemSidebar/ItemSidebar';
-import FilterBar from './components/filterBar/FilterBar';
+import ItemFilterBar from './components/itemFilterBar/ItemFilterBar';
 import './styles.scss';
 
 export type ActiveFilters = {
@@ -107,7 +107,7 @@ export default function ItemsPage() {
 
   return (
     <div className="items-page">
-      <FilterBar
+      <ItemFilterBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         activeFilters={activeFilters}

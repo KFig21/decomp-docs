@@ -171,7 +171,7 @@ interface Props {
   setSortBy: (v: SortOption) => void;
 }
 
-export default function FilterBar({
+export default function ItemFilterBar({
   searchTerm,
   setSearchTerm,
   activeFilters,
