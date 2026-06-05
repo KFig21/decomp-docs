@@ -83,7 +83,6 @@ export default function Breadcrumbs({ currentPage }: Props) {
   const startScrolling = (direction: 'left' | 'right') => {
     if (scrollIntervalRef.current) return;
 
-    // Increased scrollAmount and lowered interval for faster response
     const scrollAmount = 30;
     scrollIntervalRef.current = setInterval(() => {
       if (scrollContainerRef.current) {
@@ -91,7 +90,7 @@ export default function Breadcrumbs({ currentPage }: Props) {
           left: direction === 'left' ? -scrollAmount : scrollAmount,
         });
       }
-    }, 10);
+    }, 50);
   };
 
   const stopScrolling = () => {
