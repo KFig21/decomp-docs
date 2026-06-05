@@ -2,7 +2,7 @@
 @use '../../../../styles/colors.scss' as *;
 
 .pokemon-filter-bar {
-    background-color: var(--backgroundColor);
+    background-color: var(--containerBgColor);
     border-bottom: 1px solid var(--containerBorderColor);
     padding: 12px 24px;
     display: flex;
@@ -33,7 +33,7 @@
         input[type="text"],
         input[type="number"],
         select {
-            background-color: color-mix(in srgb, var(--containerBgColor), transparent 50%);
+            background-color: var(--backgroundColor);
             border: 1px solid var(--containerBorderColor);
             color: var(--fontColor);
             padding: 8px 12px;

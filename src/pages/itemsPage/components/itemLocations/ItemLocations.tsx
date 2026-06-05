@@ -1,13 +1,12 @@
-// decomp-docs/src/pages/itemsPage/components/itemLocations/ItemLocations.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './styles.scss';
 
-type Props = {
-  locations?: any[];
-};
+type Props = { locations?: any[] };
 
-// Method metadata: label, icon (emoji for zero-dep), css modifier
+// mod maps the data method key -> CSS class suffix
+// berry_tree (underscore) -> berry-tree (hyphen) to match SCSS map key
 const METHOD_META: Record<string, { label: string; icon: string; mod: string }> = {
   overworld: { label: 'Overworld', icon: '🌿', mod: 'overworld' },
   hidden: { label: 'Hidden', icon: '🔍', mod: 'hidden' },
@@ -27,13 +26,19 @@ function MethodBadge({ method }: { method: string }) {
 }
 
 export default function ItemLocations({ locations }: Props) {
+  const [activeMethod, setActiveMethod] = useState<string | null>(null);
+
   if (!locations || locations.length === 0) return null;
 
-  // Group by method for the summary chips
   const methodCounts: Record<string, number> = {};
   for (const loc of locations) {
     methodCounts[loc.method] = (methodCounts[loc.method] ?? 0) + 1;
   }
+
+  const displayed = activeMethod ? locations.filter((l) => l.method === activeMethod) : locations;
+
+  const toggleMethod = (method: string) =>
+    setActiveMethod((prev) => (prev === method ? null : method));
 
   return (
     <div className="item-card-style item-locations">
@@ -42,41 +47,65 @@ export default function ItemLocations({ locations }: Props) {
         <div className="method-summary">
           {Object.entries(methodCounts).map(([method, count]) => {
             const meta = METHOD_META[method] ?? { label: method, icon: '📦', mod: 'other' };
+            const isActive = activeMethod === method;
             return (
-              <span key={method} className={`method-chip method-chip--${meta.mod}`}>
+              <button
+                key={method}
+                className={`method-chip method-chip--${meta.mod} ${isActive ? 'method-chip--active' : ''}`}
+                onClick={() => toggleMethod(method)}
+                title={isActive ? 'Click to show all' : `Filter to ${meta.label} only`}
+              >
                 {meta.icon} {meta.label} ×{count}
-              </span>
+              </button>
             );
           })}
+          {activeMethod && (
+            <button
+              className="method-chip method-chip--clear"
+              onClick={() => setActiveMethod(null)}
+            >
+              ✕ Clear filter
+            </button>
+          )}
         </div>
       </div>
+
       <div className="content">
-        <table className="data-table locations-table">
-          <thead>
-            <tr>
-              <th className="left">Location</th>
-              <th className="left">Map</th>
-              <th className="center">Method</th>
-              <th className="center">Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {locations.map((loc, i) => (
-              <tr key={i} className={`loc-row loc-row--${METHOD_META[loc.method]?.mod ?? 'other'}`}>
-                <td>
-                  <Link to={`/locations/${loc.location}`} className="location-link">
-                    {loc.location}
-                  </Link>
-                </td>
-                <td className="map-name">{loc.map}</td>
-                <td className="center">
-                  <MethodBadge method={loc.method} />
-                </td>
-                <td className="center qty-cell">{loc.method === 'mart' ? '∞' : loc.quantity}</td>
+        {displayed.length === 0 ? (
+          <p className="no-results">No locations match this filter.</p>
+        ) : (
+          <table className="data-table locations-table">
+            <thead>
+              <tr>
+                <th className="left">Location</th>
+                <th className="left">Map</th>
+                <th className="center">Method</th>
+                <th className="center">Qty</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayed.map((loc, i) => {
+                const mod = METHOD_META[loc.method]?.mod ?? 'other';
+                return (
+                  <tr key={i} className={`loc-row loc-row--${mod}`}>
+                    <td>
+                      <Link to={`/locations/${loc.location}`} className="location-link">
+                        {loc.location}
+                      </Link>
+                    </td>
+                    <td className="map-name">{loc.map}</td>
+                    <td className="center">
+                      <MethodBadge method={loc.method} />
+                    </td>
+                    <td className="center qty-cell">
+                      {loc.method === 'mart' ? '∞' : loc.quantity}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

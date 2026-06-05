@@ -106,14 +106,15 @@ export async function parseDecompV2(
     .filter(([path]) => path.includes('src/data/pokemon/species_info'))
     .map(([, content]) => (typeof content === 'string' ? content : ''))
     .join('\n');
-
   attachWildHeldItems(pokemon, items, speciesInfoContent);
 
   // ── Obtainability ─────────────────────────────────────────────────────────
   if (onProgress) onProgress('Determining Pokémon obtainability...', m.attach + 2);
   await delay(100);
   markPokemonObtainable(pokemon, trainers);
-  markItemsPlaced(items, pokemon, trainers, files);
+
+  // ── Pass `locations` so markItemsPlaced can whitelist by valid roots ──
+  markItemsPlaced(items, pokemon, trainers, files, locations);
 
   if (onProgress) onProgress('Complete!', m.complete);
   await delay(500);

@@ -17,6 +17,7 @@
         max-width: 130px;
         display: flex;
         justify-content: center;
+        flex-shrink: 0;
 
         .sprite-wrapper {
             width: 64px;
@@ -31,7 +32,22 @@
     .header-info {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header-bottom-row {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+        }
 
         .item-name {
             font-size: 2rem;
@@ -40,17 +56,69 @@
             text-transform: capitalize;
         }
 
-        .price-info {
-            color: var(--fadedFont);
-            font-size: 0.95rem;
+        .pocket-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+            color: var(--primaryColor);
+            border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
+            white-space: nowrap;
+        }
 
-            strong {
-                color: var(--fontColor);
+        // ── Price row ──────────────────────────────────────────────────────────
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: color-mix(in srgb, var(--backgroundColor), black 4%);
+            border: 1px solid var(--containerBorderColor);
+            border-radius: 8px;
+            overflow: hidden;
+            width: fit-content;
+            flex-shrink: 0;
+        }
+
+        .price-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 20px;
+            gap: 2px;
+        }
+
+        .price-divider {
+            width: 1px;
+            height: 36px;
+            background: var(--containerBorderColor);
+        }
+
+        .price-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--fadedFont);
+        }
+
+        .price-value {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--fontColor);
+            font-variant-numeric: tabular-nums;
+
+            &.sell {
+                color: #3baf6a;
             }
         }
 
         .item-description {
             display: flex;
+            align-items: center;
+            width: 100%;
             margin: 0;
             color: var(--fontColor);
             font-size: 0.9rem;
@@ -59,7 +127,6 @@
             padding: 12px;
             border-left: 3px solid var(--primaryColor);
             border-radius: 4px;
-            margin-top: 8px;
         }
     }
 }

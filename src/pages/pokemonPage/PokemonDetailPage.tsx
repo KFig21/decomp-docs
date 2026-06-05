@@ -9,6 +9,7 @@ import Learnset from './components/learnset/Learnset';
 import TmHmLearnset from './components/learnset/TmHmLearnset';
 import WildLocations from './components/wildLocations/WildLocations';
 import TrainersBlock from './components/trainersBlock/TrainersBlock';
+import PokemonHeldItems from './components/pokemonHeldItems/PokemonHeldItems';
 import JsonDebug from './components/jsonDebug/JsonDebug';
 
 export default function PokemonDetailPage() {
@@ -16,7 +17,6 @@ export default function PokemonDetailPage() {
   const { id } = useParams<{ id: string }>();
 
   const selectedArray = (Array.isArray(pokemon) ? pokemon : Object.values(pokemon)) as any[];
-
   const baseSelected = selectedArray.find((p) => p.key === id);
   const [activeVariant, setActiveVariant] = useState<any>(null);
 
@@ -42,6 +42,7 @@ export default function PokemonDetailPage() {
       />
       <EvolutionFamily selected={activeVariant} />
       <BaseStats stats={activeVariant.baseStats} bst={bst as number} />
+      <PokemonHeldItems heldItems={activeVariant.heldItems} />
       <Learnset learnset={activeVariant.levelUpLearnset} />
       <TmHmLearnset learnset={activeVariant.tmhmLearnset} />
       <WildLocations selectedKey={activeVariant.key} />

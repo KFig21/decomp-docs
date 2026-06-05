@@ -1,0 +1,94 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+$chance-common: #3baf6a;
+$chance-uncommon: #d4862f;
+$chance-rare: #c84b4b;
+
+.pokemon-held-items {
+    .held-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+
+.held-item-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--containerBorderColor);
+    background: color-mix(in srgb, var(--backgroundColor), white 2%);
+    text-decoration: none;
+    color: var(--fontColor);
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+
+    &:hover {
+        background: color-mix(in srgb, var(--primaryColor), transparent 88%);
+        border-color: var(--primaryColor);
+        transform: translateX(3px);
+    }
+
+    .held-item-sprite {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        image-rendering: pixelated;
+        flex-shrink: 0;
+    }
+
+    .held-item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .held-item-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .held-item-desc {
+        font-size: 0.78rem;
+        color: var(--fadedFont);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+// ── Chance badges ─────────────────────────────────────────────────────────────
+.held-chance-badge {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &--common {
+        background: color-mix(in srgb, $chance-common, transparent 82%);
+        color: $chance-common;
+        border: 1px solid color-mix(in srgb, $chance-common, transparent 55%);
+    }
+
+    &--uncommon {
+        background: color-mix(in srgb, $chance-uncommon, transparent 82%);
+        color: $chance-uncommon;
+        border: 1px solid color-mix(in srgb, $chance-uncommon, transparent 55%);
+    }
+
+    &--rare {
+        background: color-mix(in srgb, $chance-rare, transparent 82%);
+        color: $chance-rare;
+        border: 1px solid color-mix(in srgb, $chance-rare, transparent 55%);
+    }
+}

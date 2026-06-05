@@ -18,7 +18,6 @@ export function attachMapData(
   locationRoot: string,
   scripts?: string,
   starters: string[] = [],
-  // ── NEW: pass in the pre-built berry-tree lookup ──
   berryTreeLookup: Map<string, string> = new Map(),
 ) {
   map.trainers = [];
@@ -29,7 +28,7 @@ export function attachMapData(
 
   // ---- OBJECT EVENTS ----
   for (const obj of mapJson.object_events ?? []) {
-    // 🎯 OBJECT-BOUND TRAINERS
+    // TRAINERS
     const trainer = resolveTrainerFromObjectEvents(obj.script, trainers);
     if (trainer) {
       map.trainers.push(trainer);
@@ -39,21 +38,34 @@ export function attachMapData(
       continue;
     }
 
-    // 🎁 ITEM BALLS
+    // ITEM BALLS
+    // The decomp uses two patterns:
+    //   A) Custom script:  "Route111_EventScript_ItemSitrusBerry2"
+    //      resolveItemFromScript extracts item key from the script name
+    //   B) Generic script: "Common_EventScript_FindItem"
+    //      trainer_sight_or_berry_tree_id = "ITEM_POTION"  ← item key stored directly
     if (obj.graphics_id === 'OBJ_EVENT_GFX_ITEM_BALL') {
-      const item = resolveItemFromScript(obj.script, items);
+      let item = resolveItemFromScript(obj.script, items);
+
+      if (!item) {
+        const directKey = obj.trainer_sight_or_berry_tree_id;
+        if (typeof directKey === 'string' && directKey.startsWith('ITEM_')) {
+          item = items[directKey] ?? null;
+        }
+      }
+
       if (item) {
         map.items.push({ item, x: obj.x, y: obj.y, source: 'item_ball', quantity: 1 });
       }
       continue;
     }
 
-    // 🫐 BERRY TREES – resolved separately below (after loop)
+    // BERRY TREES – resolved in batch below
     if (obj.graphics_id === 'OBJ_EVENT_GFX_BERRY_TREE') {
-      continue; // handled in batch below
+      continue;
     }
 
-    // 🧍 NPCs
+    // NPCs
     if (obj.trainer_type === 'TRAINER_TYPE_NONE') {
       map.npcs.push({
         graphics: obj.graphics_id,
@@ -64,7 +76,7 @@ export function attachMapData(
     }
   }
 
-  // 🫐 Resolve all berry trees for this map in one pass
+  // Berry trees in one pass
   if (berryTreeLookup.size > 0) {
     const berryItems = resolveBerryTreeItems(mapJson.object_events ?? [], berryTreeLookup, items);
     map.items.push(...berryItems);
@@ -82,7 +94,6 @@ export function attachMapData(
       }
     }
 
-    // Starters
     if (scripts.includes('special ChooseStarter')) {
       for (const speciesStr of starters) {
         const species = pokemon[speciesStr];
@@ -92,7 +103,6 @@ export function attachMapData(
       }
     }
 
-    // setwildbattle
     const wildBattleRegex = /setwildbattle\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
     let match;
     while ((match = wildBattleRegex.exec(scripts))) {
@@ -103,7 +113,6 @@ export function attachMapData(
       }
     }
 
-    // givemon
     const givemonRegex = /givemon\s+(SPECIES_[A-Z0-9_]+)\s*,\s*(\d+)/g;
     while ((match = givemonRegex.exec(scripts))) {
       const species = pokemon[match[1]];

@@ -1,28 +1,129 @@
+// decomp-docs/src/pages/itemsPage/components/heldByPokemon/styles.scss
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
+$chance-common: #3baf6a;
+$chance-uncommon: #d4862f;
+$chance-rare: #c84b4b;
+
+// ── Section header ────────────────────────────────────────────────────────────
+.held-by-header {
+    justify-content: space-between;
+}
+
+.toggle-unavailable {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--containerBorderColor);
+    background: none;
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover {
+        background: color-mix(in srgb, var(--fontColor), transparent 88%);
+        color: var(--fontColor);
+    }
+
+    &.active {
+        background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+        color: var(--primaryColor);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
+    }
+}
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
 .held-by-grid {
     display: flex;
-    gap: 24px;
+    gap: 12px;
     flex-wrap: wrap;
+}
 
-    .held-by-link {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-decoration: none;
-        color: var(--fontColor);
-        transition: transform 0.2s;
+// ── Card ──────────────────────────────────────────────────────────────────────
+.held-by-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: var(--fontColor);
+    transition: transform 0.18s ease, opacity 0.2s;
+    padding: 12px 10px 10px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: color-mix(in srgb, var(--backgroundColor), white 2%);
+    position: relative;
+
+    &:hover {
+        transform: translateY(-3px);
+        border-color: var(--containerBorderColor);
+        background: color-mix(in srgb, var(--primaryColor), transparent 88%);
+    }
+
+    // ── Unavailable state ─────────────────────────────────────────────────────
+    &--unavailable {
+        opacity: 0.35;
+        filter: grayscale(60%);
 
         &:hover {
-            transform: translateY(-2px);
+            opacity: 0.6;
+            filter: grayscale(30%);
         }
+    }
 
-        .pokemon-name {
-            font-size: 0.85rem;
-            margin-top: 8px;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
+    .sprite-wrap {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        image-rendering: pixelated;
+    }
+
+    .pokemon-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        text-align: center;
+    }
+
+    .unavailable-label {
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--fadedFont);
+        opacity: 0.8;
+    }
+}
+
+// ── Chance badges ─────────────────────────────────────────────────────────────
+.chance-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+
+    &--common {
+        background: color-mix(in srgb, $chance-common, transparent 82%);
+        color: $chance-common;
+        border: 1px solid color-mix(in srgb, $chance-common, transparent 55%);
+    }
+
+    &--uncommon {
+        background: color-mix(in srgb, $chance-uncommon, transparent 82%);
+        color: $chance-uncommon;
+        border: 1px solid color-mix(in srgb, $chance-uncommon, transparent 55%);
+    }
+
+    &--rare {
+        background: color-mix(in srgb, $chance-rare, transparent 82%);
+        color: $chance-rare;
+        border: 1px solid color-mix(in srgb, $chance-rare, transparent 55%);
     }
 }

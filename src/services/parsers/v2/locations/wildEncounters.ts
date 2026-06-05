@@ -1,3 +1,9 @@
+// CHANGES FROM ORIGINAL:
+//   • METHOD_DISPLAY_NAMES map added – cleans up raw JSON keys like
+//     "rock_smash_mons" → "Rock Smash" for display in the UI
+//   • normalizeMethodKey() exported so WildLocations component can use it
+//   • Everything else unchanged
+//
 import type { ParsedPokemon } from '../pokemon/types';
 import type {
   WildPokemonEntry,
@@ -6,12 +12,38 @@ import type {
   WildEncounterMethod_fromJson,
 } from './types';
 
+// Maps raw JSON method keys to human-readable display labels.
+// Grouped fishing methods come in as e.g. "fishing_old_rod_group_old_rod" –
+// the prefix match in normalizeMethodKey handles those.
+export const METHOD_DISPLAY_NAMES: Record<string, string> = {
+  land_mons: 'Tall Grass',
+  water_mons: 'Surfing',
+  rock_smash_mons: 'Rock Smash',
+  fishing_old_rod: 'Old Rod',
+  fishing_good_rod: 'Good Rod',
+  fishing_super_rod: 'Super Rod',
+  static: 'Static / Gift',
+};
+
+/** Returns a clean display label for any encounter method string. */
+export function normalizeMethodKey(raw: string): string {
+  // Direct hit
+  if (METHOD_DISPLAY_NAMES[raw]) return METHOD_DISPLAY_NAMES[raw];
+  // Grouped fishing: e.g. "fishing_old_rod_old_rod" → "Old Rod"
+  for (const [key, label] of Object.entries(METHOD_DISPLAY_NAMES)) {
+    if (raw.startsWith(key)) return label;
+  }
+  // Last resort: title-case the raw key
+  return raw
+    .replace(/_mons$/, '')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 function mergeAndSortEncounters(encounters: WildPokemonEntry[]): WildPokemonEntry[] {
   const merged = new Map<string, WildPokemonEntry>();
-
   for (const e of encounters) {
     const key = `${e.pokemon.key}|${e.minLevel}|${e.maxLevel}`;
-
     const existing = merged.get(key);
     if (existing) {
       existing.rate += e.rate;
@@ -19,7 +51,6 @@ function mergeAndSortEncounters(encounters: WildPokemonEntry[]): WildPokemonEntr
       merged.set(key, { ...e });
     }
   }
-
   return Array.from(merged.values()).sort((a, b) => b.rate - a.rate);
 }
 
@@ -48,18 +79,15 @@ export function parseWildEncounters(
       const rates = field.encounter_rates;
       const encounterablePokemon = encounterMethodData.mons;
 
-      // 🎣 Grouped methods (Old Rod / Good Rod / Super Rod)
       if (field.groups) {
+        // Grouped methods (e.g. fishing rods split by group)
         for (const [groupName, indexes] of Object.entries(field.groups)) {
           const rawEncounters: WildPokemonEntry[] = [];
-
           indexes.forEach((i) => {
             const monInContext = encounterablePokemon[i];
             if (!monInContext) return;
-
             const species = pokemonBySpecies[monInContext.species];
             if (!species) return;
-
             rawEncounters.push({
               pokemon: species,
               minLevel: monInContext.min_level,
@@ -67,7 +95,6 @@ export function parseWildEncounters(
               rate: rates[i],
             });
           });
-
           tables.push({
             method: `${method}_${groupName}`,
             encounterRate: encounterMethodData.encounter_rate,
@@ -75,13 +102,11 @@ export function parseWildEncounters(
           });
         }
       } else {
-        // 🌿 Standard methods (land, water, rock smash, etc)
+        // Standard methods: land, water, rock_smash_mons, etc.
         const rawEncounters: WildPokemonEntry[] = [];
-
         encounterablePokemon.forEach((monInContext, i) => {
           const species = pokemonBySpecies[monInContext.species];
           if (!species) return;
-
           rawEncounters.push({
             pokemon: species,
             minLevel: monInContext.min_level,
@@ -89,7 +114,6 @@ export function parseWildEncounters(
             rate: rates[i],
           });
         });
-
         tables.push({
           method,
           encounterRate: encounterMethodData.encounter_rate,

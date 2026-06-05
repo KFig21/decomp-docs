@@ -19,13 +19,14 @@
         border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 50%);
         cursor: pointer;
         transition: background-color 0.2s;
+        background-color: var(--backgroundColor);
 
         &:hover {
-            background-color: color-mix(in srgb, var(--backgroundColor), white 2%);
+            background-color: color-mix(in srgb, var(--containerBgColor), white 4%);
         }
 
         &.active {
-            background-color: color-mix(in srgb, var(--primaryColor), transparent 80%);
+            background-color: var(--containerBgColor);
             border-left: 4px solid var(--primaryColor);
             padding-left: 12px;
         }

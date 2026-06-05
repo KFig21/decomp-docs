@@ -1,7 +1,8 @@
+// decomp-docs/src/pages/itemsPage/styles.scss
 @use '../../styles/index.scss' as *;
 @use '../../styles/colors.scss' as *;
 
-// -- ITEMS MASTER/DETAIL LAYOUT --
+// ── Master layout ─────────────────────────────────────────────────────────────
 .items-page {
     display: flex;
     flex-direction: column;
@@ -11,31 +12,81 @@
     background-color: var(--backgroundColor);
 }
 
+// ── Filter bar ────────────────────────────────────────────────────────────────
 .items-filter-bar {
-    padding: 16px;
+    padding: 12px 16px;
     background-color: var(--containerBgColor);
     border-bottom: 1px solid var(--containerBorderColor);
-    flex-shrink: 0; // Prevents the search bar from squishing
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
 
     .items-search-input {
         width: 100%;
-        padding: 10px 16px;
+        padding: 8px 14px;
         border-radius: 6px;
         border: 1px solid var(--containerBorderColor);
         background: var(--backgroundColor);
         color: var(--fontColor);
+        font-size: 0.9rem;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: var(--fadedFont);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--primaryColor);
+        }
     }
 }
 
+// ── Filter chip groups ────────────────────────────────────────────────────────
+.filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.filter-chip {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--containerBorderColor);
+    background: none;
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+    white-space: nowrap;
+
+    &:hover {
+        color: var(--fontColor);
+        background: color-mix(in srgb, var(--fontColor), transparent 90%);
+    }
+
+    &.active {
+        background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+        color: var(--primaryColor);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 45%);
+        font-weight: 700;
+    }
+}
+
+// ── Content area ──────────────────────────────────────────────────────────────
 .items-page-content {
     display: grid;
     grid-template-columns: 460px 1fr;
     flex: 1;
     overflow: hidden;
-    min-height: 0; // Crucial fix: forces grid to respect parent boundaries
+    min-height: 0;
 }
 
-// -- ITEMS DETAIL AREA --
+// ── Detail area ───────────────────────────────────────────────────────────────
 .items-detail-area {
     height: 100%;
     overflow-y: auto;
@@ -57,7 +108,7 @@
     }
 }
 
-// -- ITEMS DETAIL PANE --
+// ── Detail pane ───────────────────────────────────────────────────────────────
 .items-detail-pane {
     display: flex;
     flex-direction: column;
@@ -67,7 +118,7 @@
     margin: 0 auto;
 }
 
-// -- SHARED ITEM COMPONENTS --
+// ── Shared card shell ─────────────────────────────────────────────────────────
 .item-card-style {
     background: var(--containerBgColor);
     border: 1px solid var(--containerBorderColor);
@@ -87,6 +138,7 @@
     }
 }
 
+// ── Shared data table ─────────────────────────────────────────────────────────
 .data-table {
     width: 100%;
     border-collapse: collapse;
