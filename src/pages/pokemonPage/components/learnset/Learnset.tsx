@@ -1,27 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import './styles.scss';
 
-type Props = {
-  learnset: any[];
+type Props = { learnset: any[] };
+
+const formatCategory = (catStr?: string) => {
+  if (!catStr) return '—';
+  return formatReadableName(catStr.replace('SPLIT_', '').replace('DAMAGE_CATEGORY_', ''));
+};
+
+const formatNumber = (num?: number) => {
+  if (!num || num === 0) return '—';
+  return num;
 };
 
 export default function Learnset({ learnset }: Props) {
   const [isOpen, setIsOpen] = useState(true);
-
-  // UPDATED: Support both the old SPLIT_ and new DAMAGE_CATEGORY_ syntax
-  const formatCategory = (catStr?: string) => {
-    if (!catStr) return '—';
-    return formatReadableName(catStr.replace('SPLIT_', '').replace('DAMAGE_CATEGORY_', ''));
-  };
-
-  const formatNumber = (num?: number) => {
-    if (!num || num === 0) return '—';
-    return num;
-  };
 
   return (
     <div className={`section pokemon-card-style ${isOpen ? '' : 'collapsed'}`}>
@@ -48,12 +46,21 @@ export default function Learnset({ learnset }: Props) {
                 {learnset.map((learnData: any, i: number) => {
                   const move = learnData.move;
                   const moveName = move.name || formatReadableName(move);
+                  const moveKey = move?.key ?? (typeof move === 'string' ? move : null);
                   const moveType = move.type ? move.type.replace('type_', '') : '';
 
                   return (
                     <tr key={i}>
                       <td className="center">{learnData.lvl === 0 ? 'Evo' : learnData.lvl}</td>
-                      <td>{moveName}</td>
+                      <td>
+                        {moveKey ? (
+                          <Link to={`/moves/${moveKey}`} className="learnset-link">
+                            {moveName}
+                          </Link>
+                        ) : (
+                          moveName
+                        )}
+                      </td>
                       <td className="center">{moveType ? <TypeBadge type={moveType} /> : '—'}</td>
                       <td className="center">{formatCategory(move.category || move.split)}</td>
                       <td className="center">{formatNumber(move.power)}</td>

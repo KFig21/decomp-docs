@@ -1,2 +1,92 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
+
+// ── Move / TM links in learnset tables ───────────────────────────────────────
+.learnset-link {
+    color: var(--fontColor);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s;
+
+    &:hover {
+        color: var(--primaryColor);
+        text-decoration: underline;
+    }
+
+    // TM/HM badge
+    &--tm {
+        display: inline-flex;
+        align-items: center;
+        padding: 1px 7px;
+        border-radius: 4px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+        color: var(--primaryColor);
+        border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 58%);
+        text-decoration: none;
+
+        &:hover {
+            background: color-mix(in srgb, var(--primaryColor), transparent 72%);
+        }
+    }
+}
+
+// Tutor label (not a link)
+.tutor-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--fadedFont);
+    font-style: italic;
+}
+
+// ── Section header with inline chips ────────────────────────────────────────
+.tmhm-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    cursor: pointer;
+}
+
+// ── Method filter chips ──────────────────────────────────────────────────────
+.tmhm-method-filters {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.tmhm-chip {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--containerBorderColor);
+    background: none;
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.13s, color 0.13s, border-color 0.13s;
+
+    &:hover {
+        color: var(--fontColor);
+        border-color: var(--primaryColor);
+    }
+
+    &--active {
+        background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+        color: var(--primaryColor);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 45%);
+    }
+
+    &--clear {
+        color: var(--errorColor, #ef4444);
+        border-color: var(--errorColor, #ef4444);
+        background: none;
+
+        &:hover {
+            background: color-mix(in srgb, var(--errorColor, #ef4444), transparent 88%);
+        }
+    }
+}

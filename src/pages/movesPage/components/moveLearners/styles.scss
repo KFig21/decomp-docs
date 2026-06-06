@@ -1,40 +1,23 @@
-// decomp-docs/src/pages/movesPage/components/moveLearners/styles.scss
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
 .move-learners {
+
+  // collapsed state: hide border-bottom on section-header
+  &.collapsed .section-header {
+    border-bottom: none;
+  }
+
   &__header {
-    justify-content: space-between;
-  }
-
-  &__tabs {
-    display: flex;
-    gap: 4px;
-  }
-
-  &__tab {
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--containerBorderColor);
-    background: none;
-    color: var(--fadedFont);
+    justify-content: flex-start;
+    gap: 10px;
     cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-
-    &:hover { color: var(--fontColor); }
-
-    &.active {
-      background: color-mix(in srgb, var(--primaryColor), transparent 80%);
-      color: var(--primaryColor);
-      border-color: color-mix(in srgb, var(--primaryColor), transparent 45%);
-    }
+    user-select: none;
   }
 
   &__count {
-    font-size: 0.8rem;
+    margin-left: auto;
+    font-size: 0.78rem;
     color: var(--fadedFont);
     font-weight: 500;
   }

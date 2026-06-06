@@ -114,3 +114,33 @@
         padding: 16px;
     }
 }
+
+// ── Back to top button ────────────────────────────────────────────────────────
+.back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--containerBgColor);
+    color: var(--fontColor);
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+
+    &:hover {
+        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+        border-color: var(--primaryColor);
+        color: var(--primaryColor);
+        transform: translateY(-2px);
+    }
+}
