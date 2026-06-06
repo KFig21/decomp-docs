@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getShowdownSlug } from '../../../utils/pokemon';
+import { getShowdownSlug } from '../../../../utils/pokemon';
 import './PokemonSprite.scss';
 
 type Props = {

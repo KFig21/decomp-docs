@@ -5,10 +5,13 @@ import { formatReadableName } from '../../../../utils/functions';
 import { useData } from '../../../../contexts/dataContext';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
+import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
 import SvgIcon from '../../../../components/elements/svgIcon/SvgIcon';
 import { locationsIcon } from '../../../../components/elements/svgIcon/icons/locationsIcon';
 import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokemonIcon';
 import { itemsIcon } from '../../../../components/elements/svgIcon/icons/itemsIcon';
+import { trainersIcon } from '../../../../components/elements/svgIcon/icons/trainersIcon';
+import { movesIcon } from '../../../../components/elements/svgIcon/icons/movesIcon';
 import './styles.scss';
 
 type Props = {
@@ -18,7 +21,7 @@ type Props = {
 type HistoryItem = {
   path: string;
   label: string;
-  category: 'locations' | 'pokemon' | 'items' | 'unknown';
+  category: 'locations' | 'pokemon' | 'items' | 'trainers' | 'moves' | 'unknown';
   isRoot: boolean;
   id?: string;
 };
@@ -26,7 +29,7 @@ type HistoryItem = {
 export default function Breadcrumbs({ currentPage }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { pokemon, items } = useData();
+  const { pokemon, items, trainers } = useData();
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -51,7 +54,13 @@ export default function Breadcrumbs({ currentPage }: Props) {
 
       if (segments.length > 0) {
         const rootSegment = segments[0];
-        if (rootSegment === 'pokemon' || rootSegment === 'items' || rootSegment === 'locations') {
+        if (
+          rootSegment === 'pokemon' ||
+          rootSegment === 'items' ||
+          rootSegment === 'locations' ||
+          rootSegment === 'trainers' ||
+          rootSegment === 'moves'
+        ) {
           category = rootSegment;
         }
 
@@ -62,7 +71,13 @@ export default function Breadcrumbs({ currentPage }: Props) {
           id = segments[1];
           if (category === 'pokemon') label = formatReadableName(id.replace('SPECIES_', ''));
           else if (category === 'items') label = formatReadableName(id.replace('ITEM_', ''));
-          else label = formatReadableName(id);
+          else if (category === 'trainers') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const trainerGroup = (trainers as any)[id];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const rep = trainerGroup?.variants?.find((v: any) => v.isPlaced) ?? trainerGroup?.variants?.[0];
+            label = rep?.name ? rep.name : formatReadableName(id);
+          } else label = formatReadableName(id);
         }
       }
 
@@ -72,7 +87,7 @@ export default function Breadcrumbs({ currentPage }: Props) {
       if (newHistory.length > 100) newHistory.shift();
       return newHistory;
     });
-  }, [location.pathname]);
+  }, [location.pathname, trainers]);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -108,6 +123,10 @@ export default function Breadcrumbs({ currentPage }: Props) {
         return <SvgIcon viewBox={pokemonIcon.viewBox}>{pokemonIcon.path}</SvgIcon>;
       if (h.category === 'items')
         return <SvgIcon viewBox={itemsIcon.viewBox}>{itemsIcon.path}</SvgIcon>;
+      if (h.category === 'trainers')
+        return <SvgIcon viewBox={trainersIcon.viewBox}>{trainersIcon.path}</SvgIcon>;
+      if (h.category === 'moves')
+        return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
     } else {
       if (h.category === 'pokemon' && h.id && pokemon) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,6 +138,23 @@ export default function Breadcrumbs({ currentPage }: Props) {
         const item = (items as any)[h.id];
         if (item) return <ItemSprite item={item} size={24} />;
       }
+      if (h.category === 'trainers' && h.id && trainers) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const trainerGroup = (trainers as any)[h.id];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rep = trainerGroup?.variants?.find((v: any) => v.isPlaced) ?? trainerGroup?.variants?.[0];
+        if (rep)
+          return (
+            <TrainerSprite
+              name={rep.name}
+              trainerClass={rep.trainerClass}
+              sprite={rep.trainerPic}
+              size={24}
+            />
+          );
+      }
+      if (h.category === 'moves')
+        return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
     }
     return null;
   };
