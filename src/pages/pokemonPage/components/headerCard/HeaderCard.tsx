@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import './styles.scss';
 

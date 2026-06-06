@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import './styles.scss';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { StaticEncounter } from '../../../../../../services/parsers/v2/locations/types';
-import PokemonSprite from '../../../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../../../components/elements/sprites/pokemon/PokemonSprite';
 import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 import './../../styles.scss';
 

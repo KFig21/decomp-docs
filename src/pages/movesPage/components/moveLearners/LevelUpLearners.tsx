@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from 'react-router-dom';
-import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { useState } from 'react';
 import './styles.scss';

@@ -8,6 +8,7 @@ type Props = {
   trainerGroup: ParsedTrainerVariant[];
 };
 
+// Typically used for rivals (mudkip party, treeko party, torchic party)
 function formatTabName(key: string, index: number) {
   const parts = key.split('_');
   const lastPart = parts[parts.length - 1];

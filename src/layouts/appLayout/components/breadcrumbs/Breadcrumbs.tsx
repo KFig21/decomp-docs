@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { formatReadableName } from '../../../../utils/functions';
 import { useData } from '../../../../contexts/dataContext';
-import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import SvgIcon from '../../../../components/elements/svgIcon/SvgIcon';
 import { locationsIcon } from '../../../../components/elements/svgIcon/icons/locationsIcon';

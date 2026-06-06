@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
-import PokemonSprite from '../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
 import './styles.scss';

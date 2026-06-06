@@ -1,0 +1,26 @@
+// Pokemon sprite bounding box — size driven by --pokemon-sprite-size custom property
+.pokemon-sprite {
+    --pokemon-sprite-size: 64px;
+
+    width: var(--pokemon-sprite-size);
+    height: var(--pokemon-sprite-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+
+    &__img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        image-rendering: pixelated;
+        display: block;
+    }
+
+    &__fallback {
+        font-size: 0.7rem;
+        color: var(--fadedFont);
+        text-align: center;
+        user-select: none;
+    }
+}

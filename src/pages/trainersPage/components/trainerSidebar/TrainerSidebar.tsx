@@ -2,10 +2,11 @@
 import { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
+import type { BaseTrainerEntry } from '../../TrainersPage';
 import './styles.scss';
 
 type Props = {
-  filteredTrainers: any[];
+  filteredTrainers: BaseTrainerEntry[];
   activeId?: string;
 };
 
@@ -23,19 +24,13 @@ export default function TrainerSidebar({ filteredTrainers, activeId }: Props) {
       {filteredTrainers.length === 0 && (
         <p className="trainers-sidebar__empty">No trainers match your filters.</p>
       )}
-      {filteredTrainers.map((trainer: any) => {
-        const isActive = trainer.key === activeId;
-        const partyCount = trainer.party?.length ?? 0;
-        const maxLevel = trainer.party?.reduce(
-          (max: number, p: any) => Math.max(max, p.level ?? 0),
-          0,
-        ) ?? 0;
-
+      {filteredTrainers.map((trainer) => {
+        const isActive = trainer.baseKey === activeId;
         return (
           <Link
-            key={trainer.key}
+            key={trainer.baseKey}
             ref={isActive ? activeRef : null}
-            to={`/trainers/${trainer.key}`}
+            to={`/trainers/${trainer.baseKey}`}
             className={`trainers-sidebar-item ${isActive ? 'active' : ''}`}
           >
             <div className="trainer-sprite-col">
@@ -51,10 +46,14 @@ export default function TrainerSidebar({ filteredTrainers, activeId }: Props) {
               <span className="trainer-name-label">{trainer.name}</span>
             </div>
             <div className="trainer-meta-col">
-              {trainer.doubleBattle && <span className="double-badge">2v2</span>}
-              <span className="party-count">
-                {partyCount} <span className="party-count__sub">Lv.{maxLevel}</span>
+              {trainer.isDouble && <span className="double-badge">2v2</span>}
+              <span className="battle-count">
+                {trainer.uniqueLocations}{' '}
+                <span className="battle-count__sub">
+                  {trainer.uniqueLocations === 1 ? 'battle' : 'battles'}
+                </span>
               </span>
+              <span className="max-level">Lv.{trainer.maxLevel}</span>
             </div>
           </Link>
         );

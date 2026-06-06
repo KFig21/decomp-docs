@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { ParsedTrainerPokemon } from '../../../../../../../../services/parsers/v2/trainers/types';
-import PokemonSprite from '../../../../../../../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../../../../../../../components/elements/sprites/pokemon/PokemonSprite';
 import './styles.scss';
 
 type Props = {

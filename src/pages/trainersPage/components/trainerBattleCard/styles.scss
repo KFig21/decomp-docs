@@ -1,0 +1,183 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.trainer-battle-card {
+    display: flex;
+    flex-direction: column;
+
+    .battle-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--containerBorderColor);
+        flex-wrap: wrap;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.15s;
+
+        &:hover {
+            background: color-mix(in srgb, var(--containerBgColor), white 2%);
+        }
+
+        &__left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        &__right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            // Prevent the right side clicks from collapsing the card
+            cursor: default;
+            pointer-events: auto;
+        }
+
+        .battle-index {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--fadedFont);
+            background: color-mix(in srgb, var(--backgroundColor), black 6%);
+            border: 1px solid var(--containerBorderColor);
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+
+        .battle-location {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+
+            &__name {
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: var(--fontColor);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &__sub {
+                font-size: 0.72rem;
+                color: var(--fadedFont);
+            }
+        }
+
+        .double-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: color-mix(in srgb, #d4862f, transparent 80%);
+            color: #d4862f;
+            border: 1px solid color-mix(in srgb, #d4862f, transparent 55%);
+            white-space: nowrap;
+        }
+
+        .battle-items {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .battle-item-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px 3px 5px;
+            border-radius: 5px;
+            background: color-mix(in srgb, var(--backgroundColor), black 4%);
+            border: 1px solid var(--containerBorderColor);
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--fontColor);
+        }
+    }
+
+    // ── Export toggle button ───────────────────────────────────────────────────
+    .export-toggle-btn {
+        padding: 5px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--containerBorderColor);
+        background: var(--backgroundColor);
+        color: var(--fadedFont);
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+
+        &:hover {
+            color: var(--fontColor);
+            border-color: var(--primaryColor);
+        }
+
+        &--active {
+            background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+            color: var(--primaryColor);
+            border-color: var(--primaryColor);
+        }
+    }
+
+    // ── Starter tabs ──────────────────────────────────────────────────────────
+    .battle-tabs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+        background: color-mix(in srgb, var(--backgroundColor), black 3%);
+        flex-wrap: wrap;
+
+        &__label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--fadedFont);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 2px;
+        }
+
+        .tab-btn {
+            padding: 4px 12px;
+            border-radius: 5px;
+            border: 1px solid var(--containerBorderColor);
+            background: var(--backgroundColor);
+            color: var(--fadedFont);
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+
+            &:hover {
+                color: var(--fontColor);
+                border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
+            }
+
+            &--active {
+                background: var(--primaryColor);
+                color: #fff;
+                border-color: var(--primaryColor);
+            }
+        }
+    }
+
+    // ── Party content area ────────────────────────────────────────────────────
+    .battle-content {
+        padding: 16px;
+    }
+}

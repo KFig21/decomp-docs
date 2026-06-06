@@ -6,16 +6,13 @@ import './styles.scss';
 
 type Props = {
   trainer: any;
+  battleCount?: number;
 };
 
-export default function TrainerHeaderCard({ trainer }: Props) {
-  const { name, trainerClass, trainerPic, items, doubleBattle, location, party } = trainer;
+export default function TrainerHeaderCard({ trainer, battleCount }: Props) {
+  const { name, trainerClass, trainerPic, items, doubleBattle, location } = trainer;
 
   const locationName = location?.locationKey ? formatReadableName(location.locationKey) : null;
-  const mapName = location?.mapKey ? formatReadableName(location.mapKey) : null;
-
-  const maxLevel = party?.reduce((max: number, p: any) => Math.max(max, p.level ?? 0), 0) ?? 0;
-  const partyCount = party?.length ?? 0;
 
   return (
     <div className="trainer-header-card trainer-card-style">
@@ -38,28 +35,18 @@ export default function TrainerHeaderCard({ trainer }: Props) {
         </div>
 
         <div className="trainer-header-stats">
-          <div className="stat-block">
-            <span className="stat-label">Party</span>
-            <span className="stat-value">{partyCount}</span>
-          </div>
-          <div className="stat-divider" />
-          <div className="stat-block">
-            <span className="stat-label">Max Level</span>
-            <span className="stat-value">{maxLevel || '—'}</span>
-          </div>
+          {battleCount != null && (
+            <div className="stat-block">
+              <span className="stat-label">Battles</span>
+              <span className="stat-value">{battleCount}</span>
+            </div>
+          )}
+          {battleCount != null && locationName && <div className="stat-divider" />}
           {locationName && (
-            <>
-              <div className="stat-divider" />
-              <div className="stat-block stat-block--location">
-                <span className="stat-label">Location</span>
-                <span className="stat-value stat-value--location">
-                  {locationName}
-                  {mapName && mapName !== locationName && (
-                    <span className="stat-map"> · {mapName}</span>
-                  )}
-                </span>
-              </div>
-            </>
+            <div className="stat-block stat-block--location">
+              <span className="stat-label">First Encounter</span>
+              <span className="stat-value stat-value--location">{locationName}</span>
+            </div>
           )}
         </div>
 

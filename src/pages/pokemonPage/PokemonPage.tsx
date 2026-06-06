@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
-import PokemonSprite from '../../components/elements/sprites/PokemonSprite';
+import PokemonSprite from '../../components/elements/sprites/pokemon/PokemonSprite';
 import PokemonDetailPage from './PokemonDetailPage';
 import PokemonSidebar from './components/pokemonSidebar/PokemonSidebar';
 import PokemonFilterBar from './components/pokemonFilterBar/PokemonFilterBar';
