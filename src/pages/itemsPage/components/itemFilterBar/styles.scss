@@ -1,7 +1,6 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
-// ── Filter bar shell ──────────────────────────────────────────────────────────
 .items-filter-bar {
     padding: 8px 16px;
     background-color: var(--containerBgColor);
@@ -12,7 +11,6 @@
     gap: 8px;
 }
 
-// ── Controls row (search + dropdowns) ────────────────────────────────────────
 .filter-bar__controls {
     display: flex;
     align-items: center;
@@ -42,7 +40,6 @@
     }
 }
 
-// ── Clear all ─────────────────────────────────────────────────────────────────
 .filter-clear-all {
     font-size: 0.75rem;
     font-weight: 600;
@@ -57,13 +54,12 @@
     transition: color 0.15s, border-color 0.15s, background 0.15s;
 
     &:hover {
-        color: #ef4444;
-        border-color: #ef4444;
-        background: rgba(239, 68, 68, 0.08);
+        color: var(--errorColor);
+        border-color: var(--errorColor);
+        background: color-mix(in srgb, var(--errorColor), transparent 92%);
     }
 }
 
-// ── Active pills row ──────────────────────────────────────────────────────────
 .filter-bar__pills {
     display: flex;
     gap: 6px;
@@ -79,9 +75,8 @@
     font-weight: 600;
     padding: 3px 4px 3px 10px;
     border-radius: 999px;
-    // Filled with the pill color at full opacity
     background-color: var(--pill-color, var(--primaryColor));
-    color: #fff;
+    color: white;
     white-space: nowrap;
 
     &__close {
@@ -93,7 +88,7 @@
         border-radius: 50%;
         border: none;
         background: rgba(255, 255, 255, 0.25);
-        color: #fff;
+        color: white;
         cursor: pointer;
         font-size: 0.8rem;
         line-height: 1;
@@ -107,7 +102,6 @@
     }
 }
 
-// ── Dropdown ──────────────────────────────────────────────────────────────────
 .ms-dropdown {
     position: relative;
 
@@ -147,7 +141,7 @@
         height: 18px;
         border-radius: 999px;
         background: var(--primaryColor);
-        color: #fff;
+        color: white;
         font-size: 0.68rem;
         font-weight: 800;
         padding: 0 4px;
@@ -195,7 +189,6 @@
         }
 
         &--selected {
-            // Use the per-option color set via CSS custom prop
             background: color-mix(in srgb, var(--opt-color, var(--primaryColor)), transparent 82%);
             color: var(--opt-color, var(--primaryColor));
             font-weight: 700;

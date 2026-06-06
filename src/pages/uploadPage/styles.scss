@@ -42,7 +42,6 @@
             padding: 1rem;
 
             button {
-
                 &.enabled {
                     background-color: var(--primaryColor);
                     color: var(--backgroundColor);
@@ -117,8 +116,8 @@
 
             .cancel-button {
                 background-color: transparent;
-                color: #ff5f56;
-                border: 1px solid #ff5f56;
+                color: var(--errorColor);
+                border: 1px solid var(--errorColor);
                 padding: 0.4rem 1rem;
                 font-size: 0.9rem;
                 border-radius: 0.5rem;
@@ -126,7 +125,7 @@
                 transition: all 0.2s ease;
 
                 &:hover {
-                    background-color: #ff5f56;
+                    background-color: var(--errorColor);
                     color: white;
                 }
             }

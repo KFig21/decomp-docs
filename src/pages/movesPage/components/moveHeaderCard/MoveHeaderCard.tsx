@@ -1,4 +1,3 @@
-// decomp-docs/src/pages/movesPage/components/moveHeaderCard/MoveHeaderCard.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import { normalizeMoveCategory, normalizeTypeName } from '../../MovesPage';
@@ -8,14 +7,51 @@ type Props = { move: any };
 
 const CATEGORY_ICON: Record<string, string> = {
   Physical: '⚔️',
-  Special:  '✨',
-  Status:   '🔮',
+  Special: '✨',
+  Status: '🔮',
 };
 
 const CATEGORY_COLOR: Record<string, string> = {
   Physical: '#c03028',
-  Special:  '#6890f0',
-  Status:   '#a040a0',
+  Special: '#6890f0',
+  Status: '#a040a0',
+};
+
+// ── Boolean flag → display metadata ──────────────────────────────────────────
+// Only flags worth showing to a player/developer are listed here.
+// Flags that are internal-only (metronomeBanned etc) are grouped as "Banned from".
+const FLAG_DISPLAY: Record<
+  string,
+  { label: string; icon: string; group: 'move-type' | 'banned' | 'misc' }
+> = {
+  makesContact: { label: 'Makes Contact', icon: '🤜', group: 'move-type' },
+  soundMove: { label: 'Sound', icon: '🔊', group: 'move-type' },
+  punchingMove: { label: 'Punch', icon: '👊', group: 'move-type' },
+  bitingMove: { label: 'Bite', icon: '🦷', group: 'move-type' },
+  pulseMove: { label: 'Pulse', icon: '💫', group: 'move-type' },
+  ballisticMove: { label: 'Ballistic', icon: '💣', group: 'move-type' },
+  windMove: { label: 'Wind', icon: '🌬️', group: 'move-type' },
+  powderMove: { label: 'Powder', icon: '🌫️', group: 'move-type' },
+  danceMove: { label: 'Dance', icon: '💃', group: 'move-type' },
+  slicingMove: { label: 'Slicing', icon: '🗡️', group: 'move-type' },
+  healingMove: { label: 'Healing', icon: '💊', group: 'move-type' },
+  multiHit: { label: 'Multi-hit', icon: '✖️', group: 'misc' },
+  twoTurnMove: { label: 'Two-turn', icon: '⏳', group: 'misc' },
+  higherCritRatio: { label: 'High crit', icon: '🎯', group: 'misc' },
+  alwaysCriticalHit: { label: 'Always crits', icon: '💥', group: 'misc' },
+  ignoresProtect: { label: 'Bypasses Protect', icon: '🛡️', group: 'misc' },
+  ignoresSubstitute: { label: 'Hits through Sub', icon: '🪆', group: 'misc' },
+  magicCoatAffected: { label: 'Magic Coat', icon: '🪄', group: 'misc' },
+  snatchAffected: { label: 'Snatchable', icon: '🤲', group: 'misc' },
+  forcePressure: { label: 'Force Pressure', icon: '⬇️', group: 'misc' },
+  skyBattleBanned: { label: 'Sky Battle ban', icon: '🚫', group: 'banned' },
+  metronomeBanned: { label: 'Metronome ban', icon: '🚫', group: 'banned' },
+  copycatBanned: { label: 'Copycat ban', icon: '🚫', group: 'banned' },
+  assistBanned: { label: 'Assist ban', icon: '🚫', group: 'banned' },
+  mirrorMoveBanned: { label: 'Mirror Move ban', icon: '🚫', group: 'banned' },
+  sleepTalkBanned: { label: 'Sleep Talk ban', icon: '🚫', group: 'banned' },
+  instructBanned: { label: 'Instruct ban', icon: '🚫', group: 'banned' },
+  parentalBondBanned: { label: 'Parental Bond ban', icon: '🚫', group: 'banned' },
 };
 
 function StatCell({ label, value }: { label: string; value: string | number }) {
@@ -31,13 +67,19 @@ export default function MoveHeaderCard({ move }: Props) {
   const typeName = normalizeTypeName(move.type);
   const category = normalizeMoveCategory(move.category || move.split);
   const catColor = CATEGORY_COLOR[category] ?? '#7a8a9a';
-
-  const effectLabel = move.effect
-    ? move.effect.replace(/^EFFECT_/, '').replace(/_/g, ' ')
-        .toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase())
-    : null;
-
   const priority = move.priority ?? 0;
+
+  // Collect displayable boolean flags
+  const boolFlags: { label: string; icon: string; group: string }[] = [];
+  if (move.booleanFlags instanceof Set) {
+    for (const [key, meta] of Object.entries(FLAG_DISPLAY)) {
+      if ((move.booleanFlags as Set<string>).has(key)) boolFlags.push(meta);
+    }
+  }
+  // Separate by group
+  const moveTypeFlags = boolFlags.filter((f) => f.group === 'move-type');
+  const miscFlags = boolFlags.filter((f) => f.group === 'misc');
+  const bannedFlags = boolFlags.filter((f) => f.group === 'banned');
 
   return (
     <div className="move-header-card move-card-style">
@@ -46,10 +88,7 @@ export default function MoveHeaderCard({ move }: Props) {
         <h1 className="move-header-card__name">{move.name}</h1>
         <div className="move-header-card__badges">
           {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} />}
-          <span
-            className="move-category-badge"
-            style={{ '--cat-color': catColor } as any}
-          >
+          <span className="move-category-badge" style={{ '--cat-color': catColor } as any}>
             {CATEGORY_ICON[category]} {category}
           </span>
         </div>
@@ -57,37 +96,74 @@ export default function MoveHeaderCard({ move }: Props) {
 
       {/* ── Stats row ── */}
       <div className="move-header-card__stats">
-        <StatCell label="Power"    value={move.power    ?? '—'} />
+        <StatCell label="Power" value={move.power ?? '—'} />
         <StatCell label="Accuracy" value={move.accuracy != null ? `${move.accuracy}%` : '—'} />
-        <StatCell label="PP"       value={move.pp       ?? '—'} />
-        <StatCell label="Priority" value={priority > 0 ? `+${priority}` : priority === 0 ? '0' : priority} />
-        {move.secondaryEffectChance != null && move.secondaryEffectChance > 0 && (
-          <StatCell label="Effect Chance" value={`${move.secondaryEffectChance}%`} />
-        )}
+        <StatCell label="PP" value={move.pp ?? '—'} />
+        <StatCell
+          label="Priority"
+          value={priority > 0 ? `+${priority}` : priority === 0 ? '0' : String(priority)}
+        />
         {move.target && (
           <StatCell
             label="Target"
-            value={move.target.replace(/^MOVE_TARGET_/, '').replace(/_/g, ' ')
-              .toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase())}
+            value={move.target
+              .replace(/^MOVE_TARGET_/, '')
+              .replace(/_/g, ' ')
+              .toLowerCase()
+              .replace(/\b\w/g, (c: string) => c.toUpperCase())}
           />
         )}
       </div>
 
-      {/* ── Effect ── */}
-      {effectLabel && effectLabel !== 'Hit' && effectLabel !== 'Normal Hit' && (
+      {/* ── Description ── */}
+      {move.description && (
         <div className="move-header-card__effect">
-          <span className="move-header-card__effect-label">Effect</span>
-          <span className="move-header-card__effect-value">{effectLabel}</span>
+          <span className="move-header-card__effect-value" style={{ fontStyle: 'italic' }}>
+            "{move.description}"
+          </span>
         </div>
       )}
 
-      {/* ── Flags ── */}
-      {move.flags && move.flags.length > 0 && (
+      {/* ── Additional effects (secondary effects with %) ── */}
+      {move.additionalEffects && move.additionalEffects.length > 0 && (
+        <div className="move-header-card__additional-effects">
+          {move.additionalEffects.map((e: any, i: number) => (
+            <span key={i} className="move-effect-chip">
+              {e.label}
+              {e.chance != null ? ` (${e.chance}%)` : ''}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* ── Move-type flags ── */}
+      {moveTypeFlags.length > 0 && (
         <div className="move-header-card__flags">
-          {move.flags.map((f: string) => (
-            <span key={f} className="move-flag-chip">
-              {f.replace(/^FLAG_/, '').replace(/_/g, ' ')
-                .toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase())}
+          {moveTypeFlags.map((f) => (
+            <span key={f.label} className="move-flag-chip move-flag-chip--type">
+              {f.icon} {f.label}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* ── Misc flags ── */}
+      {miscFlags.length > 0 && (
+        <div className="move-header-card__flags">
+          {miscFlags.map((f) => (
+            <span key={f.label} className="move-flag-chip">
+              {f.icon} {f.label}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* ── Banned-from flags (collapsed into one row) ── */}
+      {bannedFlags.length > 0 && (
+        <div className="move-header-card__flags">
+          {bannedFlags.map((f) => (
+            <span key={f.label} className="move-flag-chip move-flag-chip--banned">
+              {f.label}
             </span>
           ))}
         </div>

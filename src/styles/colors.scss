@@ -2,16 +2,40 @@
 [data-theme='base'] {
     --borderColor: rgb(58, 72, 90);
     --backgroundColor: #1e212b;
-
     --fontColor: rgb(236, 236, 236);
     --fadedFont: rgb(200, 200, 200);
-
     --primaryColor: rgb(132, 159, 212);
     --primaryColorHover: rgb(102, 134, 199);
 
     --containerBgColor: rgba(136, 190, 255, 0.06);
     --containerBorderColor: rgba(136, 190, 255, 0.24);
 
+    // Status & UI Colors
+    --successColor: #3baf6a;
+    --warningColor: #d4862f;
+    --errorColor: #ef4444;
+
+    // Category Colors
+    --catPurple: #8a63d2;
+    --catBlue: #3a9bd4;
+    --catPink: #d43a6e;
+    --catGray: #7a8a9a;
+
+    // Terminal Colors
+    --terminalBg: #1e1e1e;
+    --terminalHeader: #2d2d2d;
+    --terminalText: #d4d4d4;
+    --terminalFaded: #999999;
+    --terminalThumb: #444444;
+
+    // JSON Debug Colors
+    --jsonProp: #009033;
+    --jsonIndex: #676dff;
+    --jsonString: #b2762e;
+    --jsonBool: #dc155e;
+    --jsonText: #4d4d4d;
+
+    // Pokemon Types
     --normalType: #A8A77A;
     --fireType: #EE8130;
     --waterType: #6390F0;
@@ -30,18 +54,16 @@
     --darkType: #705848;
     --steelType: #B7B7CE;
     --fairyType: #D685AD;
+    --pokemonTypeFontColor: white;
 }
 
 [data-theme='night'] {
     --borderColor: rgb(58, 72, 90);
     --backgroundColor: #151515;
-
     --fontColor: rgb(225, 225, 225);
     --fadedFont: rgb(160, 160, 160);
-
     --primaryColor: rgb(128, 128, 128);
     --primaryColorHover: rgb(173, 173, 173);
-
     --containerBgColor: rgba(168, 171, 189, 0.06);
     --containerBorderColor: rgba(242, 248, 255, 0.24);
 }
@@ -49,13 +71,10 @@
 [data-theme='light'] {
     --borderColor: rgb(58, 72, 90);
     --backgroundColor: #f4f4f4;
-
     --fontColor: rgb(0, 0, 0);
     --fadedFont: rgb(66, 66, 66);
-
     --primaryColor: rgb(45, 45, 45);
     --primaryColorHover: rgb(0, 0, 0);
-
     --containerBgColor: rgba(120, 120, 120, 0.06);
     --containerBorderColor: rgba(65, 65, 65, 0.24);
 }

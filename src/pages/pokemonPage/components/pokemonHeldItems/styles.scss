@@ -1,10 +1,6 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
-$chance-common: #3baf6a;
-$chance-uncommon: #d4862f;
-$chance-rare: #c84b4b;
-
 .pokemon-held-items {
     .held-items-list {
         display: flex;
@@ -63,7 +59,6 @@ $chance-rare: #c84b4b;
     }
 }
 
-// ── Chance badges ─────────────────────────────────────────────────────────────
 .held-chance-badge {
     flex-shrink: 0;
     font-size: 0.7rem;
@@ -75,20 +70,20 @@ $chance-rare: #c84b4b;
     white-space: nowrap;
 
     &--common {
-        background: color-mix(in srgb, $chance-common, transparent 82%);
-        color: $chance-common;
-        border: 1px solid color-mix(in srgb, $chance-common, transparent 55%);
+        background: color-mix(in srgb, var(--successColor), transparent 82%);
+        color: var(--successColor);
+        border: 1px solid color-mix(in srgb, var(--successColor), transparent 55%);
     }
 
     &--uncommon {
-        background: color-mix(in srgb, $chance-uncommon, transparent 82%);
-        color: $chance-uncommon;
-        border: 1px solid color-mix(in srgb, $chance-uncommon, transparent 55%);
+        background: color-mix(in srgb, var(--warningColor), transparent 82%);
+        color: var(--warningColor);
+        border: 1px solid color-mix(in srgb, var(--warningColor), transparent 55%);
     }
 
     &--rare {
-        background: color-mix(in srgb, $chance-rare, transparent 82%);
-        color: $chance-rare;
-        border: 1px solid color-mix(in srgb, $chance-rare, transparent 55%);
+        background: color-mix(in srgb, var(--errorColor), transparent 82%);
+        color: var(--errorColor);
+        border: 1px solid color-mix(in srgb, var(--errorColor), transparent 55%);
     }
 }

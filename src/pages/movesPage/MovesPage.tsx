@@ -4,9 +4,9 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
 import MoveSidebar from './components/moveSidebar/MoveSidebar';
-import './styles.scss';
 import MoveFilterBar from './components/moveFilterBar/MoveFilterBar';
 import MoveDetailPage from './MoveDetailPage';
+import './styles.scss';
 
 export type MoveActiveFilters = {
   types: string[];
@@ -35,28 +35,27 @@ export const MOVE_SORT_OPTIONS: { value: MoveSortOption; label: string }[] = [
   { value: 'pp-asc', label: 'PP: Low → High' },
 ];
 
-// Normalise raw CATEGORY_ / split_ identifiers to display strings
-export function normalizeMoveCategory(raw: string | undefined): string {
+// ── Category normaliser (THE FIX) ─────────────────────────────────────────────
+// The expansion uses DAMAGE_CATEGORY_STATUS / DAMAGE_CATEGORY_PHYSICAL / DAMAGE_CATEGORY_SPECIAL
+// Vanilla uses SPLIT_STATUS / SPLIT_PHYSICAL / SPLIT_SPECIAL
+// We strip the prefix entirely and match on the bare word.
+export function normalizeMoveCategory(raw: string | undefined): 'Physical' | 'Special' | 'Status' {
   if (!raw) return 'Status';
-  const s = raw.toUpperCase();
-  if (s.includes('PHYSICAL') || (s.includes('DAMAGE') && !s.includes('SPECIAL'))) return 'Physical';
-  if (s.includes('SPECIAL')) return 'Special';
+  const bare = raw
+    .toUpperCase()
+    .replace(/^DAMAGE_CATEGORY_/, '')
+    .replace(/^SPLIT_/, '')
+    .trim();
+  if (bare === 'PHYSICAL') return 'Physical';
+  if (bare === 'SPECIAL') return 'Special';
   return 'Status';
 }
 
 // Converts TYPE_FIRE → Fire
 export function normalizeTypeName(raw: string | undefined): string {
   if (!raw) return '';
-  return (
-    raw
-      .replace(/^TYPE_/i, '')
-      .charAt(0)
-      .toUpperCase() +
-    raw
-      .replace(/^TYPE_/i, '')
-      .slice(1)
-      .toLowerCase()
-  );
+  const bare = raw.replace(/^TYPE_/i, '');
+  return bare.charAt(0).toUpperCase() + bare.slice(1).toLowerCase();
 }
 
 function applySort(moves: any[], sort: MoveSortOption): any[] {
@@ -103,30 +102,28 @@ export default function MovesPage() {
   const itemsArray = useMemo(() => Object.values(items || {}), [items]);
   const pokemonArray = useMemo(() => Object.values(pokemon || {}), [pokemon]);
 
-  // Build tm item lookup: moveKey -> TM item
+  // TM item lookup: moveKey → TM item
   const tmByMove = useMemo(() => {
     const map: Record<string, any> = {};
     for (const item of itemsArray as any[]) {
       if (!item.key?.startsWith('ITEM_TM') && !item.key?.startsWith('ITEM_HM')) continue;
-      // TM item key pattern: ITEM_TM01_FOCUS_PUNCH or ITEM_TM_FOCUS_PUNCH
-      // Move key is built from the item key by stripping ITEM_TM##_
       const moveKey = 'MOVE_' + item.key.replace(/^ITEM_(TM\d+_|HM\d+_|TM_|HM_)/, '');
       if (moveKey in (moves || {})) map[moveKey] = item;
     }
     return map;
   }, [itemsArray, moves]);
 
-  // Collect all unique effects for the filter dropdown
+  // Unique secondary effect labels for the Effect dropdown
+  // Use additionalEffects[].label (human-readable) rather than raw EFFECT_ strings
   const allEffects = useMemo(() => {
     const set = new Set<string>();
     for (const m of movesArray as any[]) {
-      if (m.effect && m.effect !== 'EFFECT_HIT' && m.effect !== 'EFFECT_NORMAL_HIT') {
-        const label = m.effect
-          .replace(/^EFFECT_/, '')
-          .replace(/_/g, ' ')
-          .toLowerCase()
-          .replace(/\b\w/g, (c: string) => c.toUpperCase());
-        set.add(label);
+      if (m.additionalEffects) {
+        for (const e of m.additionalEffects) {
+          // Strip trailing " (N%)" so the filter label matches cleanly
+          const bare = e.label.replace(/\s*\(\d+%\)$/, '').trim();
+          if (bare) set.add(bare);
+        }
       }
     }
     return Array.from(set).sort();
@@ -139,29 +136,27 @@ export default function MovesPage() {
 
       if (searchTerm && !move.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
 
+      // Type filter
       if (activeFilters.types.length > 0) {
         const moveType = normalizeTypeName(move.type).toLowerCase();
         if (!activeFilters.types.some((t) => t.toLowerCase() === moveType)) return false;
       }
 
+      // Category filter — uses the fixed normaliser
       if (activeFilters.categories.length > 0) {
         const cat = normalizeMoveCategory(move.category || move.split);
         if (!activeFilters.categories.includes(cat)) return false;
       }
 
+      // Effect filter — match against additionalEffects[].label
       if (activeFilters.effects.length > 0) {
-        const effectLabel = move.effect
-          ? move.effect
-              .replace(/^EFFECT_/, '')
-              .replace(/_/g, ' ')
-              .toLowerCase()
-              .replace(/\b\w/g, (c: string) => c.toUpperCase())
-          : '';
-        if (!activeFilters.effects.includes(effectLabel)) return false;
+        const effectLabels: string[] = (move.additionalEffects ?? []).map((e: any) =>
+          e.label.replace(/\s*\(\d+%\)$/, '').trim(),
+        );
+        if (!activeFilters.effects.some((f) => effectLabels.includes(f))) return false;
       }
 
       if (hasTmOnly && !tmByMove[move.key]) return false;
-
       if (minPower && (move.power ?? 0) < Number(minPower)) return false;
       if (maxPower && (move.power ?? 0) > Number(maxPower)) return false;
 

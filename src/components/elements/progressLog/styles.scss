@@ -7,18 +7,18 @@
     margin: 1rem auto 0;
     border-radius: 0.5rem;
     overflow: hidden;
-    background-color: #1e1e1e; // Terminal background
+    background-color: var(--terminalBg);
     border: 1px solid var(--containerBorderColor);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     text-align: left;
 
     .terminal-header {
-        background-color: #2d2d2d;
+        background-color: var(--terminalHeader);
         padding: 0.5rem;
         display: flex;
         align-items: center;
         gap: 6px;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid black;
 
         .dot {
             width: 12px;
@@ -26,20 +26,20 @@
             border-radius: 50%;
 
             &.red {
-                background-color: #ff5f56;
+                background-color: var(--errorColor);
             }
 
             &.yellow {
-                background-color: #ffbd2e;
+                background-color: var(--warningColor);
             }
 
             &.green {
-                background-color: #27c93f;
+                background-color: var(--successColor);
             }
         }
 
         .title {
-            color: #999;
+            color: var(--terminalFaded);
             font-size: 0.8rem;
             margin-left: 0.5rem;
             font-family: monospace;
@@ -52,15 +52,14 @@
         overflow-y: auto;
         font-family: 'Courier New', Courier, monospace;
         font-size: 0.85rem;
-        color: #d4d4d4;
+        color: var(--terminalText);
 
-        // Custom scrollbar for the terminal
         &::-webkit-scrollbar {
             width: 8px;
         }
 
         &::-webkit-scrollbar-thumb {
-            background-color: #444;
+            background-color: var(--terminalThumb);
             border-radius: 4px;
         }
 

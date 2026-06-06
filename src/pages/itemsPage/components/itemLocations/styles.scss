@@ -1,18 +1,16 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
-// ── Color palette — MUST match METHOD_COLORS in FilterBar.tsx ────────────────
-// These are the canonical method colors used everywhere (chips, badges, rows).
+// Maps SCSS names to CSS custom properties from colors.scss
 $method-colors: (
-    overworld: #3baf6a,
-    hidden: #8a63d2,
-    mart: #d4862f,
-    npc: #3a9bd4,
-    berry-tree: #d43a6e,
-    other: #7a8a9a,
+    overworld: '--successColor',
+    hidden: '--catPurple',
+    mart: '--warningColor',
+    npc: '--catBlue',
+    berry-tree: '--catPink',
+    other: '--catGray',
 );
 
-// ── Section header ────────────────────────────────────────────────────────────
 .item-locations {
     .section-header {
         display: flex;
@@ -30,7 +28,6 @@ $method-colors: (
     }
 }
 
-// ── Method chip (clickable filter, now a <button>) ───────────────────────────
 .method-chip {
     display: inline-flex;
     align-items: center;
@@ -46,32 +43,29 @@ $method-colors: (
     font-family: inherit;
     transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
 
-    // Default (inactive): subtle tinted background, colored text
-    @each $name, $color in $method-colors {
+    @each $name, $var in $method-colors {
         &--#{$name} {
-            background-color: color-mix(in srgb, #{$color}, transparent 82%);
-            color: #{$color};
-            border-color: color-mix(in srgb, #{$color}, transparent 60%);
+            background-color: color-mix(in srgb, var(#{$var}), transparent 82%);
+            color: var(#{$var});
+            border-color: color-mix(in srgb, var(#{$var}), transparent 60%);
 
             &:hover {
-                background-color: color-mix(in srgb, #{$color}, transparent 65%);
+                background-color: color-mix(in srgb, var(#{$var}), transparent 65%);
             }
 
-            // ── ACTIVE: solid fill, white text ──
             &.method-chip--active {
-                background-color: #{$color};
-                color: #fff;
-                border-color: #{$color};
-                box-shadow: 0 0 0 3px color-mix(in srgb, #{$color}, transparent 65%);
+                background-color: var(#{$var});
+                color: white;
+                border-color: var(#{$var});
+                box-shadow: 0 0 0 3px color-mix(in srgb, var(#{$var}), transparent 65%);
 
                 &:hover {
-                    background-color: color-mix(in srgb, #{$color}, black 10%);
+                    background-color: color-mix(in srgb, var(#{$var}), black 10%);
                 }
             }
         }
     }
 
-    // Clear button
     &--clear {
         background: color-mix(in srgb, var(--fontColor), transparent 90%);
         color: var(--fadedFont);
@@ -79,14 +73,13 @@ $method-colors: (
         font-size: 0.7rem;
 
         &:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border-color: #ef4444;
+            background: color-mix(in srgb, var(--errorColor), transparent 90%);
+            color: var(--errorColor);
+            border-color: var(--errorColor);
         }
     }
 }
 
-// ── Method badge (table cell) — always uses tinted style ─────────────────────
 .method-badge {
     display: inline-flex;
     align-items: center;
@@ -102,16 +95,15 @@ $method-colors: (
         line-height: 1;
     }
 
-    @each $name, $color in $method-colors {
+    @each $name, $var in $method-colors {
         &--#{$name} {
-            background-color: color-mix(in srgb, #{$color}, transparent 82%);
-            color: #{$color};
-            border: 1px solid color-mix(in srgb, #{$color}, transparent 55%);
+            background-color: color-mix(in srgb, var(#{$var}), transparent 82%);
+            color: var(#{$var});
+            border: 1px solid color-mix(in srgb, var(#{$var}), transparent 55%);
         }
     }
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
 .locations-table {
     .map-name {
         font-size: 0.85rem;
@@ -124,9 +116,9 @@ $method-colors: (
         font-variant-numeric: tabular-nums;
     }
 
-    @each $name, $color in $method-colors {
+    @each $name, $var in $method-colors {
         .loc-row--#{$name} td:first-child {
-            border-left: 3px solid color-mix(in srgb, #{$color}, transparent 40%);
+            border-left: 3px solid color-mix(in srgb, var(#{$var}), transparent 40%);
         }
     }
 }

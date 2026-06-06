@@ -69,7 +69,6 @@
             white-space: nowrap;
         }
 
-        // ── Price row ──────────────────────────────────────────────────────────
         .price-row {
             display: flex;
             align-items: center;
@@ -111,7 +110,7 @@
             font-variant-numeric: tabular-nums;
 
             &.sell {
-                color: #3baf6a;
+                color: var(--successColor);
             }
         }
 

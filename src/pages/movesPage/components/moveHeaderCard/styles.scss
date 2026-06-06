@@ -1,17 +1,16 @@
-// decomp-docs/src/pages/movesPage/components/moveHeaderCard/styles.scss
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
 .move-header-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   padding: 24px;
 
   &__top {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
   }
 
@@ -58,11 +57,18 @@
   }
 
   &__effect-value {
-    font-size: 0.92rem;
-    font-weight: 600;
+    font-size: 0.9rem;
     color: var(--fontColor);
   }
 
+  // Secondary effects row
+  &__additional-effects {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  // Boolean flags rows
   &__flags {
     display: flex;
     gap: 6px;
@@ -79,7 +85,9 @@
   gap: 2px;
   border-right: 1px solid var(--containerBorderColor);
 
-  &:last-child { border-right: none; }
+  &:last-child {
+    border-right: none;
+  }
 
   &__label {
     font-size: 0.66rem;
@@ -98,7 +106,7 @@
   }
 }
 
-// ── Category badge ────────────────────────────────────────────────────────────
+// ── Category badge ─────────────────────────────────────────────────────────────
 .move-category-badge {
   display: inline-flex;
   align-items: center;
@@ -112,13 +120,42 @@
   border: 1px solid color-mix(in srgb, var(--cat-color, #7a8a9a), transparent 55%);
 }
 
-// ── Flag chips ────────────────────────────────────────────────────────────────
+// ── Secondary effect chips ────────────────────────────────────────────────────
+.move-effect-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, #f08030, transparent 82%);
+  color: #f08030;
+  border: 1px solid color-mix(in srgb, #f08030, transparent 55%);
+}
+
+// ── Boolean flag chips ────────────────────────────────────────────────────────
 .move-flag-chip {
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--fontColor), transparent 88%);
   color: var(--fadedFont);
   border: 1px solid var(--containerBorderColor);
+
+  // Move-type flags get a teal accent
+  &--type {
+    background: color-mix(in srgb, #3a9bd4, transparent 85%);
+    color: #3a9bd4;
+    border-color: color-mix(in srgb, #3a9bd4, transparent 55%);
+  }
+
+  // Banned flags are subtle red
+  &--banned {
+    background: color-mix(in srgb, #c84b4b, transparent 88%);
+    color: #c84b4b;
+    border-color: color-mix(in srgb, #c84b4b, transparent 65%);
+    font-size: 0.68rem;
+  }
 }
