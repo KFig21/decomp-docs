@@ -5,6 +5,7 @@ import MoveHeaderCard from './components/moveHeaderCard/MoveHeaderCard';
 import MoveTmInfo from './components/moveTmInfo/MoveTmInfo';
 import LevelUpLearners from './components/moveLearners/LevelUpLearners';
 import TmLearners from './components/moveLearners/TmLearners';
+import TutorLearners from './components/moveLearners/TutorLearners';
 
 type Props = {
   tmByMove: Record<string, any>;
@@ -42,10 +43,8 @@ export default function MoveDetailPage({ tmByMove, pokemonArray }: Props) {
     })
     .sort((a: any, b: any) => a.level - b.level);
 
-  // ── TM/HM learners ────────────────────────────────────────────────────────
-  // The expansion's all_learnables.json format produces { move } entries with
-  // no .tm — we still show TM learners whenever a TM item exists for this move.
-  const tmLearners = pokemonArray.filter(
+  // ── Pokemon that have this move in their tmhmLearnset ────────────────────
+  const allTmhmLearners = pokemonArray.filter(
     (mon: any) =>
       mon.isSeen &&
       mon.tmhmLearnset?.some((e: any) => {
@@ -54,12 +53,21 @@ export default function MoveDetailPage({ tmByMove, pokemonArray }: Props) {
       }),
   );
 
+  // Split by whether a TM item exists for this move:
+  // - tmLearners:    show when tmItem exists (they can learn via TM)
+  // - tutorLearners: show when NO tmItem exists (pure tutor move)
+  // A move is either a TM move or a tutor move, never split between the two,
+  // because all_learnables.json doesn't distinguish within a species.
+  const tmLearners = tmItem ? allTmhmLearners : [];
+  const tutorLearners = tmItem ? [] : allTmhmLearners;
+
   return (
     <div className="moves-detail-pane">
       <MoveHeaderCard move={selected} />
       {tmItem && <MoveTmInfo tmItem={tmItem} move={selected} />}
       <LevelUpLearners learners={levelUpLearners} />
       <TmLearners learners={tmLearners} isHm={isHm} />
+      <TutorLearners learners={tutorLearners} />
     </div>
   );
 }
