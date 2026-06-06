@@ -5,7 +5,14 @@ import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokem
 import { itemsIcon } from '../../../../components/elements/svgIcon/icons/itemsIcon';
 import './styles.scss';
 
-// ── Inline SVG paths for moves (sword) and the upload/home icon ───────────────
+// ── Inline SVG paths for moves (sword), trainers (person), and the upload/home icon ──
+const trainersIconPath = (
+  <>
+    <circle cx="12" cy="7" r="4" />
+    <path d="M12 13c-5 0-8 2.5-8 4v1h16v-1c0-1.5-3-4-8-4z" />
+  </>
+);
+
 const movesIconPath = (
   <>
     {/* Simple crossed-swords icon composed of two path elements */}
@@ -53,6 +60,15 @@ export default function NavBar() {
       icon: (
         <SvgIcon viewBox="0 0 24 24" width={18}>
           {movesIconPath}
+        </SvgIcon>
+      ),
+    },
+    {
+      path: '/trainers',
+      label: 'Trainers',
+      icon: (
+        <SvgIcon viewBox="0 0 24 24" width={18}>
+          {trainersIconPath}
         </SvgIcon>
       ),
     },

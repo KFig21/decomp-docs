@@ -1,0 +1,166 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.trainer-header-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 24px;
+    gap: 28px;
+
+    .trainer-header-sprite {
+        background-color: var(--backgroundColor);
+        border-radius: 8px;
+        padding: 16px;
+        border: 1px solid var(--containerBorderColor);
+        min-width: 130px;
+        max-width: 130px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+
+        img {
+            image-rendering: pixelated;
+            object-fit: contain;
+        }
+    }
+
+    .trainer-header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+
+        .trainer-header-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .trainer-header-name {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--fontColor);
+        }
+
+        .trainer-header-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .trainer-class-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+            color: var(--primaryColor);
+            border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
+            white-space: nowrap;
+        }
+
+        .double-battle-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: color-mix(in srgb, #d4862f, transparent 80%);
+            color: #d4862f;
+            border: 1px solid color-mix(in srgb, #d4862f, transparent 55%);
+            white-space: nowrap;
+        }
+
+        .trainer-header-stats {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: color-mix(in srgb, var(--backgroundColor), black 4%);
+            border: 1px solid var(--containerBorderColor);
+            border-radius: 8px;
+            overflow: hidden;
+            width: fit-content;
+        }
+
+        .stat-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 20px;
+            gap: 2px;
+
+            &--location {
+                align-items: flex-start;
+                padding: 8px 16px;
+            }
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 36px;
+            background: var(--containerBorderColor);
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--fadedFont);
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--fontColor);
+            font-variant-numeric: tabular-nums;
+
+            &--location {
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
+        }
+
+        .stat-map {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--fadedFont);
+        }
+
+        .trainer-header-items {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .items-label {
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: var(--fadedFont);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+
+            .trainer-item-chip {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 10px 4px 6px;
+                border-radius: 6px;
+                background: color-mix(in srgb, var(--backgroundColor), black 4%);
+                border: 1px solid var(--containerBorderColor);
+                font-size: 0.82rem;
+                font-weight: 600;
+                color: var(--fontColor);
+            }
+        }
+    }
+}

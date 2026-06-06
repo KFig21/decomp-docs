@@ -1,0 +1,116 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.trainers-sidebar {
+    height: 100%;
+    overflow-y: auto;
+    background-color: var(--containerBgColor);
+    border-right: 1px solid var(--containerBorderColor);
+    display: flex;
+    flex-direction: column;
+    min-width: 340px;
+    max-width: 340px;
+
+    &__empty {
+        padding: 20px 16px;
+        color: var(--fadedFont);
+        font-size: 0.85rem;
+        text-align: center;
+    }
+}
+
+.trainers-sidebar-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--fontColor);
+    border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 55%);
+    background-color: var(--backgroundColor);
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--containerBgColor), white 4%);
+    }
+
+    &.active {
+        background-color: var(--containerBgColor);
+        border-left: 4px solid var(--primaryColor);
+        padding-left: 8px;
+    }
+
+    .trainer-sprite-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+
+        img {
+            image-rendering: pixelated;
+            object-fit: contain;
+        }
+    }
+
+    .trainer-info-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+
+        .trainer-class-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--fadedFont);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .trainer-name-label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--fontColor);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .trainer-meta-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+        flex-shrink: 0;
+
+        .double-badge {
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: color-mix(in srgb, #d4862f, transparent 78%);
+            color: #d4862f;
+            border: 1px solid color-mix(in srgb, #d4862f, transparent 55%);
+        }
+
+        .party-count {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--fontColor);
+            font-variant-numeric: tabular-nums;
+
+            &__sub {
+                font-size: 0.68rem;
+                font-weight: 500;
+                color: var(--fadedFont);
+            }
+        }
+    }
+}

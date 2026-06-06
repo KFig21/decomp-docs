@@ -7,6 +7,7 @@ import LocationDetailPage from './pages/locationsPage/LocationDetailPage';
 import PokemonPage from './pages/pokemonPage/PokemonPage';
 import ItemsPage from './pages/itemsPage/ItemsPage';
 import MovesPage from './pages/movesPage/MovesPage';
+import TrainersPage from './pages/trainersPage/TrainersPage';
 import { useData } from './contexts/dataContext';
 import LoadingScreen from './components/elements/loadingScreen/LoadingScreen';
 
@@ -33,7 +34,6 @@ export function CreateRouter() {
     ]);
   }
 
-  // NOTE: We no longer need `setCurrentPage`. AppLayout can use `location.pathname === '/'`
   return createBrowserRouter([
     {
       element: <AppLayout projectName={projectName} />,
@@ -50,6 +50,8 @@ export function CreateRouter() {
         { path: '/items/:id', element: <ItemsPage /> },
         { path: '/moves', element: <MovesPage /> },
         { path: '/moves/:id', element: <MovesPage /> },
+        { path: '/trainers', element: <TrainersPage /> },
+        { path: '/trainers/:id', element: <TrainersPage /> },
       ],
     },
   ]);
