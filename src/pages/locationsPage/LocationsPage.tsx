@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, type Dispatch, type SetStateAction } from 'react';
+import { useState, useMemo } from 'react';
 import './styles.scss';
 import { useData } from '../../contexts/dataContext';
 import LocationsSidebar from './components/sidebar/LocationsSidebar';
@@ -6,17 +6,9 @@ import LocationCard from './components/locationCard/sections/locations/LocationC
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
 import { TrainerTabProvider } from '../../contexts/trainerTabContext';
 
-type Props = {
-  setCurrentPage: Dispatch<SetStateAction<string>>;
-};
-
-export default function LocationsPage({ setCurrentPage }: Props) {
+export default function LocationsPage() {
   const { locations } = useData();
   const [expandAll, setExpandAll] = useState(true);
-
-  useEffect(() => {
-    setCurrentPage('locations');
-  }, [setCurrentPage]);
 
   // Safely extract and sort the locations to match the sidebar order
   const sortedLocations = useMemo(() => {

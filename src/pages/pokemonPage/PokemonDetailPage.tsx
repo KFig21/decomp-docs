@@ -32,6 +32,7 @@ export default function PokemonDetailPage() {
       const area = paneRef.current?.closest('.pokemon-detail-area') as HTMLElement | null;
       if (area) area.scrollTop = 0;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseSelected?.key]); // Only re-run when the key changes, not the whole object
 
   // Show/hide the back-to-top button based on scroll position

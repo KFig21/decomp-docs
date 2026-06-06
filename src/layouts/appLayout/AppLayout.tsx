@@ -1,5 +1,4 @@
-// decomp-docs/src/layouts/appLayout/AppLayout.tsx
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import NavBar from './components/navBar/NavBar';
 import ThemeDrawer from './components/themeDrawer/ThemeDrawer';
@@ -10,12 +9,15 @@ import './styles.scss';
 
 type Props = {
   projectName: string;
-  currentPage: string;
 };
 
-export default function AppLayout({ projectName, currentPage }: Props) {
+export default function AppLayout({ projectName }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [themeOpen, setThemeOpen] = useState(false);
+
+  // Check if the user is currently on the upload screen
+  const isUploadPage = location.pathname === '/';
 
   return (
     <div className="app-layout">
@@ -34,7 +36,7 @@ export default function AppLayout({ projectName, currentPage }: Props) {
         </div>
 
         {/* Center: page navigation (hidden on upload page) */}
-        {currentPage !== 'upload' && <NavBar />}
+        {!isUploadPage && <NavBar />}
 
         {/* Right: theme picker */}
         <div className="themes-container">
@@ -50,7 +52,7 @@ export default function AppLayout({ projectName, currentPage }: Props) {
       </main>
 
       {/* ── Footer breadcrumbs ── */}
-      <Breadcrumbs currentPage={currentPage} />
+      <Breadcrumbs currentPage={isUploadPage ? 'upload' : ''} />
 
       {/* ── Theme drawer ── */}
       <ThemeDrawer open={themeOpen} onClose={() => setThemeOpen(false)} />

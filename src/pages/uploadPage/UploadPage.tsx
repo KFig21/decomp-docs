@@ -12,10 +12,9 @@ import './styles.scss';
 type Props = {
   projectName: string;
   setProjectName: (name: string) => void;
-  setCurrentPage: (page: string) => void;
 };
 
-export default function UploadPage({ projectName, setProjectName, setCurrentPage }: Props) {
+export default function UploadPage({ projectName, setProjectName }: Props) {
   const { setLocations, setPokemon, setItems, setTrainers, setMoves, setAbilities, setNatures } =
     useData();
 
@@ -94,8 +93,6 @@ export default function UploadPage({ projectName, setProjectName, setCurrentPage
       setMoves(result.moves);
       setAbilities(result.abilities);
       setNatures(result.natures ?? {});
-
-      setCurrentPage('locations');
       navigate('/locations');
     } catch (err: any) {
       if (err.message === 'CANCELLED') {

@@ -1,4 +1,3 @@
-// decomp-docs/src/router.tsx
 import { useState } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from './layouts/appLayout/AppLayout';
@@ -8,30 +7,42 @@ import LocationDetailPage from './pages/locationsPage/LocationDetailPage';
 import PokemonPage from './pages/pokemonPage/PokemonPage';
 import ItemsPage from './pages/itemsPage/ItemsPage';
 import MovesPage from './pages/movesPage/MovesPage';
-
-// UploadPage sets the project name + calls setXxx on the DataContext.
-// We still thread projectName / setProjectName through the router so the
-// topbar can display the rom hack name.
+import { useData } from './contexts/dataContext';
+import LoadingScreen from './components/elements/loadingScreen/LoadingScreen';
 
 export function CreateRouter() {
-  const [projectName, setProjectName] = useState('');
-  const [currentPage, setCurrentPage] = useState('upload');
+  const { isRestoring } = useData();
 
+  // Initialize from localStorage
+  const [projectName, setProjectNameState] = useState(() => {
+    return localStorage.getItem('decomp-docs-project') || '';
+  });
+
+  const setProjectName = (name: string) => {
+    setProjectNameState(name);
+    localStorage.setItem('decomp-docs-project', name);
+  };
+
+  // Prevent routing until the database has finished loading our saved data
+  if (isRestoring) {
+    return createBrowserRouter([
+      {
+        path: '*',
+        element: <LoadingScreen />,
+      },
+    ]);
+  }
+
+  // NOTE: We no longer need `setCurrentPage`. AppLayout can use `location.pathname === '/'`
   return createBrowserRouter([
     {
-      element: <AppLayout projectName={projectName} currentPage={currentPage} />,
+      element: <AppLayout projectName={projectName} />,
       children: [
         {
           path: '/',
-          element: (
-            <UploadPage
-              projectName={projectName}
-              setProjectName={setProjectName}
-              setCurrentPage={setCurrentPage} // error: Type '{ projectName: string; setProjectName: Dispatch<SetStateAction<string>>; setCurrentPage: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & Props'.  Property 'setCurrentPage' does not exist on type 'IntrinsicAttributes & Props'.
-            />
-          ),
+          element: <UploadPage projectName={projectName} setProjectName={setProjectName} />,
         },
-        { path: '/locations', element: <LocationsPage setCurrentPage={setCurrentPage} /> },
+        { path: '/locations', element: <LocationsPage /> },
         { path: '/locations/:id', element: <LocationDetailPage /> },
         { path: '/pokemon', element: <PokemonPage /> },
         { path: '/pokemon/:id', element: <PokemonPage /> },

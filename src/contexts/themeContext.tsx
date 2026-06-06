@@ -18,10 +18,15 @@ export const useTheme = () => {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const themes = ['base', 'night', 'light'];
-  const [theme, setThemeState] = useState('base');
+
+  // Initialize from localStorage, defaulting to 'base'
+  const [theme, setThemeState] = useState(() => {
+    return localStorage.getItem('decomp-docs-theme') || 'base';
+  });
 
   const setTheme = (newTheme: string) => {
     setThemeState(newTheme);
+    localStorage.setItem('decomp-docs-theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 

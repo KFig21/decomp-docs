@@ -118,7 +118,7 @@
 // ── Back to top button ────────────────────────────────────────────────────────
 .back-to-top {
     position: fixed;
-    bottom: 28px;
+    bottom: 48px;
     right: 28px;
     z-index: 100;
 
@@ -126,9 +126,10 @@
     align-items: center;
     gap: 5px;
     padding: 8px 16px;
-    border-radius: 999px;
+    border-radius: 8px;
     border: 1px solid var(--containerBorderColor);
     background: var(--containerBgColor);
+    backdrop-filter: blur(8px);
     color: var(--fontColor);
     font-size: 0.82rem;
     font-weight: 700;

@@ -1,5 +1,3 @@
-// decomp-docs/src/pages/pokemonPage/components/jsonDebug/styles.scss
-
 @use '../../../../styles/index.scss' as *;
 
 .json-debug-container {
@@ -12,22 +10,6 @@
 
         .section-header-title {
             padding-left: 8px;
-        }
-
-        .copy-btn {
-            background-color: var(--primaryColor);
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-
-            &:hover {
-                opacity: 0.9;
-            }
         }
     }
 
