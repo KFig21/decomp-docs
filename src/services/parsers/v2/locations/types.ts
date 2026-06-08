@@ -18,12 +18,18 @@ export type LocationMap = {
   wildPokemon: WildEncounterTable[];
   staticEncounters: StaticEncounter[];
   mapImage?: string;
+  weathers?: string[]; // display names e.g. ['Rain', 'Sandstorm'] — collected from all zone sources
+  hmEvents?: string[]; // e.g. ['cut', 'surf', 'waterfall', 'strength', 'rock_smash', 'dive', 'flash']
+  hasMart?: boolean;
 };
 
 export type LocationRoot = {
   root: string;
   maps: Record<string, LocationMap>;
   order?: number;
+  // Pre-computed for sidebar filtering
+  hasGym?: boolean;
+  hasRival?: boolean;
 };
 
 export type MapGroupsJson = {

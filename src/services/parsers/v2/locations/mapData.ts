@@ -8,6 +8,7 @@ import {
   resolveTrainersFromScripts,
 } from './utils';
 import { resolveBerryTreeItems } from './parseBerryTrees';
+import { resolveWeatherName } from './weatherData';
 
 export function attachMapData(
   map: LocationMap,
@@ -25,6 +26,18 @@ export function attachMapData(
   map.npcs = [];
   map.wildPokemon = [];
   map.staticEncounters = [];
+  map.hmEvents = [];
+  map.hasMart = false;
+  map.weathers = [];
+
+  // ── Weather collection helper ──────────────────────────────────────────────
+  const addWeather = (raw: string | undefined | null) => {
+    const name = resolveWeatherName(raw);
+    if (name && !map.weathers!.includes(name)) map.weathers!.push(name);
+  };
+
+  // ---- WEATHER SOURCE 1: top-level `weather` field ----
+  addWeather(mapJson.weather);
 
   // ---- OBJECT EVENTS ----
   for (const obj of mapJson.object_events ?? []) {
@@ -123,6 +136,11 @@ export function attachMapData(
     }
   }
 
+  // ---- WEATHER SOURCE 2: coord_events with type "weather" ----
+  for (const ce of mapJson.coord_events ?? []) {
+    if (ce.type === 'weather') addWeather(ce.weather);
+  }
+
   // ---- BG EVENTS ----
   for (const bg of mapJson.bg_events ?? []) {
     if (bg.type === 'hidden_item') {
@@ -130,6 +148,65 @@ export function attachMapData(
       if (item) {
         map.items.push({ item, x: bg.x, y: bg.y, source: 'hidden_item' });
       }
+    }
+  }
+
+  // ---- FLASH ----
+  if (mapJson.requires_flash) map.hmEvents!.push('flash');
+
+  // ---- HM / FIELD-MOVE DETECTION ----
+  // Collect all script name references from object events and bg events — these are
+  // short strings like "Route101_EventScript_CutTree" and are very reliable signal
+  // sources even when the full scripts.inc isn't loaded.
+  const objScriptNames = ((mapJson.object_events ?? []) as any[])
+    .map((o) => String(o.script ?? ''))
+    .join(' ');
+  const bgScriptNames = ((mapJson.bg_events ?? []) as any[])
+    .map((b) => String(b.script ?? ''))
+    .join(' ');
+  // Collect graphics IDs for object-event-based HM objects (boulders, etc.)
+  const graphicsIds = ((mapJson.object_events ?? []) as any[])
+    .map((o) => String(o.graphics_id ?? ''))
+    .join(' ');
+
+  // Combine all text sources for a single-pass test per HM
+  const allRefs = `${objScriptNames} ${bgScriptNames} ${graphicsIds}`;
+  const allText = `${allRefs} ${scripts ?? ''}`;
+
+  const has = (pattern: RegExp) => pattern.test(allText);
+
+  // Cut: tree-clearing events or HM_CUT references in scripts
+  if (has(/cut[_]?tree|CutTree|cutgrass|HM_CUT\b|HM_06\b/i)) {
+    map.hmEvents!.push('cut');
+  }
+  // Waterfall: ascending waterfalls or HM_WATERFALL references
+  if (has(/waterfall|HM_WATERFALL\b|HM_07\b/i)) {
+    map.hmEvents!.push('waterfall');
+  }
+  // Strength: pushable boulders by graphics ID name or script name or HM reference
+  if (has(/pushable[_]?boulder|strength[_]?boulder|OBJ_EVENT_GFX.*BOULDER|HM_STRENGTH\b|HM_04\b|moveboulder|pushboulder/i)) {
+    map.hmEvents!.push('strength');
+  }
+  // Rock Smash: breakable rocks or HM reference (also added from encounter methods in index.ts)
+  if (has(/rock[_]?smash|smash[_]?rock|breakable[_]?rock|HM_ROCK_SMASH\b|HM_06\b/i)) {
+    if (!map.hmEvents!.includes('rock_smash')) map.hmEvents!.push('rock_smash');
+  }
+  // Dive: underwater dive points or HM reference
+  if (has(/\bdive\b|\bdiving\b|DiveSpot|DivingSign|HM_DIVE\b|HM_08\b/i)) {
+    map.hmEvents!.push('dive');
+  }
+
+  // Mart detection: scripts reference a mart/shop menu
+  if (has(/pokemart|PokeMart|buymenu|BuyMenu|MartMenu/i)) {
+    map.hasMart = true;
+  }
+
+  // ---- WEATHER SOURCE 3: setweather commands in scripts.inc ----
+  if (scripts) {
+    const setweatherRegex = /setweather\s+(WEATHER_[A-Z0-9_]+)/g;
+    let wMatch: RegExpExecArray | null;
+    while ((wMatch = setweatherRegex.exec(scripts))) {
+      addWeather(wMatch[1]);
     }
   }
 }

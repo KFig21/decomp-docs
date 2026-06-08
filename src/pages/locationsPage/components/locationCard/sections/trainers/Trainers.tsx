@@ -11,12 +11,12 @@ type Props = {
 };
 
 export default function Trainers({ trainers, expandAll = true, parentOpen = true }: Props) {
-  const [open, setOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (expandAll || parentOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpen(true);
+      setIsOpen(true);
     }
   }, [expandAll, parentOpen]);
 
@@ -39,14 +39,14 @@ export default function Trainers({ trainers, expandAll = true, parentOpen = true
   }, [trainers]);
 
   return (
-    <div className="trainers-section container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
-        <CollapseToggle isOpen={open} />
+    <div className={`trainers-section container-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
         {/* Display the number of unique encounters, rather than total variants */}
         <span>Trainers ({groupedTrainers.length})</span>
       </div>
 
-      {open && (
+      {isOpen && (
         <div className="trainers-list">
           {groupedTrainers.map((group, i) => (
             <PartyCard key={i} trainerGroup={group} />

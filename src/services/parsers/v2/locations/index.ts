@@ -137,6 +137,21 @@ export async function parseLocations(
       if (wildByMap[mapId]) {
         map.wildPokemon.push(...wildByMap[mapId]);
 
+        // Derive HM events from encounter methods
+        if (!map.hmEvents) map.hmEvents = [];
+        for (const table of wildByMap[mapId]) {
+          const m = table.method.toLowerCase();
+          if ((m.includes('surf') || m.includes('water')) && !map.hmEvents.includes('surf')) {
+            map.hmEvents.push('surf');
+          }
+          if ((m.includes('rod') || m.includes('fish')) && !map.hmEvents.includes('surf')) {
+            map.hmEvents.push('surf');
+          }
+          if (m.includes('rock smash') && !map.hmEvents.includes('rock_smash')) {
+            map.hmEvents.push('rock_smash');
+          }
+        }
+
         for (const table of wildByMap[mapId]) {
           for (const encounter of table.encounters) {
             const mon = encounter.pokemon;
@@ -169,6 +184,30 @@ export async function parseLocations(
           mapJson,
         );
         if (base64Image) map.mapImage = base64Image;
+      }
+    }
+  }
+
+  // ── Post-process: compute root-level flags from all maps ────────────────────
+  for (const root of Object.values(locations)) {
+    root.hasGym = false;
+    root.hasRival = false;
+
+    for (const [mapName, map] of Object.entries(root.maps)) {
+      // Gym: map name ends with _Gym / _GYM, OR any trainer class contains "gym" or is "Leader"
+      if (
+        /_(gym)$/i.test(mapName) ||
+        map.trainers.some((t) => {
+          const cls = t.trainerClass?.toLowerCase() ?? '';
+          return cls.includes('gym') || cls === 'leader' || cls.includes('gym leader');
+        })
+      ) {
+        root.hasGym = true;
+      }
+
+      // Rival: any trainer class contains "rival"
+      if (map.trainers.some((t) => t.trainerClass?.toLowerCase().includes('rival'))) {
+        root.hasRival = true;
       }
     }
   }

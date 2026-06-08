@@ -1,56 +1,32 @@
-import { useEffect, useState } from 'react';
 import './../../styles.scss';
 import MapCard from './MapCard';
 import type {
   LocationMap,
   LocationRoot,
 } from '../../../../../../services/parsers/v2/locations/types';
-import { toSafeId } from '../../../../../../utils/dom';
-import { formatReadableName } from '../../../../../../utils/functions';
-import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 
 type Props = {
   locationRoot: LocationRoot;
-  expandAll?: boolean;
 };
 
-export default function LocationCard({ locationRoot, expandAll = true }: Props) {
-  const [open, setOpen] = useState(true);
-
-  useEffect(() => {
-    setOpen(expandAll);
-  }, [expandAll]);
-
+export default function LocationCard({ locationRoot }: Props) {
   return (
-    <div className="location-card container-style" id={toSafeId(locationRoot.root)}>
-      <div className="section-header" onClick={() => setOpen(!open)}>
-        <CollapseToggle isOpen={open} />
-        <span className="title">{formatReadableName(locationRoot.root)}</span>
+    <div className="location-card">
+      <div className="location-maps">
+        {Object.values(locationRoot.maps).map((locationMap: LocationMap, i: number) => {
+          const isOverworld = locationMap.name === locationRoot.root;
+
+          const hasContent =
+            locationMap.trainers.length > 0 ||
+            locationMap.wildPokemon.length > 0 ||
+            locationMap.items.length > 0 ||
+            (locationMap.staticEncounters && locationMap.staticEncounters.length > 0) ||
+            (isOverworld && !!locationMap.mapImage);
+
+          return hasContent && <MapCard key={i} location={locationMap} isOverworld={isOverworld} />;
+        })}
       </div>
-
-      {open && (
-        <div>
-          {Object.values(locationRoot.maps).map((locationMap: LocationMap, i: number) => {
-            const isOverworld = locationMap.name === locationRoot.root;
-
-            // STRICT FILTER: Must have interactions, OR be an overworld map with an image
-            const hasContent =
-              locationMap.trainers.length > 0 ||
-              locationMap.wildPokemon.length > 0 ||
-              locationMap.items.length > 0 ||
-              (locationMap.staticEncounters && locationMap.staticEncounters.length > 0) ||
-              (isOverworld && !!locationMap.mapImage);
-
-            return (
-              hasContent && (
-                <div key={i} className="map-section content">
-                  <MapCard location={locationMap} expandAll={expandAll} isOverworld={isOverworld} />
-                </div>
-              )
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }
+

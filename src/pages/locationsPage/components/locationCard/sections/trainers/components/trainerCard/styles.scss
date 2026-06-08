@@ -6,11 +6,25 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 150px;
-    min-width: 150px;
+    width: 110px;
+    min-width: 110px;
+    border: 1px solid var(--containerBorderColor);
     border-radius: 6px;
-    overflow: hidden;
-    margin-right: 12px;
+
+    .trainer-card-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        text-decoration: none;
+        border-radius: 6px 6px 0 0;
+        overflow: hidden;
+        transition: opacity 0.15s;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
 
     .trainer-sprite-wrapper {
         background-color: var(--backgroundColor);
@@ -18,11 +32,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        flex: 2;
+        padding: 6px 0;
+        border-radius: 6px 6px 0 0;
 
         .trainer-sprite-container {
-            width: 90px;
-            height: 90px;
+            width: 64px;
+            height: 128px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -38,20 +53,35 @@
     .trainer-info {
         width: 100%;
         text-align: center;
+        border-top: 1px solid var(--containerBorderColor);
 
         .trainer-class {
-            color: var(--fontColor);
-            font-size: 0.8rem;
+            color: var(--fadedFont);
+            font-size: 0.68rem;
+            font-weight: 600;
             background-color: var(--containerBgColor);
-            padding: 1px 0px;
+            padding: 2px 4px;
+        }
+
+        .trainer-name-link {
+            text-decoration: none;
+            display: block;
+
+            &:hover .trainer-name {
+                color: var(--primaryColor);
+            }
         }
 
         .trainer-name {
-            font-size: 1rem;
-            font-weight: bold;
+            font-size: 0.82rem;
+            font-weight: 700;
             color: var(--fontColor);
-            background-color: var(--containerBorderColor);
-            padding: 1px 0px;
+            background-color: color-mix(in srgb, var(--containerBgColor), black 8%);
+            padding: 2px 4px;
+            transition: color 0.15s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .trainer-items {
@@ -59,8 +89,22 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
+            gap: 2px;
             padding: 3px;
             background-color: var(--backgroundColor);
+
+            a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 3px;
+                padding: 1px;
+                transition: background 0.12s;
+
+                &:hover {
+                    background: color-mix(in srgb, var(--primaryColor), transparent 80%);
+                }
+            }
         }
     }
 }

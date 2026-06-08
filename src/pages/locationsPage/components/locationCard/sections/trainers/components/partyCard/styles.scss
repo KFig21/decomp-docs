@@ -3,51 +3,93 @@
 
 .party-card-container {
     display: flex;
+    flex-direction: row;
     gap: 16px;
-    padding: 16px;
-    border-top: 1px solid var(--containerBorderColor);
-    border-left: solid 1px var(--containerBorderColor);
+    padding: 14px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--containerBorderColor);
     background-color: var(--containerBgColor);
 
+    // ── Left column: trainer card + export button ─────────────────────────────
+    .trainer-left-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    // ── Right side: tabs + party ──────────────────────────────────────────────
     .trainer-party-area {
         display: flex;
         flex-direction: column;
+        gap: 10px;
         flex: 1;
+        min-width: 0;
+    }
 
-        .trainer-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
+    // ── Starter variant tabs ──────────────────────────────────────────────────
+    .trainer-tabs {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
 
-            .tab-button {
-                background-color: var(--backgroundColor);
-                border: 1px solid var(--containerBorderColor);
-                color: var(--fadedFont);
-                padding: 4px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 0.85rem;
-                font-weight: 600;
-                transition: all 0.2s ease;
+        .tab-button {
+            background-color: var(--backgroundColor);
+            border: 1px solid var(--containerBorderColor);
+            color: var(--fadedFont);
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.15s;
 
-                &:hover {
-                    color: var(--fontColor);
-                    border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
-                }
+            &:hover {
+                color: var(--fontColor);
+                border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
+            }
 
-                &.active {
-                    background-color: var(--primaryColor);
-                    color: #fff;
-                    border-color: var(--primaryColor);
-                }
+            &.active {
+                background-color: var(--primaryColor);
+                color: #fff;
+                border-color: var(--primaryColor);
             }
         }
+    }
 
-        .trainer-party {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+    // ── Export toggle ─────────────────────────────────────────────────────────
+    .export-toggle-btn {
+        width: 100%;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--containerBorderColor);
+        background: var(--backgroundColor);
+        color: var(--fadedFont);
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+
+        &:hover {
+            color: var(--fontColor);
+            border-color: var(--primaryColor);
         }
+
+        &--active {
+            background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+            color: var(--primaryColor);
+            border-color: var(--primaryColor);
+        }
+    }
+
+    // ── Party ─────────────────────────────────────────────────────────────────
+    .trainer-party {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 }

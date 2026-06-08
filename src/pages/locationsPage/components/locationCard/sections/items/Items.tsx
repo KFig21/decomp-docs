@@ -11,23 +11,23 @@ type Props = {
 };
 
 export default function ItemsSection({ items, expandAll = true, parentOpen = true }: Props) {
-  const [open, setOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (expandAll || parentOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpen(true);
+      setIsOpen(true);
     }
   }, [expandAll, parentOpen]);
 
   return (
-    <div className="section container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
-        <CollapseToggle isOpen={open} />
+    <div className={`section container-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
         <span>Items ({items.length})</span>
       </div>
 
-      {open && items.length > 0 && (
+      {isOpen && items.length > 0 && (
         <div className="table-container">
           <div className="table-wrapper">
             <table className="items-table">

@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function Map({ location, expandAll = true, parentOpen = true }: Props) {
-  const [open, setOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const mapImageSrc = location.mapImage
@@ -22,7 +22,7 @@ export default function Map({ location, expandAll = true, parentOpen = true }: P
   useEffect(() => {
     if (expandAll || parentOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpen(true);
+      setIsOpen(true);
     }
   }, [expandAll, parentOpen]);
 
@@ -40,13 +40,13 @@ export default function Map({ location, expandAll = true, parentOpen = true }: P
 
   return (
     <>
-      <div className="map-card container-style">
-        <div className="section-header" onClick={() => setOpen(!open)}>
-          <CollapseToggle isOpen={open} />
+      <div className={`map-card container-style ${isOpen ? '' : 'collapsed'}`}>
+        <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+          <CollapseToggle isOpen={isOpen} />
           <span className="title">Map</span>
         </div>
 
-        {open && (
+        {isOpen && (
           <div className="content">
             {mapImageSrc && (
               <div className="map-container">

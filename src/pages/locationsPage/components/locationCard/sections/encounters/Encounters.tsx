@@ -13,13 +13,13 @@ type Props = {
 };
 
 export default function Encounters({ table, expandAll = true, parentOpen = true }: Props) {
-  const [open, setOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (expandAll || parentOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpen(true);
+      setIsOpen(true);
     }
   }, [expandAll, parentOpen]);
 
@@ -38,15 +38,15 @@ export default function Encounters({ table, expandAll = true, parentOpen = true 
   };
 
   return (
-    <div className="section-encounters container-style">
-      <div className="section-header" onClick={() => setOpen(!open)}>
-        <CollapseToggle isOpen={open} />
+    <div className={`section-encounters container-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
         <span>
           {formatEncounterTableName(table.method)} ({table.encounters.length})
         </span>
       </div>
 
-      {open && table.encounters.length > 0 && (
+      {isOpen && table.encounters.length > 0 && (
         <div className="table-container">
           <div className="table-wrapper">
             <table className="encounters-table">

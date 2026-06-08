@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from './layouts/appLayout/AppLayout';
 import UploadPage from './pages/uploadPage/UploadPage';
 import LocationsPage from './pages/locationsPage/LocationsPage';
-import LocationDetailPage from './pages/locationsPage/LocationDetailPage';
 import PokemonPage from './pages/pokemonPage/PokemonPage';
 import ItemsPage from './pages/itemsPage/ItemsPage';
 import MovesPage from './pages/movesPage/MovesPage';
@@ -43,7 +42,7 @@ export function CreateRouter() {
           element: <UploadPage projectName={projectName} setProjectName={setProjectName} />,
         },
         { path: '/locations', element: <LocationsPage /> },
-        { path: '/locations/:id', element: <LocationDetailPage /> },
+        { path: '/locations/:id', element: <LocationsPage /> },
         { path: '/pokemon', element: <PokemonPage /> },
         { path: '/pokemon/:id', element: <PokemonPage /> },
         { path: '/items', element: <ItemsPage /> },

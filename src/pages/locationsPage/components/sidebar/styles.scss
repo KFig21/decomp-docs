@@ -1,56 +1,48 @@
 @use './../../../../styles/index.scss' as *;
 @use './../../../../styles/colors.scss' as *;
 
-$collapseButtonHeight: 41px;
-
-.sidebar-wrapper {
-    height: $scrollableContainerHeight;
-    border-right: solid 1px var(--containerBorderColor);
-    background-color: var(--backgroundColor);
-
-    .collapse-all-button {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        border-bottom: solid 1px var(--containerBorderColor);
-        height: $collapseButtonHeight;
-
-        .collapse-all-text {
-            font-size: 1rem;
-            color: var(--fontColor);
-        }
-    }
-}
-
 .locations-sidebar {
-    overflow-y: scroll;
-    width: 250px;
-    height: calc(100vh - $topbarHeight - $collapseButtonHeight);
+    height: 100%;
+    overflow-y: auto;
+    background-color: var(--containerBgColor);
+    border-right: 1px solid var(--containerBorderColor);
+    display: flex;
+    flex-direction: column;
+    min-width: 280px;
+    max-width: 280px;
 }
 
-.sidebar-item {
-    display: block;
-    padding: 6px 8px;
-    font-size: 0.95rem;
+.locations-sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
     color: var(--fadedFont);
-    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 55%);
+    background-color: var(--backgroundColor);
     border-left: 3px solid transparent;
-    transition: all 0.15s ease;
-
-    span {
-        margin-right: 1rem;
-
-    }
+    transition: background-color 0.15s, color 0.15s;
+    user-select: none;
 
     &:hover {
+        background-color: color-mix(in srgb, var(--containerBgColor), white 4%);
         color: var(--fontColor);
     }
 
     &.active {
+        background-color: var(--containerBgColor);
+        border-left-color: var(--primaryColor);
+        border-left-width: 4px;
+        padding-left: 10px;
         color: var(--fontColor);
         font-weight: 700;
-        border-left-color: var(--primaryColor);
-        border-left-width: 3px;
-        background: var(--containerBgColor);
+    }
+
+    .location-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

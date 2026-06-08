@@ -174,7 +174,7 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
           )}
 
           {/* Held item link */}
-          {heldItem && (
+          {/* {heldItem && (
             <Link
               to={`/items/${heldItem.key}`}
               className="party-held-item"
@@ -183,7 +183,7 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
               <ItemSprite item={heldItem} size={14} />
               <span className="held-name">{heldItem.name || heldItem.key}</span>
             </Link>
-          )}
+          )} */}
 
           {/* Moves */}
           <div className="party-moves">
