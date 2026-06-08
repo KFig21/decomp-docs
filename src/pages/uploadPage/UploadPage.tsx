@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function UploadPage({ projectName, setProjectName }: Props) {
-  const { setLocations, setPokemon, setItems, setTrainers, setMoves, setAbilities, setNatures } =
+  const { setLocations, setPokemon, setItems, setTrainers, setMoves, setAbilities, setNatures, setWeathers } =
     useData();
 
   const navigate = useNavigate();
@@ -93,6 +93,7 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
       setMoves(result.moves);
       setAbilities(result.abilities);
       setNatures(result.natures ?? {});
+      setWeathers(result.weathers ?? {});
       navigate('/locations');
     } catch (err: any) {
       if (err.message === 'CANCELLED') {

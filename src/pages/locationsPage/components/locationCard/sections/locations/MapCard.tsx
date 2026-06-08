@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './../../styles.scss';
-import { WEATHER_ICONS } from '../../../../../../services/parsers/v2/locations/weatherData';
 import Trainers from '../trainers/Trainers';
 import ItemsSection from '../items/Items';
 import EncounterTable from '../encounters/EncounterTables';
@@ -31,8 +30,8 @@ export default function MapCard({ location, isOverworld = false }: Props) {
         {location.weathers && location.weathers.length > 0 && (
           <div className="map-weather-badges">
             {location.weathers.map((w) => (
-              <span key={w} className="map-weather-badge" title={`Weather: ${w}`}>
-                {WEATHER_ICONS[w] ?? '🌤️'} {w}
+              <span key={w.key} className="map-weather-badge" title={`Weather: ${w.name}`}>
+                {w.icon} {w.name}
               </span>
             ))}
           </div>

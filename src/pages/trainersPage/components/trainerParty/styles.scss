@@ -4,9 +4,9 @@
 // ── 3 × 2 party grid ─────────────────────────────────────────────────────────
 .trainer-party-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 10px;
-    padding: 0px 20px;
+    padding: 0px;
 }
 
 // ── Flip wrapper — sets perspective and ensures equal-height grid cells ────────

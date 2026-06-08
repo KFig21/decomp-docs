@@ -4,6 +4,7 @@ import { parseAbilities } from './abilities';
 import { parseItems } from './items';
 import { attachItemLocations } from './items/attachItemLocations';
 import { parseLocations } from './locations';
+import { parseWeathers } from './weather';
 import { parseMoves } from './moves/moves';
 import { parseNatures } from './natures';
 import { markItemsPlaced, markPokemonObtainable } from './obtainability';
@@ -75,6 +76,11 @@ export async function parseDecompV2(
   if (checkCancel?.()) throw new Error('CANCELLED');
   const trainers = parseTrainers(files, moves, items, pokemon);
 
+  if (onProgress) onProgress('Parsing weather...', m.locStart - 1);
+  await delay(0);
+  if (checkCancel?.()) throw new Error('CANCELLED');
+  const weathers = parseWeathers(files);
+
   if (onProgress) onProgress('Parsing locations...', m.locStart);
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
@@ -85,6 +91,7 @@ export async function parseDecompV2(
     items,
     trainers,
     pokemon,
+    weathers,
     renderMaps,
     onProgress,
     m.locStart,
@@ -125,8 +132,9 @@ export async function parseDecompV2(
   console.log('Parsed natures:', natures);
   console.log('Parsed Pokémon:', pokemon);
   console.log('Parsed trainers:', trainers);
+  console.log('Parsed weathers:', weathers);
   console.log('Parsed locations:', locations);
 
   // ── Return ALL parsed data including abilities and natures ────────────────
-  return { moves, items, abilities, natures, pokemon, trainers, locations };
+  return { moves, items, abilities, natures, pokemon, trainers, weathers, locations };
 }

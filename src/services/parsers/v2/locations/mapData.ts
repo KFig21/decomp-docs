@@ -8,7 +8,8 @@ import {
   resolveTrainersFromScripts,
 } from './utils';
 import { resolveBerryTreeItems } from './parseBerryTrees';
-import { resolveWeatherName } from './weatherData';
+import { resolveWeather } from '../weather';
+import type { ParsedWeather } from '../weather/types';
 
 export function attachMapData(
   map: LocationMap,
@@ -20,6 +21,7 @@ export function attachMapData(
   scripts?: string,
   starters: string[] = [],
   berryTreeLookup: Map<string, string> = new Map(),
+  weathers: Record<string, ParsedWeather> = {},
 ) {
   map.trainers = [];
   map.items = [];
@@ -32,8 +34,8 @@ export function attachMapData(
 
   // ── Weather collection helper ──────────────────────────────────────────────
   const addWeather = (raw: string | undefined | null) => {
-    const name = resolveWeatherName(raw);
-    if (name && !map.weathers!.includes(name)) map.weathers!.push(name);
+    const w = resolveWeather(raw, weathers);
+    if (w && !map.weathers!.some((x) => x.key === w.key)) map.weathers!.push(w);
   };
 
   // ---- WEATHER SOURCE 1: top-level `weather` field ----
@@ -203,7 +205,7 @@ export function attachMapData(
 
   // ---- WEATHER SOURCE 3: setweather commands in scripts.inc ----
   if (scripts) {
-    const setweatherRegex = /setweather\s+(WEATHER_[A-Z0-9_]+)/g;
+    const setweatherRegex = /setweather\s+((?:WEATHER|COORD_EVENT_WEATHER)_[A-Z0-9_]+)/g;
     let wMatch: RegExpExecArray | null;
     while ((wMatch = setweatherRegex.exec(scripts))) {
       addWeather(wMatch[1]);

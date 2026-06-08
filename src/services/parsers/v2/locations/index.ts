@@ -8,6 +8,7 @@ import { getFile } from '../utils';
 import type { ParsedItem } from '../items/types';
 import type { ParsedTrainer } from '../trainers/types';
 import type { ParsedPokemon } from '../pokemon/types';
+import type { ParsedWeather } from '../weather/types';
 import { generateMapImage } from '../../../mapRenderer';
 import type { FileContent } from '../../../fileReader';
 
@@ -21,6 +22,7 @@ export async function parseLocations(
   items: Record<string, ParsedItem>,
   trainers: Record<string, ParsedTrainer>,
   pokemon: Record<string, ParsedPokemon>,
+  weathers: Record<string, ParsedWeather>,
   renderMaps: boolean,
   onProgress?: (text: string, percent: number) => void,
   progressStart: number = 70,
@@ -131,15 +133,21 @@ export async function parseLocations(
         scriptsRaw,
         starters,
         berryTreeLookup,
+        weathers,
       );
 
       const mapId = mapJson.id;
       if (wildByMap[mapId]) {
-        map.wildPokemon.push(...wildByMap[mapId]);
+        // Rename "Tall Grass" → "Cave" for dungeon/indoor maps (land encounters without grass)
+        const isCave = map.type === 'dungeon' || map.type === 'indoor';
+        const remappedTables = wildByMap[mapId].map((table) =>
+          table.method === 'Tall Grass' && isCave ? { ...table, method: 'Cave' } : table,
+        );
+        map.wildPokemon.push(...remappedTables);
 
         // Derive HM events from encounter methods
         if (!map.hmEvents) map.hmEvents = [];
-        for (const table of wildByMap[mapId]) {
+        for (const table of remappedTables) {
           const m = table.method.toLowerCase();
           if ((m.includes('surf') || m.includes('water')) && !map.hmEvents.includes('surf')) {
             map.hmEvents.push('surf');
@@ -152,7 +160,7 @@ export async function parseLocations(
           }
         }
 
-        for (const table of wildByMap[mapId]) {
+        for (const table of remappedTables) {
           for (const encounter of table.encounters) {
             const mon = encounter.pokemon;
             if (!mon) continue;

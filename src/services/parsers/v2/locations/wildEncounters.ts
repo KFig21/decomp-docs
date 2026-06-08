@@ -16,9 +16,15 @@ import type {
 // Grouped fishing methods come in as e.g. "fishing_old_rod_group_old_rod" –
 // the prefix match in normalizeMethodKey handles those.
 export const METHOD_DISPLAY_NAMES: Record<string, string> = {
+  // Standard method keys from wild_encounters.json
   land_mons: 'Tall Grass',
   water_mons: 'Surfing',
   rock_smash_mons: 'Rock Smash',
+  fishing_mons: 'Fishing',
+  fishing_mons_old_rod: 'Old Rod',
+  fishing_mons_good_rod: 'Good Rod',
+  fishing_mons_super_rod: 'Super Rod',
+  // Legacy / alternate prefixes (vanilla pokeemerald)
   fishing_old_rod: 'Old Rod',
   fishing_good_rod: 'Good Rod',
   fishing_super_rod: 'Super Rod',
@@ -96,7 +102,7 @@ export function parseWildEncounters(
             });
           });
           tables.push({
-            method: `${method}_${groupName}`,
+            method: normalizeMethodKey(`${method}_${groupName}`),
             encounterRate: encounterMethodData.encounter_rate,
             encounters: mergeAndSortEncounters(rawEncounters),
           });
@@ -115,7 +121,7 @@ export function parseWildEncounters(
           });
         });
         tables.push({
-          method,
+          method: normalizeMethodKey(method),
           encounterRate: encounterMethodData.encounter_rate,
           encounters: mergeAndSortEncounters(rawEncounters),
         });

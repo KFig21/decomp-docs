@@ -98,7 +98,7 @@ function locationMatchesFilters(loc: LocationRoot, filters: LocationFilters, sea
   }
 
   for (const w of filters.weather) {
-    if (!maps.some((m) => m.weathers?.includes(w))) return false;
+    if (!maps.some((m) => m.weathers?.some((pw) => pw.name === w))) return false;
   }
 
   for (const hm of filters.hmEvents) {
@@ -167,7 +167,7 @@ export default function LocationsPage() {
     const weathers = new Set<string>();
     for (const loc of sortedLocations) {
       for (const map of Object.values(loc.maps)) {
-        for (const w of map.weathers ?? []) weathers.add(w);
+        for (const w of map.weathers ?? []) weathers.add(w.name);
       }
     }
     return Array.from(weathers).sort();

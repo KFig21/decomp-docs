@@ -7,6 +7,7 @@ import type { ParsedItem } from '../services/parsers/v2/items/types';
 import type { ParsedTrainerVariant } from '../services/parsers/v2/trainers/types';
 import type { ParsedAttack } from '../services/parsers/v2/moves/types';
 import type { ParsedAbility } from '../services/parsers/v2/abilities';
+import type { ParsedWeather } from '../services/parsers/v2/weather/types';
 
 interface DataContextProps {
   isRestoring: boolean;
@@ -24,6 +25,8 @@ interface DataContextProps {
   setAbilities: (a: Record<string, ParsedAbility>) => void;
   natures: Record<string, any>;
   setNatures: (n: Record<string, any>) => void;
+  weathers: Record<string, ParsedWeather>;
+  setWeathers: (w: Record<string, ParsedWeather>) => void;
 }
 
 const DataContext = createContext<DataContextProps>({
@@ -42,6 +45,8 @@ const DataContext = createContext<DataContextProps>({
   setAbilities: () => {},
   natures: {},
   setNatures: () => {},
+  weathers: {},
+  setWeathers: () => {},
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -56,6 +61,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [moves, setMoves] = useState<Record<string, ParsedAttack>>({});
   const [abilities, setAbilities] = useState<Record<string, ParsedAbility>>({});
   const [natures, setNatures] = useState<Record<string, any>>({});
+  const [weathers, setWeathers] = useState<Record<string, ParsedWeather>>({});
 
   // 1. Load data from IndexedDB on mount
   useEffect(() => {
@@ -68,6 +74,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const savedMoves = await AppDB.get('moves');
         const savedAbilities = await AppDB.get('abilities');
         const savedNatures = await AppDB.get('natures');
+        const savedWeathers = await AppDB.get('weathers');
 
         if (savedLocations) setLocations(savedLocations);
         if (savedPokemon) setPokemon(savedPokemon);
@@ -76,6 +83,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (savedMoves) setMoves(savedMoves);
         if (savedAbilities) setAbilities(savedAbilities);
         if (savedNatures) setNatures(savedNatures);
+        if (savedWeathers) setWeathers(savedWeathers);
 
         // DEV DEBUG: Artificial delay to test the loading screen
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -101,12 +109,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (Object.keys(moves).length) await AppDB.set('moves', moves);
         if (Object.keys(abilities).length) await AppDB.set('abilities', abilities);
         if (Object.keys(natures).length) await AppDB.set('natures', natures);
+        if (Object.keys(weathers).length) await AppDB.set('weathers', weathers);
       } catch (error) {
         console.error('Failed to save parsed data:', error);
       }
     }
     saveCurrentData();
-  }, [locations, pokemon, items, trainers, moves, abilities, natures, isRestoring]);
+  }, [locations, pokemon, items, trainers, moves, abilities, natures, weathers, isRestoring]);
 
   return (
     <DataContext.Provider
@@ -126,6 +135,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAbilities,
         natures,
         setNatures,
+        weathers,
+        setWeathers,
       }}
     >
       {children}

@@ -2,6 +2,7 @@
 import type { ParsedTrainerVariant } from '../trainers/types';
 import type { ParsedPokemon } from '../pokemon/types';
 import type { ParsedItem } from '../items/types';
+import type { ParsedWeather } from '../weather/types';
 
 export type StaticEncounter = {
   species: ParsedPokemon;
@@ -18,7 +19,7 @@ export type LocationMap = {
   wildPokemon: WildEncounterTable[];
   staticEncounters: StaticEncounter[];
   mapImage?: string;
-  weathers?: string[]; // display names e.g. ['Rain', 'Sandstorm'] — collected from all zone sources
+  weathers?: ParsedWeather[]; // collected from all zone sources (top-level, coord events, scripts)
   hmEvents?: string[]; // e.g. ['cut', 'surf', 'waterfall', 'strength', 'rock_smash', 'dive', 'flash']
   hasMart?: boolean;
 };
