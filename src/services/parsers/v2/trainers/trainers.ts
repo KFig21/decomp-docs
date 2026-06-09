@@ -27,6 +27,8 @@ export function parseTrainersFile(
     let trainerClassRaw = 'Pkmn Trainer';
     let trainerPicRaw = 'Hiker';
     let doubleBattle = false;
+    const trainerItems: any[] = [];
+    let hasCustomMoves = false;
 
     const party: ParsedTrainerPokemon[] = [];
     let currentMon: any = null;
@@ -55,6 +57,22 @@ export function parseTrainersFile(
           else if (line.startsWith('Pic:')) trainerPicRaw = line.split(':')[1].trim();
           else if (line.startsWith('Double Battle:'))
             doubleBattle = line.split(':')[1].trim().toLowerCase() === 'yes';
+          else if (line.startsWith('Items:')) {
+            // Format: "Items: Super Potion / Super Potion" (up to 4, separated by " / ")
+            const itemsStr = line.slice('Items:'.length).trim();
+            for (const rawItem of itemsStr.split('/')) {
+              const itemStr = rawItem.trim();
+              if (!itemStr) continue;
+              const safeItem = itemStr
+                .toUpperCase()
+                .replace(/[^A-Z0-9]/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/_$/, '');
+              const itemKey = itemStr.startsWith('ITEM_') ? itemStr : `ITEM_${safeItem}`;
+              const resolved = items[itemKey];
+              if (resolved) trainerItems.push(resolved);
+            }
+          }
         } else {
           // If we hit text without a colon, it's a Pokemon (The decomp forgot the blank line!)
           currentSection = 'POKEMON';
@@ -70,6 +88,7 @@ export function parseTrainersFile(
           } else if (line.startsWith('IVs:')) {
             currentMon.iv = parseIVs(line);
           } else if (line.startsWith('- ')) {
+            hasCustomMoves = true;
             const moveStr = line.replace('- ', '').trim();
             const safeMove = moveStr
               .toUpperCase()
@@ -105,15 +124,23 @@ export function parseTrainersFile(
       };
     }
 
+    const hasPartyItems = party.some((mon) => mon.heldItem != null);
+    const hasItems = trainerItems.length > 0 || hasPartyItems;
+    const partyType =
+      hasItems && hasCustomMoves ? 'ItemCustomMoves'
+      : hasItems                 ? 'ItemDefaultMoves'
+      : hasCustomMoves           ? 'NoItemCustomMoves'
+      :                            'NoItemDefaultMoves';
+
     const variant: ParsedTrainerVariant = {
       key: enumKey,
       name,
       trainerClass: trainerClassRaw,
       trainerPic: trainerPicRaw,
-      items: [],
+      items: trainerItems,
       doubleBattle,
       partyKey: '',
-      partyType: 'NoItemCustomMoves',
+      partyType,
       party,
       location: { locationKey: '', mapKey: '' },
       isPlaced: false,

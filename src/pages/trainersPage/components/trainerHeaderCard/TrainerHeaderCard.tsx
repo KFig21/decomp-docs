@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link } from 'react-router-dom';
 import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import { formatReadableName } from '../../../../utils/functions';
@@ -42,10 +43,15 @@ export default function TrainerHeaderCard({ trainer, battleCount }: Props) {
             </div>
           )}
           {battleCount != null && locationName && <div className="stat-divider" />}
-          {locationName && (
+          {locationName && location?.locationKey && (
             <div className="stat-block stat-block--location">
               <span className="stat-label">First Encounter</span>
-              <span className="stat-value stat-value--location">{locationName}</span>
+              <Link
+                to={`/locations/${location.locationKey}`}
+                className="stat-value stat-value--location stat-value--link"
+              >
+                {locationName}
+              </Link>
             </div>
           )}
         </div>

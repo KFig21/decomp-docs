@@ -127,6 +127,17 @@
                 font-size: 0.9rem;
                 font-weight: 700;
             }
+
+            &--link {
+                text-decoration: none;
+                color: var(--fontColor);
+                transition: color 0.15s;
+
+                &:hover {
+                    color: var(--primaryColor);
+                    text-decoration: underline;
+                }
+            }
         }
 
         .stat-map {

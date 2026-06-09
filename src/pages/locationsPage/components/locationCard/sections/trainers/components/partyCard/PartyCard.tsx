@@ -32,37 +32,39 @@ export default function PartyCard({ trainerGroup }: Props) {
 
   return (
     <div className="party-card-container">
-      {/* Left column: trainer card + export button */}
-      <div className="trainer-left-col">
-        <TrainerCard trainer={activeTrainer} />
-        <button
-          className={`export-toggle-btn ${exportMode ? 'export-toggle-btn--active' : ''}`}
-          onClick={() => setExportMode((m) => !m)}
-          title="Toggle Showdown export view"
-        >
-          {exportMode ? 'Normal' : 'Export'}
-        </button>
-      </div>
+      {/* Variant tabs — full-width header row, only shown when there are multiple variants */}
+      {trainerGroup.length > 1 && (
+        <div className="trainer-tabs">
+          {trainerGroup.map((t, i) => {
+            const tabName = formatTabName(t.key, i);
+            return (
+              <button
+                key={t.key}
+                className={`tab-button ${i === activeIndex ? 'active' : ''}`}
+                onClick={() => setGlobalTab(tabName)}
+              >
+                {tabName}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
-      {/* Right side: starter tabs + party */}
-      <div className="trainer-party-area">
-        {trainerGroup.length > 1 && (
-          <div className="trainer-tabs">
-            {trainerGroup.map((t, i) => {
-              const tabName = formatTabName(t.key, i);
-              return (
-                <button
-                  key={t.key}
-                  className={`tab-button ${i === activeIndex ? 'active' : ''}`}
-                  onClick={() => setGlobalTab(tabName)}
-                >
-                  {tabName}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      {/* Content row: trainer card + party */}
+      <div className="trainer-content-row">
+        {/* Left column: trainer card + export button */}
+        <div className="trainer-left-col">
+          <TrainerCard trainer={activeTrainer} />
+          <button
+            className={`export-toggle-btn ${exportMode ? 'export-toggle-btn--active' : ''}`}
+            onClick={() => setExportMode((m) => !m)}
+            title="Toggle Showdown export view"
+          >
+            {exportMode ? 'Normal' : 'Export'}
+          </button>
+        </div>
 
+        {/* Party */}
         <div className="trainer-party">
           {activeTrainer.party?.map((mon, i) => (
             <TrainerPokemonCard key={i} pokemon={mon} exportMode={exportMode} />

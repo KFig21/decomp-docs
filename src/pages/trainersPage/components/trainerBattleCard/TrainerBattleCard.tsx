@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTrainerTab } from '../../../../contexts/trainerTabContext';
 import { formatReadableName } from '../../../../utils/functions';
 import TrainerParty from '../trainerParty/TrainerParty';
@@ -47,7 +48,17 @@ export default function TrainerBattleCard({ battleIndex, variants }: Props) {
           <CollapseToggle isOpen={isOpen} />
           <span className="battle-index">#{battleIndex + 1}</span>
           <div className="battle-location">
-            <span className="battle-location__name">{displayLocation}</span>
+            {location?.locationKey ? (
+              <Link
+                to={`/locations/${location.locationKey}`}
+                className="battle-location__name battle-location__link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {displayLocation}
+              </Link>
+            ) : (
+              <span className="battle-location__name">{displayLocation}</span>
+            )}
             {locationName && mapName && mapName !== locationName && (
               <span className="battle-location__sub">{locationName}</span>
             )}

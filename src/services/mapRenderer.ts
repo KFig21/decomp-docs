@@ -84,23 +84,93 @@ function findTilesetFile(
 }
 
 /**
- * Finds an Object Event Sprite (e.g. "OBJ_EVENT_GFX_WOMAN_5" -> "woman_5.png")
+ * Finds an Object Event Sprite (e.g. "OBJ_EVENT_GFX_WOMAN_5" -> "woman_5.png").
+ *
+ * Overworld sprites live under graphics/object_events/pics/.
+ * Trainer battle sprites live under graphics/trainers/<name>/front.png.
+ * We must prefer the overworld path and never fall back to battle sprites.
  */
 function findSpriteFile(
   files: Map<string, FileContent>,
   graphicsId: string,
 ): { path: string; content: FileContent } | null {
-  // 1. Clean the ID: "OBJ_EVENT_GFX_WOMAN_5" -> "woman_5"
-  let cleanName = graphicsId.replace(/^OBJ_EVENT_GFX_/, '').toLowerCase();
+  const cleanName = graphicsId.replace(/^OBJ_EVENT_GFX_/, '').toLowerCase();
+  const targetSuffix = `/${cleanName}.png`;
+  const normalize = (s: string) => s.toLowerCase().replace(/\\/g, '/');
 
-  // 2. Special overrides for common inconsistencies
-  if (cleanName === 'item_ball') cleanName = 'item_ball';
-  // Add more overrides here if you find broken sprites
+  let fallback: { path: string; content: FileContent } | null = null;
 
-  // 3. Search in standard graphics folders
-  // We look for any file ending in "/{cleanName}.png"
-  // This handles paths like "graphics/object_events/pics/people/woman_5.png"
-  return findFile(files, `/${cleanName}.png`) || findFile(files, `/${cleanName}/front.png`);
+  for (const [key, value] of files.entries()) {
+    const k = normalize(key);
+    if (!k.endsWith(targetSuffix)) continue;
+
+    // Overworld sprites are always under object_events/ — return immediately
+    if (k.includes('/object_events/')) return { path: key, content: value };
+
+    // Skip known battle-sprite directories
+    if (k.includes('/trainers/') || k.includes('/battle_') || k.includes('/front_sprites/')) continue;
+
+    fallback ??= { path: key, content: value };
+  }
+
+  return fallback;
+}
+
+/**
+ * Parses object_event_graphics_info.c to build a map of sprite name → frame
+ * dimensions (width × height in pixels). Uses the OAM struct reference
+ * (e.g. `gObjectEventBaseOam_16x32`) which is present in every graphics info
+ * struct in the pokeemerald-expansion codebase.
+ *
+ * Also resolves OBJ_EVENT_GFX_* constants → struct names via the pointer table
+ * so callers can look up dimensions directly by the clean GFX name.
+ */
+function parseObjectEventDimensions(
+  files: Map<string, FileContent>,
+): Record<string, { w: number; h: number }> {
+  const dims: Record<string, { w: number; h: number }> = {};
+
+  // Find the graphics info source file
+  const candidates = [
+    'object_event_graphics_info.c',
+    'object_events_graphics_info.c',
+    'event_object_graphics_info.c',
+  ];
+  let content: string | null = null;
+  for (const name of candidates) {
+    const found = findFile(files, name);
+    if (found && typeof found.content === 'string') {
+      content = found.content;
+      break;
+    }
+  }
+  if (!content) return dims;
+
+  // Step 1: Extract "InfoStructName" → {w, h} from OAM references
+  //   e.g.  gObjectEventGraphicsInfo_Fisherman = { ... .oam = &gObjectEventBaseOam_16x32 ... }
+  const byStructName: Record<string, { w: number; h: number }> = {};
+  const structRegex = /gObjectEventGraphicsInfo_(\w+)\s*=\s*\{([^{}]+)\}/g;
+  let m: RegExpExecArray | null;
+  while ((m = structRegex.exec(content))) {
+    const structName = m[1].toLowerCase();
+    const body = m[2];
+    const oam = body.match(/gObjectEventBaseOam_(\d+)x(\d+)/);
+    if (oam) {
+      byStructName[structName] = { w: parseInt(oam[1]), h: parseInt(oam[2]) };
+    }
+  }
+
+  // Step 2: Map OBJ_EVENT_GFX_FOO → struct name via the pointer table
+  //   [OBJ_EVENT_GFX_FISHERMAN] = &gObjectEventGraphicsInfo_Fisherman,
+  const ptrRegex = /\[OBJ_EVENT_GFX_([A-Z0-9_]+)\]\s*=\s*&gObjectEventGraphicsInfo_(\w+)/g;
+  while ((m = ptrRegex.exec(content))) {
+    const gfxKey = m[1].toLowerCase();          // e.g. "fisherman"
+    const structKey = m[2].toLowerCase();       // e.g. "fisherman"
+    const d = byStructName[structKey];
+    if (d) dims[gfxKey] = d;
+  }
+
+  return dims;
 }
 
 function parseJascPalette(text: string): Palette {
@@ -257,9 +327,12 @@ export async function generateMapImage(
   // Put the background map onto the canvas
   ctx.putImageData(outputBuffer, 0, 0);
 
-  // 4. RENDER OBJECT EVENTS (The New Part)
+  // 4. RENDER OBJECT EVENTS
   if (mapJson && mapJson.object_events) {
-    // Sort events by Y coordinate so lower objects appear "in front" of higher ones
+    // Parse sprite frame dimensions from the project's C source once per map render
+    const spriteDims = parseObjectEventDimensions(files);
+
+    // Sort events by Y so lower sprites render in front of higher ones
     const sortedEvents = [...mapJson.object_events].sort((a, b) => a.y - b.y);
 
     for (const evt of sortedEvents) {
@@ -268,78 +341,106 @@ export async function generateMapImage(
       if (spriteFile && spriteFile.content instanceof Blob) {
         const spriteImg = await getImageData(spriteFile.content);
         if (spriteImg) {
-          // --- SPRITE DIMENSION LOGIC ---
-          let frameWidth = spriteImg.width;
-          const frameHeight = spriteImg.height;
+          // --- FRAME DIMENSIONS ---
+          // Priority 1: parsed from object_event_graphics_info.c (most accurate)
+          const cleanKey = evt.graphics_id.replace(/^OBJ_EVENT_GFX_/, '').toLowerCase();
+          const parsed = spriteDims[cleanKey];
 
-          // Heuristic for Gen 3 Sprites:
-          // 1. Most NPCs (People) are strips of animations.
-          //    If the image is wider than it is tall, it's likely a strip.
-          //    The standard width for a person is 16px.
-          if (frameWidth > frameHeight) {
-            frameWidth = 16;
-          }
+          let frameWidth: number;
+          let frameHeight: number;
 
-          // 2. Some "Big" Pokemon/Objects are 32x32 or 64x64.
-          //    If width == height, it's likely a static object or large sprite
-          //    that doesn't need slicing (like an Item Ball or Berry Tree).
-          //    (No change needed to frameWidth in this case)
+          if (parsed) {
+            frameWidth = parsed.w;
+            frameHeight = parsed.h;
+          } else {
+            // Fallback heuristic when the C source couldn't be parsed.
+            //
+            // GBA sprite sheets in pokeemerald-expansion are either:
+            //   A) Horizontal strips: (N×frameW) × frameH  — wider than tall
+            //   B) Vertical grids:    frameW × (N×frameH)  — taller than wide
+            //   C) Single frames:     frameW × frameH      — square or portrait
+            //
+            // In all cases frame 0 is at (0, 0). We need only its dimensions.
+            // GBA hardware allows: 8, 16, 32, 64 px per axis.
+            const GBA_DIMS = [8, 16, 32, 64] as const;
+            const sw = spriteImg.width;
+            const sh = spriteImg.height;
 
-          // 3. Calculate Rendering Position
-          //    Porymap aligns the BOTTOM of the sprite with the BOTTOM of the tile.
-          //    Events are at (x, y) metatile coordinates (16px grid).
-          const drawX = evt.x * META_SIZE;
-
-          //    Shift Y up so the "feet" land on the tile.
-          //    If sprite is 32px tall, it shifts up by 16px.
-          //    If sprite is 16px tall (Item Ball), it doesn't shift.
-          const drawY = evt.y * META_SIZE - (frameHeight - META_SIZE);
-
-          // --- TRANSPARENCY (Green Screen Removal) ---
-          const sCanvas = document.createElement('canvas');
-          sCanvas.width = spriteImg.width;
-          sCanvas.height = spriteImg.height;
-          const sCtx = sCanvas.getContext('2d');
-          if (!sCtx) continue;
-
-          const imgData = spriteImg;
-          // Sample the top-left pixel (0,0) as the background color
-          const bgR = imgData.data[0];
-          const bgG = imgData.data[1];
-          const bgB = imgData.data[2];
-
-          // Apply alpha = 0 to matching background pixels
-          for (let j = 0; j < imgData.data.length; j += 4) {
-            if (
-              imgData.data[j] === bgR &&
-              imgData.data[j + 1] === bgG &&
-              imgData.data[j + 2] === bgB
-            ) {
-              imgData.data[j + 3] = 0;
+            if (sw === sh) {
+              // Square image — single frame (e.g. item ball, 32×32 NPC)
+              frameWidth = sw;
+              frameHeight = sh;
+            } else if (sw > sh) {
+              // Case A: horizontal strip
+              // Most person NPCs use portrait frames (frameW = frameH / 2).
+              frameHeight = sh;
+              const halfH = sh >> 1;
+              if (halfH >= 8 && sw % halfH === 0) {
+                frameWidth = halfH;            // portrait frames in strip (16 from 48×32)
+              } else {
+                // Square frames in strip: largest GBA size that divides width evenly
+                frameWidth = [...GBA_DIMS].reverse().find((d) => d <= sh && sw % d === 0) ?? sh;
+              }
+            } else {
+              // Case B/C: taller than wide — vertical grid or single portrait frame
+              frameWidth = sw;
+              if (sw <= 16) {
+                // Standard small NPC sprite (16 wide): frames are 16×32, cap height to 32
+                frameHeight = Math.min(sh, 32);
+              } else {
+                // Larger sprites (32+ wide): assume square frames stacked vertically
+                // Use the largest GBA dimension that is ≤ width (so frames are square)
+                frameHeight = [...GBA_DIMS].reverse().find((d) => d <= sw) ?? sw;
+              }
             }
           }
 
-          sCtx.putImageData(imgData, 0, 0);
+          // Clamp to actual image bounds (guard against bad data)
+          frameWidth = Math.min(frameWidth, spriteImg.width);
+          frameHeight = Math.min(frameHeight, spriteImg.height);
 
-          // --- DRAW SLICED FRAME ---
-          // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          ctx.drawImage(
-            sCanvas,
-            0,
-            0,
-            frameWidth,
-            frameHeight, // Source: Grab top-left frame
-            drawX,
-            drawY,
-            frameWidth,
-            frameHeight, // Dest: Draw at calculated pos
-          );
+          // --- RENDERING POSITION ---
+          // The NPC's (x, y) is in metatile (16 px) coordinates.
+          // We align the BOTTOM of the sprite with the BOTTOM of the metatile.
+          const drawX = evt.x * META_SIZE;
+          const drawY = evt.y * META_SIZE + META_SIZE - frameHeight;
+
+          // --- TRANSPARENCY (background colour removal) ---
+          // Sample the top-left pixel as the transparency key colour.
+          const sCanvas = document.createElement('canvas');
+          sCanvas.width = frameWidth;
+          sCanvas.height = frameHeight;
+          const sCtx = sCanvas.getContext('2d', { willReadFrequently: true });
+          if (!sCtx) continue;
+
+          // Draw only the first frame onto a scratch canvas
+          const scratch = document.createElement('canvas');
+          scratch.width = spriteImg.width;
+          scratch.height = spriteImg.height;
+          const scratchCtx = scratch.getContext('2d', { willReadFrequently: true });
+          if (!scratchCtx) continue;
+          scratchCtx.putImageData(spriteImg, 0, 0);
+
+          // Read the first frame's pixels and key-colour the background
+          const frameData = scratchCtx.getImageData(0, 0, frameWidth, frameHeight);
+          const bgR = frameData.data[0];
+          const bgG = frameData.data[1];
+          const bgB = frameData.data[2];
+          for (let j = 0; j < frameData.data.length; j += 4) {
+            if (
+              frameData.data[j] === bgR &&
+              frameData.data[j + 1] === bgG &&
+              frameData.data[j + 2] === bgB
+            ) {
+              frameData.data[j + 3] = 0;
+            }
+          }
+          sCtx.putImageData(frameData, 0, 0);
+
+          ctx.drawImage(sCanvas, 0, 0, frameWidth, frameHeight, drawX, drawY, frameWidth, frameHeight);
         }
-      } else {
-        // Fallback: Red Box
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
-        ctx.fillRect(evt.x * META_SIZE, evt.y * META_SIZE, META_SIZE, META_SIZE);
       }
+      // No fallback red box — missing sprites are just skipped silently
     }
   }
 

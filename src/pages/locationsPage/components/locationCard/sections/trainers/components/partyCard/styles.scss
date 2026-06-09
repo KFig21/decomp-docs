@@ -3,32 +3,14 @@
 
 .party-card-container {
     display: flex;
-    flex-direction: row;
-    gap: 16px;
+    flex-direction: column;
+    gap: 10px;
     padding: 14px 16px;
     border-radius: 6px;
     border: 1px solid var(--containerBorderColor);
     background-color: var(--containerBgColor);
 
-    // ── Left column: trainer card + export button ─────────────────────────────
-    .trainer-left-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
-    }
-
-    // ── Right side: tabs + party ──────────────────────────────────────────────
-    .trainer-party-area {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex: 1;
-        min-width: 0;
-    }
-
-    // ── Starter variant tabs ──────────────────────────────────────────────────
+    // ── Variant tabs — full-width header ──────────────────────────────────────
     .trainer-tabs {
         display: flex;
         gap: 6px;
@@ -57,6 +39,23 @@
                 border-color: var(--primaryColor);
             }
         }
+    }
+
+    // ── Content row: trainer card left + party right ──────────────────────────
+    .trainer-content-row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    // ── Left column: trainer card + export button ─────────────────────────────
+    .trainer-left-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
     }
 
     // ── Export toggle ─────────────────────────────────────────────────────────
