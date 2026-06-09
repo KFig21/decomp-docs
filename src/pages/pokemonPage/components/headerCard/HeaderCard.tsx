@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import './styles.scss';
@@ -52,7 +53,14 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
           </div>
           <div className="abilities-list">
             <strong>Abilities:</strong>{' '}
-            {activeVariant.abilities?.map((a: any) => a.name).join(' / ') || 'None'}
+            {activeVariant.abilities?.filter((a: any) => a.name).length > 0
+              ? activeVariant.abilities.filter((a: any) => a.name).map((a: any, i: number, arr: any[]) => (
+                  <span key={a.key}>
+                    <Link to={`/abilities/${a.key}`} className="ability-link">{a.name}</Link>
+                    {i < arr.length - 1 && ' / '}
+                  </span>
+                ))
+              : 'None'}
           </div>
 
           {hasVariants && (

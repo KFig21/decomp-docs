@@ -1,0 +1,30 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.ability-header-card {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .ability-header-name {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--fontColor);
+        line-height: 1.1;
+    }
+
+    .ability-header-description {
+        font-size: 0.95rem;
+        color: var(--fadedFont);
+        line-height: 1.6;
+        font-style: italic;
+
+        &--empty {
+            opacity: 0.45;
+        }
+    }
+}

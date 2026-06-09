@@ -7,6 +7,7 @@ import PokemonPage from './pages/pokemonPage/PokemonPage';
 import ItemsPage from './pages/itemsPage/ItemsPage';
 import MovesPage from './pages/movesPage/MovesPage';
 import TrainersPage from './pages/trainersPage/TrainersPage';
+import AbilitiesPage from './pages/abilitiesPage/AbilitiesPage';
 import { useData } from './contexts/dataContext';
 import LoadingScreen from './components/elements/loadingScreen/LoadingScreen';
 
@@ -51,6 +52,8 @@ export function CreateRouter() {
         { path: '/moves/:id', element: <MovesPage /> },
         { path: '/trainers', element: <TrainersPage /> },
         { path: '/trainers/:id', element: <TrainersPage /> },
+        { path: '/abilities', element: <AbilitiesPage /> },
+        { path: '/abilities/:id', element: <AbilitiesPage /> },
       ],
     },
   ]);

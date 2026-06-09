@@ -1,0 +1,107 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.ability-pokemon-section {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.15s;
+
+        &:hover {
+            background: color-mix(in srgb, var(--containerBgColor), white 3%);
+        }
+    }
+
+    &__title {
+        flex: 1;
+        font-size: 0.9rem;
+        color: var(--fontColor);
+    }
+
+    &__slot-badge {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+
+        &--primary {
+            background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+            color: var(--primaryColor);
+        }
+
+        &--secondary {
+            background: color-mix(in srgb, var(--catBlue), transparent 82%);
+            color: var(--catBlue);
+        }
+
+        &--hidden {
+            background: color-mix(in srgb, var(--catPurple), transparent 82%);
+            color: var(--catPurple);
+        }
+    }
+
+    &__count {
+        font-size: 0.78rem;
+        color: var(--fadedFont);
+        font-weight: 500;
+    }
+
+    &__grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 16px;
+    }
+}
+
+.ability-learner-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--backgroundColor);
+    text-decoration: none;
+    color: var(--fontColor);
+    transition: background 0.15s, border-color 0.15s;
+    min-width: 80px;
+
+    &:hover {
+        background: color-mix(in srgb, var(--primaryColor), transparent 92%);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 55%);
+    }
+
+    &__sprite {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__name {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.2;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

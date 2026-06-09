@@ -3,6 +3,7 @@ import SvgIcon from '../../../../components/elements/svgIcon/SvgIcon';
 import { locationsIcon } from '../../../../components/elements/svgIcon/icons/locationsIcon';
 import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokemonIcon';
 import { itemsIcon } from '../../../../components/elements/svgIcon/icons/itemsIcon';
+import { abilitiesIcon } from '../../../../components/elements/svgIcon/icons/abilitiesIcon';
 import './styles.scss';
 
 // ── Inline SVG paths for moves (sword), trainers (person), and the upload/home icon ──
@@ -71,6 +72,11 @@ export default function NavBar() {
           {trainersIconPath}
         </SvgIcon>
       ),
+    },
+    {
+      path: '/abilities',
+      label: 'Abilities',
+      icon: <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>,
     },
   ];
 

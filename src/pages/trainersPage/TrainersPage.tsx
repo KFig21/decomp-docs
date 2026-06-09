@@ -12,6 +12,7 @@ import './styles.scss';
 export type TrainerActiveFilters = {
   classes: string[];
   battleTypes: string[];
+  threatMoves: string[];
 };
 
 export type TrainerSortOption = 'alpha-asc' | 'alpha-desc' | 'party-desc' | 'battles-desc';
@@ -59,6 +60,7 @@ export default function TrainersPage() {
   const [activeFilters, setActiveFilters] = useState<TrainerActiveFilters>({
     classes: [],
     battleTypes: [],
+    threatMoves: [],
   });
   const [sortBy, setSortBy] = useState<TrainerSortOption>('alpha-asc');
 
@@ -123,6 +125,18 @@ export default function TrainersPage() {
         if (wantSingle && !hasSingle) return false;
         if (wantDouble && !hasDouble) return false;
       }
+      if (activeFilters.threatMoves.length > 0) {
+        const hasThreat = t.placedVariants.some((v: any) =>
+          (v.party ?? []).some((p: any) =>
+            (p.moves ?? []).some((m: any) => {
+              if (!m?.name) return false;
+              const normalized = m.name.toLowerCase().replace(/[\s-]/g, '');
+              return activeFilters.threatMoves.includes(normalized);
+            }),
+          ),
+        );
+        if (!hasThreat) return false;
+      }
       return true;
     });
     return applySort(filtered, sortBy);
@@ -146,7 +160,7 @@ export default function TrainersPage() {
 
   const clearAll = () => {
     setSearchTerm('');
-    setActiveFilters({ classes: [], battleTypes: [] });
+    setActiveFilters({ classes: [], battleTypes: [], threatMoves: [] });
     setSortBy('alpha-asc');
   };
 

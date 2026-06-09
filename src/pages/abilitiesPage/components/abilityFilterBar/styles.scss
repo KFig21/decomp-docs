@@ -1,0 +1,59 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.ability-filter-bar {
+    padding: 8px 16px;
+    background-color: var(--containerBgColor);
+    border-bottom: 1px solid var(--containerBorderColor);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: $filterbarHeight;
+}
+
+.ability-search-input {
+    min-width: 240px;
+    max-width: 320px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--backgroundColor);
+    color: var(--fontColor);
+    font-size: 0.875rem;
+    font-family: inherit;
+
+    &::placeholder {
+        color: var(--fadedFont);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--primaryColor);
+    }
+}
+
+.ability-sort-select {
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--backgroundColor);
+    color: var(--fontColor);
+    font-size: 0.82rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+        border-color: var(--primaryColor);
+    }
+}
+
+.ability-filter-count {
+    font-size: 0.78rem;
+    color: var(--fadedFont);
+    margin-left: auto;
+    white-space: nowrap;
+}

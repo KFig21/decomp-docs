@@ -9,8 +9,24 @@ export const BATTLE_TYPE_OPTIONS = [
   { value: 'double', label: 'Double Battle' },
 ];
 
+// Normalized value = move name lowercased with spaces/hyphens removed
+export const THREAT_MOVE_OPTIONS = [
+  { value: 'metronome', label: 'Metronome' },
+  { value: 'perishsong', label: 'Perish Song' },
+  { value: 'destinybond', label: 'Destiny Bond' },
+  { value: 'selfdestruct', label: 'Self-Destruct' },
+  { value: 'explosion', label: 'Explosion' },
+  { value: 'counter', label: 'Counter' },
+  { value: 'mirrorcoat', label: 'Mirror Coat' },
+  { value: 'fissure', label: 'Fissure' },
+  { value: 'sheercold', label: 'Sheer Cold' },
+  { value: 'guillotine', label: 'Guillotine' },
+  { value: 'horndrill', label: 'Horn Drill' },
+];
+
 export const CLASS_COLOR = '#6b7af5';
 export const BATTLE_TYPE_COLOR = '#d4862f';
+export const THREAT_MOVE_COLOR = '#c0392b';
 
 // ── Multi-select dropdown ──────────────────────────────────────────────────────
 
@@ -177,11 +193,25 @@ export default function TrainerFilterBar({
 
   const classOptions = allClasses.map((c) => ({ value: c, label: c }));
 
+  const toggleThreatMove = (v: string) =>
+    setActiveFilters((prev) => ({
+      ...prev,
+      threatMoves: prev.threatMoves.includes(v)
+        ? prev.threatMoves.filter((x) => x !== v)
+        : [...prev.threatMoves, v],
+    }));
+
   const hasAnyFilter =
-    searchTerm || activeFilters.classes.length > 0 || activeFilters.battleTypes.length > 0;
+    searchTerm ||
+    activeFilters.classes.length > 0 ||
+    activeFilters.battleTypes.length > 0 ||
+    activeFilters.threatMoves.length > 0;
 
   const battleTypeLabel = (v: string) =>
     BATTLE_TYPE_OPTIONS.find((o) => o.value === v)?.label ?? v;
+
+  const threatMoveLabel = (v: string) =>
+    THREAT_MOVE_OPTIONS.find((o) => o.value === v)?.label ?? v;
 
   return (
     <div className="trainers-filter-bar">
@@ -206,6 +236,13 @@ export default function TrainerFilterBar({
           selected={activeFilters.battleTypes}
           onToggle={toggleBattleType}
           pillColor={() => BATTLE_TYPE_COLOR}
+        />
+        <MultiSelectDropdown
+          label="Threat Moves"
+          options={THREAT_MOVE_OPTIONS}
+          selected={activeFilters.threatMoves}
+          onToggle={toggleThreatMove}
+          pillColor={() => THREAT_MOVE_COLOR}
         />
         <SortDropdown value={sortBy} onChange={setSortBy} />
         {hasAnyFilter && (
@@ -234,6 +271,14 @@ export default function TrainerFilterBar({
               label={battleTypeLabel(v)}
               color={BATTLE_TYPE_COLOR}
               onRemove={() => removeFilter('battleTypes', v)}
+            />
+          ))}
+          {activeFilters.threatMoves.map((v) => (
+            <FilterPill
+              key={v}
+              label={threatMoveLabel(v)}
+              color={THREAT_MOVE_COLOR}
+              onRemove={() => removeFilter('threatMoves', v)}
             />
           ))}
         </div>

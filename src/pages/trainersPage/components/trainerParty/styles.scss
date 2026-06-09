@@ -9,22 +9,18 @@
     padding: 0px;
 }
 
-// ── Flip wrapper — sets perspective and ensures equal-height grid cells ────────
+// ── Flip wrapper ─────────────────────────────────────────────────────────────
 .party-card-wrapper {
     perspective: 1100px;
-    // Stretch to fill the grid cell so front/back can fill it
-    display: flex;
-    flex-direction: column;
 }
 
-// ── Flip container ────────────────────────────────────────────────────────────
+// ── Flip container — CSS grid stacking so height is content-driven ────────────
+// Both faces sit in the same grid cell (row 1, col 1). The cell sizes to the
+// tallest face, so no fixed height is needed on the parent.
 .party-pokemon-card {
-    position: relative;
+    display: grid;
     transform-style: preserve-3d;
     transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    flex: 1;
-    // min-height ensures the back face always has room for the export text
-    min-height: 320px;
 
     &--flipped {
         transform: rotateY(180deg);
@@ -33,8 +29,9 @@
 
 // ── Shared face styles ────────────────────────────────────────────────────────
 .card-face {
-    position: absolute;
-    inset: 0;
+    grid-row: 1;
+    grid-column: 1;
+    width: 100%;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border-radius: 8px;
@@ -129,6 +126,23 @@
         display: flex;
         gap: 6px;
         flex-wrap: wrap;
+    }
+
+    .party-ability {
+        font-size: 0.72rem;
+        font-weight: 600;
+        font-style: italic;
+        color: var(--fadedFont);
+        text-decoration: none;
+        border-radius: 3px;
+        padding: 1px 4px;
+        align-self: flex-start;
+        transition: color 0.12s, background 0.12s;
+
+        &:hover {
+            color: var(--primaryColor);
+            background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+        }
     }
 
     .party-nature,
@@ -322,6 +336,7 @@
     background: color-mix(in srgb, var(--backgroundColor), black 4%);
     padding: 10px;
     gap: 8px;
+    min-height: 260px;
 
     .export-header {
         display: flex;

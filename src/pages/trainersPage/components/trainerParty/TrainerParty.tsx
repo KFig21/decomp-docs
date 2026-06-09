@@ -165,6 +165,17 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
             </div>
           )}
 
+          {/* Ability */}
+          {species.abilities?.[0]?.name && (
+            <Link
+              to={`/abilities/${species.abilities[0].key}`}
+              className="party-ability"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {species.abilities[0].name}
+            </Link>
+          )}
+
           {/* Nature + IV */}
           {(nature || iv != null) && (
             <div className="party-details-row">

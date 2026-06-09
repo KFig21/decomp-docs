@@ -160,7 +160,13 @@ export default function TrainerPokemonCard({
 
           {/* Ability */}
           {species.abilities?.[0]?.name && (
-            <span className="loc-detail loc-ability">{species.abilities[0].name}</span>
+            <Link
+              to={`/abilities/${species.abilities[0].key}`}
+              className="loc-detail loc-ability"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {species.abilities[0].name}
+            </Link>
           )}
 
           {/* Nature + IV */}

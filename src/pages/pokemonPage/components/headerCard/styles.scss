@@ -62,6 +62,19 @@
             strong {
                 color: var(--fontColor);
             }
+
+            .ability-link {
+                color: var(--fadedFont);
+                text-decoration: none;
+                border-radius: 3px;
+                padding: 1px 5px;
+                transition: color 0.12s, background 0.12s;
+
+                &:hover {
+                    color: var(--primaryColor);
+                    background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+                }
+            }
         }
 
         // NEW DROPDOWN STYLES

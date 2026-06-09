@@ -1,0 +1,69 @@
+@use '../../styles/index.scss' as *;
+@use '../../styles/colors.scss' as *;
+
+.abilities-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--backgroundColor);
+}
+
+.abilities-page-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.abilities-detail-area {
+    height: 100%;
+    overflow-y: auto;
+    background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+
+    .empty-selection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--fadedFont);
+
+        h2 {
+            margin: 16px 0 8px 0;
+            color: var(--fontColor);
+        }
+    }
+}
+
+.abilities-detail-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 36px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.ability-card-style {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
