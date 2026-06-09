@@ -4,70 +4,300 @@
 .app-layout {
     height: 100vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
-    .topbar {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr; // left | center-nav | right
-        align-items: stretch;
-        background-color: var(--backgroundColor);
-        border-bottom: 1px solid var(--containerBorderColor);
-        height: $topbarHeight;
-        position: sticky;
+    // ── Sidebar ────────────────────────────────────────────────────────────────
+    .sidebar {
+        position: fixed;
+        left: 0;
         top: 0;
-        z-index: 10;
+        bottom: 0;
+        width: $sidebarCollapsedWidth;
+        z-index: 50;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--backgroundColor);
+        border-right: 1px solid var(--containerBorderColor);
+        transition: width 0.2s ease;
 
-        // ── Left: project name ──────────────────────────────────────────────────
-        .title-wrapper {
-            display: flex;
-            align-items: center;
-
-            .title-container {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                height: 100%;
-                padding: 0 16px;
-                cursor: pointer;
-                transition: background-color 0.18s;
-
-                &:hover {
-                    background-color: var(--containerBorderColor);
-                }
-
-                .title {
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    color: var(--fontColor);
-                }
-            }
+        &:hover {
+            width: $sidebarExpandedWidth;
         }
 
-        // ── Right: themes button ────────────────────────────────────────────────
-        .themes-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-
-            .theme-button {
-                background-color: transparent;
-                border: none;
-                font-size: 1rem;
-                cursor: pointer;
-                color: var(--fontColor);
-                height: 100%;
-                padding: 0 16px;
-                transition: background-color 0.18s;
-
-                &:hover {
-                    background-color: var(--containerBorderColor);
-                }
-            }
+        &--locked {
+            width: $sidebarExpandedWidth;
         }
+    }
+
+    // ── Page content ─────────────────────────────────────────────────────────
+    .page-content {
+        margin-left: $sidebarCollapsedWidth;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+        transition: margin-left 0.2s ease;
+    }
+
+    &.sidebar-locked .page-content {
+        margin-left: $sidebarExpandedWidth;
     }
 
     .page-wrapper {
         flex: 1;
         overflow: hidden;
+    }
+
+    // ── Sidebar top section ───────────────────────────────────────────────────
+    // flex:1 so it fills available space; min-height:0 lets it shrink when the
+    // themes panel opens; overflow-y:auto adds scroll for nav items if needed.
+    .sidebar-top {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    // ── Brand / home button ───────────────────────────────────────────────────
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        height: $sidebarCollapsedWidth;
+        flex-shrink: 0;
+        cursor: pointer;
+        border-bottom: 1px solid var(--containerBorderColor);
+        transition: background-color 0.15s;
+
+        &:hover {
+            background-color: var(--containerBorderColor);
+        }
+
+        &__icon-area {
+            width: $sidebarCollapsedWidth;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--fontColor);
+        }
+
+        &__label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--fontColor);
+            white-space: nowrap;
+            // Sidebar's overflow:hidden acts as the clip mask for the marquee.
+        }
+    }
+
+    // ── Brand label marquee (when sidebar is expanded) ────────────────────────
+    // min(0px, X) trick: if text fits in the available space X stays ≥ 0 → no
+    // movement. If it overflows X is negative → scrolls to exactly reveal the end.
+    @keyframes sidebar-label-marquee {
+
+        0%,
+        20% {
+            transform: translateX(0);
+        }
+
+        80%,
+        100% {
+            transform: translateX(min(0px, calc(#{$sidebarExpandedWidth} - #{$sidebarCollapsedWidth} - 12px - 100%)));
+        }
+    }
+
+    .sidebar:hover .sidebar-brand__label,
+    .sidebar--locked .sidebar-brand__label {
+        animation: sidebar-label-marquee 5s ease-in-out 1s infinite;
+    }
+
+    // ── Sidebar bottom section ────────────────────────────────────────────────
+    .sidebar-bottom {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        border-top: 1px solid var(--containerBorderColor);
+    }
+
+    // ── Themes accordion panel ────────────────────────────────────────────────
+    // Garage-door effect: max-height animates from 0 to 50vh. The separator
+    // border lives inside the overflow:hidden list so it is clipped at 0 height
+    // — this eliminates the 1px gap that border-bottom on the panel itself causes.
+    .themes-panel {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+
+        &--open {
+            max-height: 50vh;
+        }
+
+        &__list {
+            padding: 0;
+            // Inside the clipped container → invisible when panel is closed
+            border-bottom: 1px solid var(--containerBorderColor);
+            overflow-y: auto;
+            max-height: 50vh;
+            scrollbar-width: thin;
+        }
+
+        &__item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 38px;
+            padding: 0;
+            background: none;
+            border: none;
+            border-left: 3px solid transparent;
+            color: var(--fadedFont);
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            text-align: left;
+
+            &:hover {
+                background-color: color-mix(in srgb, var(--containerBorderColor), transparent 30%);
+                color: var(--fontColor);
+            }
+
+            &--active {
+                color: var(--primaryColor);
+                border-left-color: var(--primaryColor);
+                background-color: color-mix(in srgb, var(--primaryColor), transparent 92%);
+
+                &:hover {
+                    background-color: color-mix(in srgb, var(--primaryColor), transparent 85%);
+                }
+            }
+        }
+
+        // Icon zone mirrors the sidebar nav icon area so labels stay aligned
+        &__icon-area {
+            width: $sidebarCollapsedWidth;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        // Per-theme dot — hardcoded colours so they look correct regardless of
+        // which theme is currently active (CSS vars would shift with the theme).
+        // box-shadow ring ensures the dot is always visible on any background.
+        &__dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid;
+            flex-shrink: 0;
+            transition: transform 0.15s;
+
+            .themes-panel__item--active & {
+                transform: scale(1.25);
+            }
+
+            // base — dark blue-grey bg, soft blue accent
+            &--base {
+                background: #1e212b;
+                border-color: rgb(132, 159, 212);
+                box-shadow: 0 0 0 1px rgba(132, 159, 212, 0.35);
+            }
+
+            // night — near-black bg, mid-grey accent
+            &--night {
+                background: #151515;
+                border-color: rgb(128, 128, 128);
+                box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.35);
+            }
+
+            // light — off-white bg, near-black accent
+            &--light {
+                background: #f4f4f4;
+                border-color: rgb(45, 45, 45);
+                box-shadow: 0 0 0 1px rgba(45, 45, 45, 0.2);
+            }
+        }
+
+        &__label {
+            line-height: 1;
+        }
+    }
+
+    // ── Shared sidebar action buttons ─────────────────────────────────────────
+    .sidebar-action-btn {
+        display: flex;
+        align-items: center;
+        height: 44px;
+        width: 100%;
+        padding: 0;
+        background: none;
+        border: none;
+        border-left: 3px solid transparent;
+        color: var(--fadedFont);
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+        text-align: left;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--containerBorderColor), transparent 30%);
+            color: var(--fontColor);
+        }
+
+        &__icon {
+            width: $sidebarCollapsedWidth;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        &__label {
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        // When the themes panel is open, tint the button to signal the active state
+        &--themes-open {
+            color: var(--primaryColor);
+            border-left-color: var(--primaryColor);
+            background-color: color-mix(in srgb, var(--primaryColor), transparent 92%);
+
+            &:hover {
+                background-color: color-mix(in srgb, var(--primaryColor), transparent 85%);
+                color: var(--primaryColor);
+            }
+        }
+    }
+
+    // ── Pin button active state ───────────────────────────────────────────────
+    .sidebar-pin-btn {
+        &--active {
+            color: var(--primaryColor);
+            border-left-color: var(--primaryColor);
+            background-color: color-mix(in srgb, var(--primaryColor), transparent 92%);
+
+            &:hover {
+                background-color: color-mix(in srgb, var(--primaryColor), transparent 85%);
+                color: var(--primaryColor);
+            }
+        }
     }
 }

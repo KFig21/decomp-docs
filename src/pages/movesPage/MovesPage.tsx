@@ -102,6 +102,23 @@ export default function MovesPage() {
   const itemsArray = useMemo(() => Object.values(items || {}), [items]);
   const pokemonArray = useMemo(() => Object.values(pokemon || {}), [pokemon]);
 
+  // Set of all move keys that at least one Pokémon can learn
+  // (via level-up, TM/HM, or tutor — all stored in levelUpLearnset / tmhmLearnset)
+  const learnableMoveKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const mon of pokemonArray as any[]) {
+      for (const e of mon.levelUpLearnset ?? []) {
+        const k = typeof e.move === 'string' ? e.move : e.move?.key;
+        if (k) keys.add(k);
+      }
+      for (const e of mon.tmhmLearnset ?? []) {
+        const k = typeof e.move === 'string' ? e.move : e.move?.key;
+        if (k) keys.add(k);
+      }
+    }
+    return keys;
+  }, [pokemonArray]);
+
   // TM item lookup: moveKey → TM item
   const tmByMove = useMemo(() => {
     const map: Record<string, any> = {};
@@ -133,6 +150,7 @@ export default function MovesPage() {
     const filtered = (movesArray as any[]).filter((move) => {
       if (move.key === 'MOVE_NONE') return false;
       if (!move.name || move.name === '????' || move.name === 'None') return false;
+      if (!learnableMoveKeys.has(move.key)) return false;
 
       if (searchTerm && !move.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
 
@@ -164,7 +182,7 @@ export default function MovesPage() {
     });
 
     return applySort(filtered, sortBy);
-  }, [movesArray, searchTerm, activeFilters, sortBy, hasTmOnly, tmByMove, minPower, maxPower]);
+  }, [movesArray, searchTerm, activeFilters, sortBy, hasTmOnly, tmByMove, minPower, maxPower, learnableMoveKeys]);
 
   useEffect(() => {
     if (!id && filteredMoves.length > 0) {

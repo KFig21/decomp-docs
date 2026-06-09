@@ -2,8 +2,11 @@
 @use './colors.scss' as *;
 
 // VARIABLES
-$topbarHeight: 50px;
-$scrollableContainerHeight: calc(100vh - var(--topbarHeight));
+$topbarHeight: 50px; // retained for ThemeDrawer header height
+$filterbarHeight: 52px;
+$sidebarCollapsedWidth: 52px;
+$sidebarExpandedWidth: 220px;
+$scrollableContainerHeight: 100vh;
 
 :root {
   /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
