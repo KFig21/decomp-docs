@@ -1,0 +1,91 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+// ── Evolution list ────────────────────────────────────────────────────────────
+.item-evo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+// ── Single row: pre-evo → arrow → post-evo ────────────────────────────────────
+.item-evo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+// ── Arrow + optional badge ────────────────────────────────────────────────────
+.item-evo-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    width: 56px;
+
+    &__line {
+        font-size: 1.4rem;
+        color: var(--fadedFont);
+        line-height: 1;
+    }
+}
+
+.item-evo-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 999px;
+
+    &--trade {
+        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+        color: var(--primaryColor);
+        border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
+    }
+}
+
+// ── Pokémon card ──────────────────────────────────────────────────────────────
+.item-evo-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--containerBorderColor);
+    background: color-mix(in srgb, var(--backgroundColor), white 2%);
+    width: 200px;
+    flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+
+    &:hover {
+        border-color: var(--primaryColor);
+        background: color-mix(in srgb, var(--primaryColor), transparent 90%);
+        transform: translateY(-2px);
+    }
+
+    &--result {
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 60%);
+        background: color-mix(in srgb, var(--primaryColor), transparent 92%);
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    &__name {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--fontColor);
+    }
+
+    &__types {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+}

@@ -5,6 +5,7 @@ import { useData } from '../../../../contexts/dataContext';
 import HeldByPokemon from './../../components/heldByPokemon/HeldByPokemon';
 import ItemHeaderCard from './../../components/itemHeaderCard/ItemHeaderCard';
 import ItemLocations from './../../components/itemLocations/ItemLocations';
+import ItemEvolutions from './../../components/itemEvolutions/ItemEvolutions';
 
 export default function ItemDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +20,7 @@ export default function ItemDetailPage() {
     <div className="items-detail-pane">
       <ItemHeaderCard selected={selected} />
       <ItemLocations locations={selected.locations} />
+      <ItemEvolutions item={selected} />
       <HeldByPokemon item={selected} />
     </div>
   );

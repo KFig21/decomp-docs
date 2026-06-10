@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './styles.scss';
 import { useData } from '../../contexts/dataContext';
 import LocationsSidebar from './components/sidebar/LocationsSidebar';
-import LocationCard from './components/locationCard/sections/locations/LocationCard';
 import type { LocationRoot } from '../../services/parsers/v2/locations/types';
 import { TrainerTabProvider } from '../../contexts/trainerTabContext';
 import { formatReadableName } from '../../utils/functions';
 import LocationsFilterBar from './components/filterBar/LocationsFilterBar';
+import LocationDetailPage from './components/locationDetailPage/LocationDetailPage';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -234,54 +234,13 @@ export default function LocationsPage() {
           <LocationsSidebar locations={filteredLocations} activeId={id ?? null} />
 
           <div className="locations-detail-area" ref={detailAreaRef}>
-            {activeLocation && activeStats ? (
-              <>
-                {/* ── Sticky detail header ── */}
-                <div className="locations-detail-header">
-                  <h2 className="locations-detail-header__title">
-                    {formatReadableName(activeLocation.root)}
-                  </h2>
-                  <div className="locations-detail-header__stats">
-                    {activeStats.mapCount > 1 && (
-                      <div className="loc-stat">
-                        <span className="loc-stat__value">{activeStats.mapCount}</span>
-                        <span className="loc-stat__label">Maps</span>
-                      </div>
-                    )}
-                    {activeStats.trainerCount > 0 && (
-                      <div className="loc-stat">
-                        <span className="loc-stat__value">{activeStats.trainerCount}</span>
-                        <span className="loc-stat__label">Trainers</span>
-                      </div>
-                    )}
-                    {activeStats.itemCount > 0 && (
-                      <div className="loc-stat">
-                        <span className="loc-stat__value">{activeStats.itemCount}</span>
-                        <span className="loc-stat__label">Items</span>
-                      </div>
-                    )}
-                    {activeStats.encounterCount > 0 && (
-                      <div className="loc-stat">
-                        <span className="loc-stat__value">{activeStats.encounterCount}</span>
-                        <span className="loc-stat__label">Wild Species</span>
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    className="loc-back-to-top"
-                    onClick={scrollToTop}
-                    title="Back to top"
-                  >
-                    ↑ Top
-                  </button>
-                </div>
-
-                {/* ── Location content ── */}
-                <div className="locations-detail-pane">
-                  <LocationCard locationRoot={activeLocation} />
-                </div>
-              </>
-            ) : null}
+            {activeLocation && activeStats && (
+              <LocationDetailPage
+                location={activeLocation}
+                stats={activeStats}
+                scrollToTop={scrollToTop}
+              />
+            )}
           </div>
         </div>
       </div>
