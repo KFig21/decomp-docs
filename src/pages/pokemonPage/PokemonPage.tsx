@@ -67,6 +67,10 @@ export default function PokemonPage() {
     const result = pokemonArray.filter((mon) => {
       if (mon.name === '??????????') return false;
 
+      // Variants (e.g. SPECIES_PIKACHU_ALOLA) are accessible via the variant
+      // selector on the base form's page — exclude them from the sidebar list.
+      if (mon.baseSpeciesKey) return false;
+
       // Obtainability
       if (showObtainableOnly && !mon.isObtainable) return false;
       if (!showObtainableOnly && !mon.isSeen && !mon.isObtainable) return false;

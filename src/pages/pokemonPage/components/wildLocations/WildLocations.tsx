@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
@@ -32,12 +33,14 @@ export default function WildLocations({ selectedKey }: Props) {
           locRoot.root === map.name
             ? formatReadableName(locRoot.root)
             : `${formatReadableName(locRoot.root)} (${formatReadableName(map.name)})`;
+        const locationKey: string = locRoot.root;
 
         (map.wildPokemon || []).forEach((table: any) => {
           table.encounters.forEach((enc: any) => {
             if (enc.pokemon?.key === selectedKey) {
               rawEncounters.push({
                 locationName: locationDisplay,
+                locationKey,
                 method: formatEncounterTableName(table.method),
                 minLevel: enc.minLevel,
                 maxLevel: enc.maxLevel,
@@ -51,6 +54,7 @@ export default function WildLocations({ selectedKey }: Props) {
           if (enc.species?.key === selectedKey) {
             rawEncounters.push({
               locationName: locationDisplay,
+              locationKey,
               method: enc.method,
               minLevel: enc.level,
               maxLevel: enc.level,
@@ -85,7 +89,11 @@ export default function WildLocations({ selectedKey }: Props) {
               <tbody>
                 {resolvedLocations.map((enc: any, i: number) => (
                   <tr key={i}>
-                    <td>{enc.locationName}</td>
+                    <td>
+                      <Link to={`/locations/${enc.locationKey}`} className="table-location-link">
+                        {enc.locationName}
+                      </Link>
+                    </td>
                     <td>{enc.method}</td>
                     <td className="center">
                       {enc.minLevel === enc.maxLevel
