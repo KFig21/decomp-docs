@@ -2,15 +2,16 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
-import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
 import './styles.scss';
 
 type Props = {
   filteredPokemon: any[];
   activeId?: string;
+  selectedDex: string;
 };
 
-export default function PokemonSidebar({ filteredPokemon, activeId }: Props) {
+export default function PokemonSidebar({ filteredPokemon, activeId, selectedDex }: Props) {
   const navigate = useNavigate();
   const activeItemRef = useRef<HTMLDivElement>(null);
 
@@ -50,16 +51,21 @@ export default function PokemonSidebar({ filteredPokemon, activeId }: Props) {
                 <PokemonSprite name={mon.name} />
               </div>
               <div className="pokemon-name">
-                {typeof mon.natDexNum === 'number' && (
-                  <span className="sidebar-dex-num">
-                    #{String(mon.natDexNum).padStart(3, '0')}{' '}
-                  </span>
-                )}
+                {(() => {
+                  const num =
+                    (mon.dexNums as Record<string, number> | undefined)?.[selectedDex] ??
+                    (selectedDex === 'NATIONAL_DEX' && typeof mon.natDexNum === 'number'
+                      ? mon.natDexNum
+                      : null);
+                  return num != null ? (
+                    <span className="sidebar-dex-num">#{String(num).padStart(3, '0')}{' '}</span>
+                  ) : null;
+                })()}
                 {mon.name}
               </div>
               <div className="pokemon-types">
                 {uniqueTypes.map((type) => (
-                  <TypeBadge key={type} type={type} />
+                  <TypeIconBadge key={type} type={type} size={20} />
                 ))}
               </div>
               <div className="pokemon-bst">{bst as number} BST</div>

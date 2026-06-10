@@ -21,9 +21,9 @@
             border-bottom: 1px solid var(--containerBorderColor);
             padding: 2px 8px;
             display: grid;
-            grid-template-columns: 60px 100px auto 50px;
+            grid-template-columns: 56px 1fr 52px 50px;
             align-items: center;
-            gap: 16px;
+            gap: 8px;
             background-color: var(--backgroundColor);
             transition: background-color 0.15s ease;
             white-space: nowrap;
@@ -54,6 +54,7 @@
                 .sidebar-dex-num {
                     color: var(--fadedFont);
                     font-size: 0.85em;
+                    font-weight: 500;
                 }
             }
 
@@ -61,7 +62,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-start;
-                gap: 6px;
+                gap: 3px;
                 flex-wrap: nowrap;
                 overflow: hidden;
             }

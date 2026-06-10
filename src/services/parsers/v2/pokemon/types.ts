@@ -37,6 +37,8 @@ export interface ParsedPokemon {
   name: string;
   pokedexEntry?: string;
   natDexNum?: string | number;
+  /** All dex numbers keyed by type, e.g. { NATIONAL_DEX: 25, HOENN_DEX: 156 } */
+  dexNums?: Record<string, number>;
   baseSpeciesKey?: string;
   variants?: ParsedPokemon[];
 

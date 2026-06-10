@@ -8,13 +8,17 @@
     padding: 24px;
     gap: 32px;
 
+    $spriteSize: 160px;
+
     .sprite-showcase {
         background-color: var(--backgroundColor);
         border-radius: 8px;
-        padding: 16px;
+        padding: 0px;
         border: 1px solid var(--containerBorderColor);
-        min-width: 130px;
-        max-width: 130px;
+        min-width: $spriteSize;
+        max-width: $spriteSize;
+        min-height: $spriteSize;
+        max-height: $spriteSize;
         display: flex;
         justify-content: center;
     }
@@ -25,7 +29,7 @@
         justify-content: flex-start;
         align-items: flex-start;
         width: 100%; // Ensure it takes the remaining space
-        min-height: 130px;
+        min-height: $spriteSize;
 
         .header-info-left {
             display: flex;
@@ -40,11 +44,36 @@
             font-size: 2rem;
             font-weight: 900;
             color: var(--fontColor);
+        }
 
-            .dex-num {
-                color: var(--fadedFont);
+        .dex-nums-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+
+            &__chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 999px;
+                background: color-mix(in srgb, var(--primaryColor), transparent 88%);
+                border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 70%);
+            }
+
+            &__label {
+                font-size: 0.7rem;
                 font-weight: 700;
-                margin-right: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--fadedFont);
+            }
+
+            &__num {
+                font-size: 0.78rem;
+                font-weight: 800;
+                color: var(--primaryColor);
             }
         }
 

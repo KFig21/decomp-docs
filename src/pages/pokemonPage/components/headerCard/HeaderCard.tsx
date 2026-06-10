@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import { dexTypeLabel } from '../pokemonFilterBar/PokemonFilterBar';
 import './styles.scss';
 
 type Props = {
@@ -30,21 +31,14 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
     }
   };
 
-  console.log('activeVariant', activeVariant);
-
   return (
     <div className="header-card pokemon-card-style">
       <div className="sprite-showcase">
-        <PokemonSprite name={activeVariant.name} speciesKey={activeVariant.key} size={96} />
+        <PokemonSprite name={activeVariant.name} speciesKey={activeVariant.key} size={160} />
       </div>
       <div className="header-info">
         <div className="header-info-left">
-          <div className="pokemon-name">
-            {typeof activeVariant.natDexNum === 'number' && (
-              <span className="dex-num">#{String(activeVariant.natDexNum).padStart(3, '0')}</span>
-            )}{' '}
-            {activeVariant.name}
-          </div>
+          <div className="pokemon-name">{activeVariant.name}</div>
 
           <div className="pokemon-types">
             {uniqueTypes.map((type) => (
@@ -54,12 +48,16 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
           <div className="abilities-list">
             <strong>Abilities:</strong>{' '}
             {activeVariant.abilities?.filter((a: any) => a.name).length > 0
-              ? activeVariant.abilities.filter((a: any) => a.name).map((a: any, i: number, arr: any[]) => (
-                  <span key={a.key}>
-                    <Link to={`/abilities/${a.key}`} className="ability-link">{a.name}</Link>
-                    {i < arr.length - 1 && ' / '}
-                  </span>
-                ))
+              ? activeVariant.abilities
+                  .filter((a: any) => a.name)
+                  .map((a: any, i: number, arr: any[]) => (
+                    <span key={a.key}>
+                      <Link to={`/abilities/${a.key}`} className="ability-link">
+                        {a.name}
+                      </Link>
+                      {i < arr.length - 1 && ' / '}
+                    </span>
+                  ))
               : 'None'}
           </div>
 
@@ -76,6 +74,25 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
             </div>
           )}
         </div>
+
+        {(() => {
+          const dexEntries =
+            activeVariant.dexNums && Object.keys(activeVariant.dexNums).length > 0
+              ? Object.entries(activeVariant.dexNums as Record<string, number>)
+              : typeof activeVariant.natDexNum === 'number'
+                ? [['NATIONAL_DEX', activeVariant.natDexNum] as [string, number]]
+                : [];
+          return dexEntries.length > 0 ? (
+            <div className="dex-nums-row">
+              {dexEntries.map(([dexType, num]) => (
+                <span key={dexType} className="dex-nums-row__chip">
+                  <span className="dex-nums-row__label">{dexTypeLabel(dexType)}</span>
+                  <span className="dex-nums-row__num">#{String(num).padStart(3, '0')}</span>
+                </span>
+              ))}
+            </div>
+          ) : null;
+        })()}
 
         {activeVariant.pokedexEntry && (
           <p className="pokedex-entry">"{activeVariant.pokedexEntry}"</p>

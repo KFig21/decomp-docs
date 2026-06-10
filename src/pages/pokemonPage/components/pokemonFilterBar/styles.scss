@@ -19,6 +19,46 @@
     flex-wrap: wrap;
 }
 
+// ── Dex selector ─────────────────────────────────────────────────────────────
+.dex-selector {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &__label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--fadedFont);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-right: 2px;
+    }
+
+    &__btn {
+        padding: 4px 10px;
+        border-radius: 5px;
+        border: 1px solid var(--containerBorderColor);
+        background: var(--backgroundColor);
+        color: var(--fadedFont);
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+
+        &:hover {
+            color: var(--fontColor);
+            border-color: color-mix(in srgb, var(--primaryColor), transparent 50%);
+        }
+
+        &--active {
+            background: var(--primaryColor);
+            color: #fff;
+            border-color: var(--primaryColor);
+        }
+    }
+}
+
 .items-search-input {
     padding: 6px 12px;
     border-radius: 6px;

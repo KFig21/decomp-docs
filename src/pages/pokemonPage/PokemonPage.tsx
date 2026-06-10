@@ -32,8 +32,21 @@ export default function PokemonPage() {
   const [maxBst, setMaxBst] = useState('');
   const [moveFilter, setMoveFilter] = useState('');
   const [sortBy, setSortBy] = useState('pokedex');
+  const [selectedDex, setSelectedDex] = useState('NATIONAL_DEX');
 
   const pokemonArray = (Array.isArray(pokemon) ? pokemon : Object.values(pokemon)) as any[];
+
+  // Collect which dex types exist in the dataset (NATIONAL_DEX first, then others alphabetically)
+  const availableDexTypes = useMemo(() => {
+    const types = new Set<string>();
+    pokemonArray.forEach((mon) => {
+      if (mon.dexNums) Object.keys(mon.dexNums).forEach((t: string) => types.add(t));
+    });
+    return [
+      'NATIONAL_DEX',
+      ...Array.from(types).filter((t) => t !== 'NATIONAL_DEX').sort(),
+    ].filter((t) => types.has(t));
+  }, [pokemonArray]);
 
   // Pre-calculate encounter methods per pokemon
   const encounterMethodsByMon = useMemo(() => {
@@ -169,8 +182,15 @@ export default function PokemonPage() {
     });
 
     // Sort
-    if (sortBy === 'alpha') result.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortBy === 'bst') {
+    if (sortBy === 'pokedex') {
+      result.sort((a, b) => {
+        const aNum = a.dexNums?.[selectedDex] ?? (typeof a.natDexNum === 'number' ? a.natDexNum : 99999);
+        const bNum = b.dexNums?.[selectedDex] ?? (typeof b.natDexNum === 'number' ? b.natDexNum : 99999);
+        return aNum - bNum;
+      });
+    } else if (sortBy === 'alpha') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === 'bst') {
       result.sort((a, b) => {
         const bA = Object.values(a.baseStats || {}).reduce(
           (s: any, v: any) => Number(s) + Number(v),
@@ -242,6 +262,7 @@ export default function PokemonPage() {
     setMaxBst('');
     setMoveFilter('');
     setSortBy('pokedex');
+    setSelectedDex(availableDexTypes[0] ?? 'NATIONAL_DEX');
   };
 
   return (
@@ -265,9 +286,12 @@ export default function PokemonPage() {
         setMoveFilter={setMoveFilter}
         sortBy={sortBy}
         setSortBy={setSortBy}
+        availableDexTypes={availableDexTypes}
+        selectedDex={selectedDex}
+        setSelectedDex={setSelectedDex}
       />
       <div className="pokemon-page-content">
-        <PokemonSidebar filteredPokemon={filteredPokemon} activeId={id} />
+        <PokemonSidebar filteredPokemon={filteredPokemon} activeId={id} selectedDex={selectedDex} />
         <div className="pokemon-detail-area">
           {id ? (
             <PokemonDetailPage />

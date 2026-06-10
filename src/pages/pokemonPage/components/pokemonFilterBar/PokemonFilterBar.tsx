@@ -13,6 +13,15 @@ const SORT_OPTIONS = [
   { value: 'type', label: 'Primary Type' },
 ];
 
+/** "NATIONAL_DEX" → "National", "HOENN_DEX" → "Hoenn" */
+export function dexTypeLabel(dexType: string): string {
+  return dexType
+    .replace(/_DEX$/, '')
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
 export const TYPE_OPTIONS = [
   'Normal',
   'Fire',
@@ -130,7 +139,15 @@ function MultiDropdown({ label, options, selected, onToggle, accentColor }: Mult
 }
 
 // Single-select sort dropdown
-function SortDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function SortDropdown({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -142,7 +159,7 @@ function SortDropdown({ value, onChange }: { value: string; onChange: (v: string
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
-  const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Sort';
+  const currentLabel = options.find((o) => o.value === value)?.label ?? 'Sort';
 
   return (
     <div className={`ms-dropdown ms-dropdown--sort ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
@@ -152,7 +169,7 @@ function SortDropdown({ value, onChange }: { value: string; onChange: (v: string
       </button>
       {open && (
         <div className="ms-dropdown__menu">
-          {SORT_OPTIONS.map((opt) => (
+          {options.map((opt) => (
             <button
               key={opt.value}
               className={`ms-dropdown__option ${value === opt.value ? 'ms-dropdown__option--selected' : ''}`}
@@ -212,6 +229,9 @@ interface Props {
   setMoveFilter: (v: string) => void;
   sortBy: string;
   setSortBy: (v: string) => void;
+  availableDexTypes: string[];
+  selectedDex: string;
+  setSelectedDex: (v: string) => void;
 }
 
 export default function PokemonFilterBar({
@@ -233,6 +253,9 @@ export default function PokemonFilterBar({
   setMoveFilter,
   sortBy,
   setSortBy,
+  availableDexTypes,
+  selectedDex,
+  setSelectedDex,
 }: Props) {
   const toggle = (cat: keyof PokemonActiveFilters) => (v: string) =>
     setActiveFilters((prev) => ({
@@ -248,6 +271,7 @@ export default function PokemonFilterBar({
 
   const encounterOptions = ENCOUNTER_OPTIONS.map((e) => ({ ...e, color: ENCOUNTER_COLOR }));
 
+  const defaultDex = availableDexTypes[0] ?? 'NATIONAL_DEX';
   const hasAnyFilter =
     searchTerm ||
     showObtainableOnly ||
@@ -258,7 +282,8 @@ export default function PokemonFilterBar({
     minBst ||
     maxBst ||
     moveFilter ||
-    sortBy !== 'pokedex';
+    sortBy !== 'pokedex' ||
+    (availableDexTypes.length > 1 && selectedDex !== defaultDex);
 
   return (
     <div className="pokemon-filter-bar">
@@ -296,7 +321,22 @@ export default function PokemonFilterBar({
           accentColor={ENCOUNTER_COLOR}
         />
 
-        <SortDropdown value={sortBy} onChange={setSortBy} />
+        {availableDexTypes.length > 1 && (
+          <div className="dex-selector">
+            <span className="dex-selector__label">Dex</span>
+            {availableDexTypes.map((dexType) => (
+              <button
+                key={dexType}
+                className={`dex-selector__btn ${selectedDex === dexType ? 'dex-selector__btn--active' : ''}`}
+                onClick={() => setSelectedDex(dexType)}
+              >
+                {dexTypeLabel(dexType)}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <SortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />
 
         {/* BST range */}
         <div className="bst-range">
@@ -400,6 +440,12 @@ export default function PokemonFilterBar({
           )}
           {moveFilter && (
             <FilterPill label={`Move: ${moveFilter}`} onRemove={() => setMoveFilter('')} />
+          )}
+          {availableDexTypes.length > 1 && selectedDex !== defaultDex && (
+            <FilterPill
+              label={`Dex: ${dexTypeLabel(selectedDex)}`}
+              onRemove={() => setSelectedDex(defaultDex)}
+            />
           )}
           {sortBy !== 'pokedex' && (
             <FilterPill

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
 import CategoryBadge from '../../../../components/elements/categoryBadge/CategoryBadge';
+import TmSprite from '../../../../components/elements/sprites/TmSprite';
 import { normalizeTypeName } from '../../MovesPage';
 import './styles.scss';
 
@@ -72,6 +73,7 @@ export default function MoveHeaderCard({ move }: Props) {
     <div className="move-header-card move-card-style">
       {/* ── Title row ── */}
       <div className="move-header-card__top">
+        {typeName && <TmSprite type={typeName} size={48} />}
         <h1 className="move-header-card__name">{move.name}</h1>
         <div className="move-header-card__badges">
           {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} />}

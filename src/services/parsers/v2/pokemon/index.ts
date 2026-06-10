@@ -36,14 +36,45 @@ export function parsePokemon(
     }
   }
 
-  // Parse pokedex.h to convert NATIONAL_DEX_PIKACHU to 25
+  // Parse pokedex.h — dex numbers are C enums with implicit sequential values:
+  //   enum NationalDexOrder { NATIONAL_DEX_NONE, NATIONAL_DEX_BULBASAUR, ... }
+  //   enum HoennDexOrder    { HOENN_DEX_NONE, HOENN_DEX_TREECKO, ... }
+  // Entry value = its position in the enum (NONE=0, first real entry=1, …).
   const pokedexConstantsFile = getFile(files, 'include/constants/pokedex.h');
-  const natDexMap: Record<string, number> = {};
+  // allDexMaps["NATIONAL_DEX"]["PIKACHU"] = 25, allDexMaps["HOENN_DEX"]["TREECKO"] = 1, …
+  const allDexMaps: Record<string, Record<string, number>> = {};
+  const natDexMap: Record<string, number> = {}; // "NATIONAL_DEX_PIKACHU" → 25
   if (pokedexConstantsFile) {
-    const regex = /#define\s+(NATIONAL_DEX_[A-Z0-9_]+)\s+(\d+)/g;
-    let m;
-    while ((m = regex.exec(pokedexConstantsFile))) {
-      natDexMap[m[1]] = parseInt(m[2], 10);
+    // Match each `enum FooDexOrder { ... }` block
+    const enumBlockRegex = /enum\s+(\w+?)DexOrder\s*\{([\s\S]*?)\}/g;
+    let enumMatch;
+    while ((enumMatch = enumBlockRegex.exec(pokedexConstantsFile))) {
+      // "National" → "NATIONAL_DEX", "Hoenn" → "HOENN_DEX"
+      const dexPrefix = enumMatch[1].toUpperCase() + '_DEX';
+      const body = enumMatch[2]
+        .replace(/#[^\n]*/g, '')           // strip #if / #endif / #define lines
+        .replace(/\/\/[^\n]*/g, '')        // strip // comments
+        .replace(/\/\*[\s\S]*?\*\//g, ''); // strip /* */ comments
+
+      const map: Record<string, number> = {};
+      let counter = 0;
+      // Match each enum identifier with optional explicit `= VALUE`
+      const entryRegex = /\b([A-Z][A-Z0-9_]+)\b\s*(?:=\s*(\d+))?/g;
+      let entry;
+      while ((entry = entryRegex.exec(body))) {
+        const name = entry[1];
+        const explicit = entry[2];
+        if (explicit !== undefined) counter = parseInt(explicit, 10);
+        if (name.startsWith(`${dexPrefix}_`)) {
+          const suffix = name.slice(dexPrefix.length + 1);
+          if (suffix !== 'NONE' && suffix !== 'COUNT' && !suffix.endsWith('_COUNT')) {
+            map[suffix] = counter;
+            if (dexPrefix === 'NATIONAL_DEX') natDexMap[name] = counter;
+          }
+        }
+        counter++;
+      }
+      if (Object.keys(map).length > 0) allDexMaps[dexPrefix] = map;
     }
   }
 
@@ -154,6 +185,18 @@ export function parsePokemon(
         // If we successfully found the number in pokedex.h, store the number. Otherwise, keep the string.
         pokemon[speciesKey].natDexNum =
           natDexMap[rawNatDex] !== undefined ? natDexMap[rawNatDex] : rawNatDex;
+
+        // Collect all dex numbers for this species across every dex type
+        const suffixMatch = rawNatDex.match(/_DEX_(.+)$/);
+        if (suffixMatch && Object.keys(allDexMaps).length > 0) {
+          const suffix = suffixMatch[1];
+          const dexNums: Record<string, number> = {};
+          for (const [dexType, speciesMap] of Object.entries(allDexMaps)) {
+            const num = speciesMap[suffix];
+            if (num !== undefined && num !== 0) dexNums[dexType] = num;
+          }
+          if (Object.keys(dexNums).length > 0) pokemon[speciesKey].dexNums = dexNums;
+        }
       }
 
       pokemon[speciesKey].baseStats = {

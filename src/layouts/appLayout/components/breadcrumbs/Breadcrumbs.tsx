@@ -6,6 +6,7 @@ import { useData } from '../../../../contexts/dataContext';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
+import TmSprite from '../../../../components/elements/sprites/TmSprite';
 import SvgIcon from '../../../../components/elements/svgIcon/SvgIcon';
 import { locationsIcon } from '../../../../components/elements/svgIcon/icons/locationsIcon';
 import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokemonIcon';
@@ -30,7 +31,7 @@ type HistoryItem = {
 export default function Breadcrumbs({ currentPage }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { pokemon, items, trainers } = useData();
+  const { pokemon, items, trainers, moves } = useData();
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -157,6 +158,11 @@ export default function Breadcrumbs({ currentPage }: Props) {
               size={24}
             />
           );
+      }
+      if (h.category === 'moves' && h.id && moves) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const move = (moves as any)[h.id];
+        if (move?.type) return <TmSprite type={move.type} size={24} />;
       }
       if (h.category === 'moves')
         return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
