@@ -1,6 +1,105 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
+// ── Sticky top bar ────────────────────────────────────────────────────────────
+.pokemon-detail-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--containerBorderColor);
+    background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+
+    &__identity {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    &__name {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--fontColor);
+        white-space: nowrap;
+        letter-spacing: -0.01em;
+    }
+
+    &__types {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    &__nav {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar { display: none; }
+    }
+}
+
+// ── Nav link pills ────────────────────────────────────────────────────────────
+.poke-nav-link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+
+    &:hover {
+        color: var(--fontColor);
+        background: color-mix(in srgb, var(--fontColor), transparent 90%);
+    }
+
+    &--active {
+        color: var(--primaryColor);
+        background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 55%);
+    }
+}
+
+// ── Back to top button ────────────────────────────────────────────────────────
+.poke-back-to-top {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--backgroundColor);
+    color: var(--fadedFont);
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+    &:hover {
+        color: var(--primaryColor);
+        border-color: var(--primaryColor);
+        background: color-mix(in srgb, var(--primaryColor), transparent 92%);
+    }
+}
+
 // ── Detail pane ───────────────────────────────────────────────────────────────
 .pokemon-detail-pane {
     display: flex;
@@ -68,36 +167,5 @@
 
     .content {
         padding: 16px;
-    }
-}
-
-// ── Back to top button ────────────────────────────────────────────────────────
-.back-to-top {
-    position: fixed;
-    bottom: 48px;
-    right: 28px;
-    z-index: 100;
-
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--containerBorderColor);
-    background: var(--containerBgColor);
-    backdrop-filter: blur(8px);
-    color: var(--fontColor);
-    font-size: 0.82rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    transition: background 0.15s, border-color 0.15s, transform 0.15s;
-
-    &:hover {
-        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
-        border-color: var(--primaryColor);
-        color: var(--primaryColor);
-        transform: translateY(-2px);
     }
 }
