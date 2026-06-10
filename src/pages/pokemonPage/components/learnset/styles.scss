@@ -1,6 +1,39 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
+// ── Learnset table (auto width + fixed columns) ───────────────────────────────
+.learnset-table {
+    width: auto;
+    border-collapse: collapse;
+
+    th,
+    td {
+        border: 1px solid var(--containerBorderColor);
+        padding: 6px 12px;
+        text-align: left;
+        background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+        white-space: nowrap;
+    }
+
+    th {
+        background-color: color-mix(in srgb, var(--backgroundColor), black 40%);
+        font-size: 0.8rem;
+    }
+
+    td.center,
+    th.center {
+        text-align: center;
+    }
+
+    .col-level  { width: 55px; }
+    .col-method { width: 70px; }
+    .col-type   { width: 110px; }
+    .col-cat    { width: 110px; }
+    .col-power  { width: 65px; }
+    .col-acc    { width: 65px; }
+    .col-pp     { width: 50px; }
+}
+
 // ── Move / TM links in learnset tables ───────────────────────────────────────
 .learnset-link {
     color: var(--fontColor);

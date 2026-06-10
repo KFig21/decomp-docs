@@ -1,21 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
-import { normalizeMoveCategory, normalizeTypeName } from '../../MovesPage';
+import CategoryBadge from '../../../../components/elements/categoryBadge/CategoryBadge';
+import { normalizeTypeName } from '../../MovesPage';
 import './styles.scss';
 
 type Props = { move: any };
-
-const CATEGORY_ICON: Record<string, string> = {
-  Physical: '⚔️',
-  Special: '✨',
-  Status: '🔮',
-};
-
-const CATEGORY_COLOR: Record<string, string> = {
-  Physical: '#c03028',
-  Special: '#6890f0',
-  Status: '#a040a0',
-};
 
 // ── Boolean flag → display metadata ──────────────────────────────────────────
 // Only flags worth showing to a player/developer are listed here.
@@ -65,8 +54,6 @@ function StatCell({ label, value }: { label: string; value: string | number }) {
 
 export default function MoveHeaderCard({ move }: Props) {
   const typeName = normalizeTypeName(move.type);
-  const category = normalizeMoveCategory(move.category || move.split);
-  const catColor = CATEGORY_COLOR[category] ?? '#7a8a9a';
   const priority = move.priority ?? 0;
 
   // Collect displayable boolean flags
@@ -88,9 +75,7 @@ export default function MoveHeaderCard({ move }: Props) {
         <h1 className="move-header-card__name">{move.name}</h1>
         <div className="move-header-card__badges">
           {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} />}
-          <span className="move-category-badge" style={{ '--cat-color': catColor } as any}>
-            {CATEGORY_ICON[category]} {category}
-          </span>
+          <CategoryBadge raw={move.category || move.split} showIcon />
         </div>
       </div>
 

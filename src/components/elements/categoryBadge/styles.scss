@@ -1,0 +1,33 @@
+@use './../../../styles/index.scss' as *;
+
+.category-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: monospace;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    border-radius: 2px;
+    color: white;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &--physical {
+        background-color: #eb5628;
+    }
+
+    &--special {
+        background-color: #375ab2;
+    }
+
+    &--status {
+        background-color: #828282;
+    }
+
+    &__icon {
+        font-style: normal;
+        line-height: 1;
+    }
+}

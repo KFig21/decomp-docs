@@ -106,20 +106,6 @@
   }
 }
 
-// ── Category badge ─────────────────────────────────────────────────────────────
-.move-category-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--cat-color, #7a8a9a), transparent 82%);
-  color: var(--cat-color, #7a8a9a);
-  border: 1px solid color-mix(in srgb, var(--cat-color, #7a8a9a), transparent 55%);
-}
-
 // ── Secondary effect chips ────────────────────────────────────────────────────
 .move-effect-chip {
   font-size: 0.75rem;

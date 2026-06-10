@@ -4,14 +4,10 @@ import { Link } from 'react-router-dom';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import CategoryBadge from '../../../../components/elements/categoryBadge/CategoryBadge';
 import './styles.scss';
 
 type Props = { learnset: any[] };
-
-const formatCategory = (catStr?: string) => {
-  if (!catStr) return '—';
-  return formatReadableName(catStr.replace('SPLIT_', '').replace('DAMAGE_CATEGORY_', ''));
-};
 
 const formatNumber = (num?: number) => {
   if (!num || num === 0) return '—';
@@ -30,16 +26,16 @@ export default function Learnset({ learnset }: Props) {
       {isOpen && (
         <div className="table-container content" style={{ overflowX: 'auto' }}>
           {learnset && learnset.length > 0 ? (
-            <table className="data-table">
+            <table className="learnset-table">
               <thead>
                 <tr>
-                  <th className="center">Level</th>
-                  <th className="left">Move</th>
-                  <th className="center">Type</th>
-                  <th className="center">Cat.</th>
-                  <th className="center">Power</th>
-                  <th className="center">Acc.</th>
-                  <th className="center">PP</th>
+                  <th className="center col-level">Level</th>
+                  <th>Move</th>
+                  <th className="center col-type">Type</th>
+                  <th className="center col-cat">Cat.</th>
+                  <th className="center col-power">Power</th>
+                  <th className="center col-acc">Acc.</th>
+                  <th className="center col-pp">PP</th>
                 </tr>
               </thead>
               <tbody>
@@ -47,7 +43,7 @@ export default function Learnset({ learnset }: Props) {
                   const move = learnData.move;
                   const moveName = move.name || formatReadableName(move);
                   const moveKey = move?.key ?? (typeof move === 'string' ? move : null);
-                  const moveType = move.type ? move.type.replace('type_', '') : '';
+                  const moveType = move.type ?? '';
 
                   return (
                     <tr key={i}>
@@ -62,7 +58,7 @@ export default function Learnset({ learnset }: Props) {
                         )}
                       </td>
                       <td className="center">{moveType ? <TypeBadge type={moveType} /> : '—'}</td>
-                      <td className="center">{formatCategory(move.category || move.split)}</td>
+                      <td className="center"><CategoryBadge raw={move.category || move.split} /></td>
                       <td className="center">{formatNumber(move.power)}</td>
                       <td className="center">{move.accuracy ? `${move.accuracy}%` : '—'}</td>
                       <td className="center">{formatNumber(move.pp)}</td>
