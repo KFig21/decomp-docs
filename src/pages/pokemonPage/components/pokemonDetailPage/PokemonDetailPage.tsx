@@ -98,7 +98,7 @@ export default function PokemonDetailPage() {
     <>
       {/* ── Sticky top bar ───────────────────────────────────────────────────── */}
       <div className="pokemon-detail-topbar">
-        <div className="pokemon-detail-topbar__identity">
+        <div className="pokemon-detail-topbar__identity" onClick={scrollToTop}>
           <PokemonSprite name={activeVariant.name} size={38} />
           <span className="pokemon-detail-topbar__name">{activeVariant.name}</span>
           {activeVariant.types && (
@@ -115,7 +115,7 @@ export default function PokemonDetailPage() {
             <button
               key={sId}
               className={`poke-nav-link ${activeSection === sId ? 'poke-nav-link--active' : ''}`}
-              onClick={() => scrollToSection(sId)}
+              onClick={() => sId === 'poke-overview' ? scrollToTop() : scrollToSection(sId)}
             >
               {label}
             </button>

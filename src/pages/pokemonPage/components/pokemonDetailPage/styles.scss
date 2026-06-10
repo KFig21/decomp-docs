@@ -21,6 +21,15 @@
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 2px 6px;
+        margin: -2px -6px;
+        transition: background 0.15s;
+
+        &:hover {
+            background: color-mix(in srgb, var(--fontColor), transparent 90%);
+        }
     }
 
     &__name {
