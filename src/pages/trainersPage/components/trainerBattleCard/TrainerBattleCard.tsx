@@ -6,6 +6,7 @@ import { formatReadableName } from '../../../../utils/functions';
 import TrainerParty from '../trainerParty/TrainerParty';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
+import ExportToggleButton from '../../../../components/elements/exportToggleButton/ExportToggleButton';
 import './styles.scss';
 
 type Props = {
@@ -40,8 +41,22 @@ export default function TrainerBattleCard({ battleIndex, variants }: Props) {
   const mapName = location?.mapKey ? formatReadableName(location.mapKey) : null;
   const displayLocation = mapName ?? locationName ?? `Battle ${battleIndex + 1}`;
 
+  // Deduplicate items by key, preserving first occurrence metadata
+  const dedupedItems = items
+    ? [
+        ...(items as any[])
+          .reduce((map, item) => {
+            const k = item.key ?? item.name ?? String(item);
+            if (map.has(k)) map.get(k).count++;
+            else map.set(k, { ...item, count: 1 });
+            return map;
+          }, new Map<string, any>())
+          .values(),
+      ]
+    : [];
+
   return (
-    <div className="trainer-battle-card trainer-card-style">
+    <div className={`trainer-battle-card trainer-card-style ${isOpen ? '' : 'collapsed'}`}>
       {/* ── Header ── */}
       <div className="battle-header">
         <div className="battle-header__left" onClick={() => setIsOpen((o) => !o)}>
@@ -63,28 +78,24 @@ export default function TrainerBattleCard({ battleIndex, variants }: Props) {
               <span className="battle-location__sub">{locationName}</span>
             )}
           </div>
+          {/* DOUBLE BATTLE TAG */}
           {doubleBattle && <span className="double-tag">Double Battle</span>}
-        </div>
-
-        <div className="battle-header__right">
-          {items && items.length > 0 && (
+          {/* ITEMS */}
+          {dedupedItems.length > 0 && (
             <div className="battle-items">
-              {items.map((item: any, i: number) => (
+              {dedupedItems.map((item: any, i: number) => (
                 <div key={i} className="battle-item-chip" title={item.name || item.key}>
                   <ItemSprite item={item} size={18} />
                   <span>{item.name || item.key}</span>
+                  {item.count > 1 && <span className="battle-item-count">×{item.count}</span>}
                 </div>
               ))}
             </div>
           )}
+        </div>
 
-          <button
-            className={`export-toggle-btn ${exportMode ? 'export-toggle-btn--active' : ''}`}
-            onClick={() => setExportMode((m) => !m)}
-            title="Toggle Showdown export view"
-          >
-            {exportMode ? 'Normal' : 'Export'}
-          </button>
+        <div className="battle-header__right">
+          <ExportToggleButton active={exportMode} onToggle={() => setExportMode((m) => !m)} />
         </div>
       </div>
 

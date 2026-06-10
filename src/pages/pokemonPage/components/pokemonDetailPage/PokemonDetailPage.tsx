@@ -73,7 +73,8 @@ export default function PokemonDetailPage() {
     return () => area.removeEventListener('scroll', handleScroll);
   }, [activeVariant]);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: SectionId) => {
+    setActiveSection(sectionId);
     const area = paneRef.current?.closest('.pokemon-detail-area') as HTMLElement | null;
     const el = document.getElementById(sectionId);
     if (!area || !el) return;

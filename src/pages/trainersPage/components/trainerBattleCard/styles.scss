@@ -53,8 +53,9 @@
 
         .battle-location {
             display: flex;
-            flex-direction: column;
-            gap: 1px;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 8px;
             min-width: 0;
 
             &__name {
@@ -78,7 +79,7 @@
             }
 
             &__sub {
-                font-size: 0.72rem;
+                font-size: 0.8rem;
                 color: var(--fadedFont);
             }
         }
@@ -114,34 +115,19 @@
             font-size: 0.78rem;
             font-weight: 600;
             color: var(--fontColor);
+
+            .battle-item-count {
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: var(--fadedFont);
+            }
         }
     }
 
-    // ── Export toggle button ───────────────────────────────────────────────────
-    .export-toggle-btn {
-        padding: 5px 14px;
-        border-radius: 6px;
-        border: 1px solid var(--containerBorderColor);
-        background: var(--backgroundColor);
-        color: var(--fadedFont);
-        font-size: 0.78rem;
-        font-weight: 700;
-        font-family: inherit;
-        cursor: pointer;
-        transition: all 0.15s;
-        white-space: nowrap;
-
-        &:hover {
-            color: var(--fontColor);
-            border-color: var(--primaryColor);
-        }
-
-        &--active {
-            background: color-mix(in srgb, var(--primaryColor), transparent 82%);
-            color: var(--primaryColor);
-            border-color: var(--primaryColor);
-        }
+    &.collapsed .battle-header {
+        border-bottom: none;
     }
+
 
     // ── Starter tabs ──────────────────────────────────────────────────────────
     .battle-tabs {

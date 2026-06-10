@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { useData } from '../../../../contexts/dataContext';
 import { Link } from 'react-router-dom';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
+import ExportToggleButton from '../../../../components/elements/exportToggleButton/ExportToggleButton';
 import { formatReadableName } from '../../../../utils/functions';
 import TrainerCard from '../../../locationsPage/components/locationCard/sections/trainers/components/trainerCard/TrainerCard';
 import TrainerPokemonCard from '../../../locationsPage/components/locationCard/sections/trainers/components/pokemonCard/TrainerPokemonCard';
@@ -58,11 +59,7 @@ export default function TrainersBlock({ selectedKey }: Props) {
           {trainersUsingMon.length > 0 ? (
             <div className="pokemon-detail-trainers">
               {trainersUsingMon.map((item, i) => (
-                <TrainerUsageRow
-                  key={i}
-                  item={item}
-                  selectedKey={selectedKey}
-                />
+                <TrainerUsageRow key={i} item={item} selectedKey={selectedKey} />
               ))}
             </div>
           ) : (
@@ -99,17 +96,13 @@ function TrainerUsageRow({
             {formatReadableName(item.trainer.location?.mapKey || 'Unknown')}
           </span>
         </div>
-        <button
-          className={`export-toggle-btn ${exportMode ? 'export-toggle-btn--active' : ''}`}
-          onClick={() => setExportMode((m) => !m)}
-          title="Toggle Showdown export view"
-        >
-          {exportMode ? 'Normal' : 'Export'}
-        </button>
       </div>
       <div className="trainer-party-container">
         <div className="trainer-party-full">
-          <TrainerCard trainer={item.trainer} />
+          <div className="trainer-party-left">
+            <TrainerCard trainer={item.trainer} />
+            <ExportToggleButton active={exportMode} onToggle={() => setExportMode((m) => !m)} />
+          </div>
           <div className="loc-party-groups">
             {(() => {
               const groups: any[][] = [];

@@ -9,16 +9,13 @@
     gap: 10px;
 }
 
-// Each group renders up to 3 cards in a fixed 3-column grid.
-// flex: 1 1 380px means each group wants at least 380px (≈ 3 × 116px cards + gaps).
-// When the container fits both groups (≥ ~770px) they sit on one line;
-// when it's narrower they each wrap to their own row.
+// Each group renders up to 3 cards at a fixed 150px width — no stretching.
+// flex: 0 0 auto keeps the group at its natural size regardless of container width.
 .trainer-party-group {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 150px);
     gap: 10px;
-    flex: 1 1 380px;
-    min-width: 0;
+    flex: 0 0 auto;
 }
 
 // ── Flip wrapper ─────────────────────────────────────────────────────────────
@@ -130,7 +127,13 @@
     .party-types {
         display: flex;
         gap: 4px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        overflow: hidden;
+
+        .type-badge {
+            padding: 2px 5px;
+            flex-shrink: 0;
+        }
     }
 
     // ── Nature + IV ──────────────────────────────────────────────────────────

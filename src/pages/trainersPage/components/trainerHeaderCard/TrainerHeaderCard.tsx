@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from 'react-router-dom';
 import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
-import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import { formatReadableName } from '../../../../utils/functions';
 import './styles.scss';
 
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export default function TrainerHeaderCard({ trainer, battleCount }: Props) {
-  const { name, trainerClass, trainerPic, items, doubleBattle, location } = trainer;
+  const { name, trainerClass, trainerPic, doubleBattle, location } = trainer;
 
   const locationName = location?.locationKey ? formatReadableName(location.locationKey) : null;
 
@@ -56,7 +55,7 @@ export default function TrainerHeaderCard({ trainer, battleCount }: Props) {
           )}
         </div>
 
-        {items && items.length > 0 && (
+        {/* {items && items.length > 0 && (
           <div className="trainer-header-items">
             <span className="items-label">Items:</span>
             {items.map((item: any, i: number) => (
@@ -66,7 +65,7 @@ export default function TrainerHeaderCard({ trainer, battleCount }: Props) {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

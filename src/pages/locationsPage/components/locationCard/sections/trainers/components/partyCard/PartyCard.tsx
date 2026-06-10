@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TrainerCard from '../trainerCard/TrainerCard';
 import TrainerPokemonCard from '../pokemonCard/TrainerPokemonCard';
+import ExportToggleButton from '../../../../../../../../components/elements/exportToggleButton/ExportToggleButton';
 import './styles.scss';
 import type { ParsedTrainerVariant } from '../../../../../../../../services/parsers/v2/trainers/types';
 import { useTrainerTab } from '../../../../../../../../contexts/trainerTabContext';
@@ -55,13 +56,7 @@ export default function PartyCard({ trainerGroup }: Props) {
         {/* Left column: trainer card + export button */}
         <div className="trainer-left-col">
           <TrainerCard trainer={activeTrainer} />
-          <button
-            className={`export-toggle-btn ${exportMode ? 'export-toggle-btn--active' : ''}`}
-            onClick={() => setExportMode((m) => !m)}
-            title="Toggle Showdown export view"
-          >
-            {exportMode ? 'Normal' : 'Export'}
-          </button>
+          <ExportToggleButton active={exportMode} onToggle={() => setExportMode((m) => !m)} />
         </div>
 
         {/* Party */}

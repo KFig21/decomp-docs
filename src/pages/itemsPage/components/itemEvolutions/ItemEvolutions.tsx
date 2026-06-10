@@ -29,7 +29,7 @@ export default function ItemEvolutions({ item }: Props) {
         const method = (evo.method as string | undefined)?.replace('EVO_', '');
         if ((method === 'ITEM' || method === 'TRADE_ITEM') && evo.param === item.key) {
           const target = pokemonRecord[evo.targetSpecies];
-          if (target) {
+          if (target && (mon.isObtainable || mon.isSeen) && (target.isObtainable || target.isSeen)) {
             results.push({ from: mon, to: target, isTrade: method === 'TRADE_ITEM' });
           }
         }
