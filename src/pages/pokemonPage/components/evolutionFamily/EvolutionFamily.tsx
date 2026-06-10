@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
+import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../utils/functions';
 import './styles.scss';
@@ -16,20 +17,35 @@ export default function EvolutionFamily({ selected }: Props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
 
-  const formatEvoMethod = (evo: any) => {
+  const renderEvoMethod = (evo: any) => {
     const method = evo.method.replace('EVO_', '');
-    if (method === 'LEVEL') return `Level ${evo.param}`;
+    if (method === 'LEVEL') return <span>Level {evo.param}</span>;
     if (method === 'ITEM') {
-      const item = items[evo.param];
-      return `Use ${item ? item.name : formatReadableName(evo.param)}`;
+      const item = (items as any)[evo.param];
+      return item ? (
+        <Link to={`/items/${item.key}`} className="evo-item-link" onClick={(e) => e.stopPropagation()}>
+          <ItemSprite item={item} size={20} />
+          <span>{item.name}</span>
+        </Link>
+      ) : (
+        <span>{formatReadableName(evo.param)}</span>
+      );
     }
-    if (method === 'TRADE') return `Trade`;
+    if (method === 'TRADE') return <span>Trade</span>;
     if (method === 'TRADE_ITEM') {
-      const item = items[evo.param];
-      return `Trade w/ ${item ? item.name : formatReadableName(evo.param)}`;
+      const item = (items as any)[evo.param];
+      return item ? (
+        <Link to={`/items/${item.key}`} className="evo-item-link" onClick={(e) => e.stopPropagation()}>
+          <span>Trade w/</span>
+          <ItemSprite item={item} size={20} />
+          <span>{item.name}</span>
+        </Link>
+      ) : (
+        <span>Trade w/ {formatReadableName(evo.param)}</span>
+      );
     }
-    if (method === 'FRIENDSHIP') return `High Friendship`;
-    return `${formatReadableName(method)} (${formatReadableName(evo.param)})`;
+    if (method === 'FRIENDSHIP') return <span>High Friendship</span>;
+    return <span>{formatReadableName(method)} ({formatReadableName(evo.param)})</span>;
   };
 
   const findRootNode = (key: string): string => {
@@ -64,7 +80,7 @@ export default function EvolutionFamily({ selected }: Props) {
               <div key={i} className="evo-branch">
                 <div className="evo-arrow-container">
                   <div className="evo-arrow">→</div>
-                  <div className="evo-method-text">{formatEvoMethod(evo)}</div>
+                  <div className="evo-method-text">{renderEvoMethod(evo)}</div>
                 </div>
                 {renderEvoTree(evo.targetSpecies)}
               </div>

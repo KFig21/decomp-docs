@@ -1,12 +1,24 @@
 @use '../../../../styles/index.scss' as *;
 @use '../../../../styles/colors.scss' as *;
 
-// ── 3 × 2 party grid ─────────────────────────────────────────────────────────
-.trainer-party-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+// ── Party groups — flex-wrap so 2 groups of 3 sit side-by-side when there's
+// room, and stack vertically when the container is too narrow.
+.trainer-party-groups {
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    padding: 0px;
+}
+
+// Each group renders up to 3 cards in a fixed 3-column grid.
+// flex: 1 1 380px means each group wants at least 380px (≈ 3 × 116px cards + gaps).
+// When the container fits both groups (≥ ~770px) they sit on one line;
+// when it's narrower they each wrap to their own row.
+.trainer-party-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    flex: 1 1 380px;
+    min-width: 0;
 }
 
 // ── Flip wrapper ─────────────────────────────────────────────────────────────

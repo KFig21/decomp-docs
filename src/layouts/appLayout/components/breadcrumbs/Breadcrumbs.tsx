@@ -12,6 +12,7 @@ import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokem
 import { itemsIcon } from '../../../../components/elements/svgIcon/icons/itemsIcon';
 import { trainersIcon } from '../../../../components/elements/svgIcon/icons/trainersIcon';
 import { movesIcon } from '../../../../components/elements/svgIcon/icons/movesIcon';
+import { abilitiesIcon } from '../../../../components/elements/svgIcon/icons/abilitiesIcon';
 import './styles.scss';
 
 type Props = {
@@ -21,7 +22,7 @@ type Props = {
 type HistoryItem = {
   path: string;
   label: string;
-  category: 'locations' | 'pokemon' | 'items' | 'trainers' | 'moves' | 'unknown';
+  category: 'locations' | 'pokemon' | 'items' | 'trainers' | 'moves' | 'abilities' | 'unknown';
   isRoot: boolean;
   id?: string;
 };
@@ -59,7 +60,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
           rootSegment === 'items' ||
           rootSegment === 'locations' ||
           rootSegment === 'trainers' ||
-          rootSegment === 'moves'
+          rootSegment === 'moves' ||
+          rootSegment === 'abilities'
         ) {
           category = rootSegment;
         }
@@ -71,6 +73,7 @@ export default function Breadcrumbs({ currentPage }: Props) {
           id = segments[1];
           if (category === 'pokemon') label = formatReadableName(id.replace('SPECIES_', ''));
           else if (category === 'items') label = formatReadableName(id.replace('ITEM_', ''));
+          else if (category === 'abilities') label = formatReadableName(id.replace('ABILITY_', ''));
           else if (category === 'trainers') {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const trainerGroup = (trainers as any)[id];
@@ -127,6 +130,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
         return <SvgIcon viewBox={trainersIcon.viewBox}>{trainersIcon.path}</SvgIcon>;
       if (h.category === 'moves')
         return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
+      if (h.category === 'abilities')
+        return <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>;
     } else {
       if (h.category === 'pokemon' && h.id && pokemon) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,6 +160,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
       }
       if (h.category === 'moves')
         return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
+      if (h.category === 'abilities')
+        return <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>;
     }
     return null;
   };

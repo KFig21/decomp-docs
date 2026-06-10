@@ -37,33 +37,3 @@
         }
     }
 }
-
-.abilities-detail-pane {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 24px 36px;
-    max-width: 960px;
-    margin: 0 auto;
-}
-
-.ability-card-style {
-    background: var(--containerBgColor);
-    border: 1px solid var(--containerBorderColor);
-    border-radius: 8px;
-
-    .section-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 700;
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--containerBorderColor);
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .content {
-        padding: 16px;
-    }
-}

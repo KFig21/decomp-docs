@@ -198,6 +198,8 @@ interface Props {
   setSearchTerm: (v: string) => void;
   showObtainableOnly: boolean;
   setShowObtainableOnly: (v: boolean) => void;
+  showEvolvesWithItem: boolean;
+  setShowEvolvesWithItem: (v: boolean) => void;
   activeFilters: PokemonActiveFilters;
   setActiveFilters: React.Dispatch<React.SetStateAction<PokemonActiveFilters>>;
   removeFilter: (cat: keyof PokemonActiveFilters, value: string) => void;
@@ -217,6 +219,8 @@ export default function PokemonFilterBar({
   setSearchTerm,
   showObtainableOnly,
   setShowObtainableOnly,
+  showEvolvesWithItem,
+  setShowEvolvesWithItem,
   activeFilters,
   setActiveFilters,
   removeFilter,
@@ -247,6 +251,7 @@ export default function PokemonFilterBar({
   const hasAnyFilter =
     searchTerm ||
     showObtainableOnly ||
+    showEvolvesWithItem ||
     activeFilters.types1.length > 0 ||
     activeFilters.types2.length > 0 ||
     activeFilters.encounters.length > 0 ||
@@ -331,6 +336,16 @@ export default function PokemonFilterBar({
           />
           Obtainable only
         </label>
+
+        {/* Evolves with item toggle */}
+        <label className="obtainable-toggle">
+          <input
+            type="checkbox"
+            checked={showEvolvesWithItem}
+            onChange={(e) => setShowEvolvesWithItem(e.target.checked)}
+          />
+          Evolves with item
+        </label>
       </div>
 
       {/* ── Active pills ── */}
@@ -346,6 +361,9 @@ export default function PokemonFilterBar({
           )}
           {showObtainableOnly && (
             <FilterPill label="Obtainable only" onRemove={() => setShowObtainableOnly(false)} />
+          )}
+          {showEvolvesWithItem && (
+            <FilterPill label="Evolves with item" color="#e67e22" onRemove={() => setShowEvolvesWithItem(false)} />
           )}
           {activeFilters.types1.map((v) => (
             <FilterPill

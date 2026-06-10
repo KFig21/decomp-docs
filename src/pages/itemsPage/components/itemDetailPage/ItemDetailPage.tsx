@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from 'react-router-dom';
-import { useData } from '../../contexts/dataContext';
-import HeldByPokemon from './components/heldByPokemon/HeldByPokemon';
-import ItemHeaderCard from './components/itemHeaderCard/ItemHeaderCard';
-import ItemLocations from './components/itemLocations/ItemLocations';
+import './styles.scss';
+import { useData } from '../../../../contexts/dataContext';
+import HeldByPokemon from './../../components/heldByPokemon/HeldByPokemon';
+import ItemHeaderCard from './../../components/itemHeaderCard/ItemHeaderCard';
+import ItemLocations from './../../components/itemLocations/ItemLocations';
 
 export default function ItemDetailPage() {
   const { id } = useParams<{ id: string }>();

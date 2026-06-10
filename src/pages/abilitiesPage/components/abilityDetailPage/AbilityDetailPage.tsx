@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from 'react-router-dom';
-import { useData } from '../../contexts/dataContext';
-import AbilityHeaderCard from './components/abilityHeaderCard/AbilityHeaderCard';
-import AbilityPokemonList from './components/abilityPokemonList/AbilityPokemonList';
+import './styles.scss';
+import { useData } from '../../../../contexts/dataContext';
+import AbilityHeaderCard from '../abilityHeaderCard/AbilityHeaderCard';
+import AbilityPokemonList from '../abilityPokemonList/AbilityPokemonList';
 
 type Props = { pokemonArray: any[] };
 

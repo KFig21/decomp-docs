@@ -1,0 +1,13 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+// ── Detail pane ───────────────────────────────────────────────────────────────
+.locations-detail-pane {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 36px;
+    max-width: 1250px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}

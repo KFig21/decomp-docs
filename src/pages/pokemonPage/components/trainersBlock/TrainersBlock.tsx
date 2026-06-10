@@ -110,14 +110,26 @@ function TrainerUsageRow({
       <div className="trainer-party-container">
         <div className="trainer-party-full">
           <TrainerCard trainer={item.trainer} />
-          {item.trainer.party.map((mon: any, idx: number) => (
-            <TrainerPokemonCard
-              key={idx}
-              pokemon={mon}
-              exportMode={exportMode}
-              highlight={mon.species?.key === selectedKey}
-            />
-          ))}
+          <div className="loc-party-groups">
+            {(() => {
+              const groups: any[][] = [];
+              for (let i = 0; i < item.trainer.party.length; i += 3) {
+                groups.push(item.trainer.party.slice(i, i + 3));
+              }
+              return groups.map((group, gi) => (
+                <div key={gi} className="loc-party-group">
+                  {group.map((mon: any, idx: number) => (
+                    <TrainerPokemonCard
+                      key={gi * 3 + idx}
+                      pokemon={mon}
+                      exportMode={exportMode}
+                      highlight={mon.species?.key === selectedKey}
+                    />
+                  ))}
+                </div>
+              ));
+            })()}
+          </div>
         </div>
       </div>
     </div>

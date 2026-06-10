@@ -3,6 +3,7 @@ import type { FileContent } from '../../fileReader';
 import { parseAbilities } from './abilities';
 import { parseItems } from './items';
 import { attachItemLocations } from './items/attachItemLocations';
+import { markEvolutionItems } from './items/markEvolutionItems';
 import { parseLocations } from './locations';
 import { parseWeathers } from './weather';
 import { parseMoves } from './moves/moves';
@@ -98,6 +99,9 @@ export async function parseDecompV2(
     m.locEnd,
     checkCancel,
   );
+
+  // ── Mark evolution items ──────────────────────────────────────────────────
+  markEvolutionItems(items, pokemon);
 
   // ── Attach item locations (overworld, hidden, mart, npc) ──────────────────
   if (onProgress) onProgress('Attaching item locations...', m.attach);

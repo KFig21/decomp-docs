@@ -165,6 +165,8 @@ interface Props {
   setSearchTerm: (v: string) => void;
   activeFilters: ActiveFilters;
   setActiveFilters: React.Dispatch<React.SetStateAction<ActiveFilters>>;
+  evolutionOnly: boolean;
+  setEvolutionOnly: (v: boolean) => void;
   removeFilter: (cat: keyof ActiveFilters, value: string) => void;
   clearAll: () => void;
   sortBy: SortOption;
@@ -176,6 +178,8 @@ export default function ItemFilterBar({
   setSearchTerm,
   activeFilters,
   setActiveFilters,
+  evolutionOnly,
+  setEvolutionOnly,
   removeFilter,
   clearAll,
   sortBy,
@@ -198,7 +202,7 @@ export default function ItemFilterBar({
     }));
 
   const hasAnyFilter =
-    searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0;
+    searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0 || evolutionOnly;
   const pocketLabel = (v: string) => POCKET_OPTIONS.find((o) => o.value === v)?.label ?? v;
   const methodOpt = (v: string) => METHOD_OPTIONS.find((o) => o.value === v);
 
@@ -227,6 +231,14 @@ export default function ItemFilterBar({
           pillColor={(v) => METHOD_COLORS[v] ?? '#7a8a9a'}
         />
         <SortDropdown value={sortBy} onChange={setSortBy} />
+        <label className="obtainable-toggle">
+          <input
+            type="checkbox"
+            checked={evolutionOnly}
+            onChange={(e) => setEvolutionOnly(e.target.checked)}
+          />
+          Evolution items
+        </label>
         {hasAnyFilter && (
           <button className="filter-clear-all" onClick={clearAll}>
             Clear all
@@ -258,6 +270,9 @@ export default function ItemFilterBar({
               />
             );
           })}
+          {evolutionOnly && (
+            <FilterPill label="Evolution items" color="#e67e22" onRemove={() => setEvolutionOnly(false)} />
+          )}
         </div>
       )}
     </div>

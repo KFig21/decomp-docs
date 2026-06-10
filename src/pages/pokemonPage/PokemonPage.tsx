@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
 import PokemonSprite from '../../components/elements/sprites/pokemon/PokemonSprite';
-import PokemonDetailPage from './PokemonDetailPage';
+import PokemonDetailPage from './components/pokemonDetailPage/PokemonDetailPage';
 import PokemonSidebar from './components/pokemonSidebar/PokemonSidebar';
 import PokemonFilterBar from './components/pokemonFilterBar/PokemonFilterBar';
 import './styles.scss';
@@ -20,6 +20,8 @@ export default function PokemonPage() {
   const { id } = useParams<{ id: string }>();
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [showEvolvesWithItem, setShowEvolvesWithItem] = useState(false);
+  const prevIdRef = useRef<string | undefined>(undefined);
   const [showObtainableOnly, setShowObtainableOnly] = useState(false);
   const [activeFilters, setActiveFilters] = useState<PokemonActiveFilters>({
     types1: [],
@@ -105,6 +107,15 @@ export default function PokemonPage() {
       if (minBst && bst < Number(minBst)) return false;
       if (maxBst && bst > Number(maxBst)) return false;
 
+      // Evolves with item
+      if (showEvolvesWithItem) {
+        const hasItemEvo = mon.evolutions?.some((e: any) => {
+          const method = (e.method as string | undefined)?.replace('EVO_', '');
+          return method === 'ITEM' || method === 'TRADE_ITEM';
+        });
+        if (!hasItemEvo) return false;
+      }
+
       // Move search
       if (moveFilter) {
         const term = moveFilter.toLowerCase();
@@ -181,6 +192,7 @@ export default function PokemonPage() {
     moveFilter,
     sortBy,
     encounterMethodsByMon,
+    showEvolvesWithItem,
   ]);
 
   useEffect(() => {
@@ -189,12 +201,29 @@ export default function PokemonPage() {
     }
   }, [id, filteredPokemon, navigate]);
 
-  // If selected mon falls outside filter, navigate to first result
+  // If the selected mon is not in the current filtered list:
+  // - id just changed (user navigated via evolution family/link) → clear filters to reveal it
+  // - filteredPokemon changed (user is typing/filtering) → redirect to first filtered result
   useEffect(() => {
     if (id && filteredPokemon.length > 0 && !filteredPokemon.find((p) => p.key === id)) {
-      navigate(`/pokemon/${filteredPokemon[0].key}`, { replace: true });
+      const idJustChanged = prevIdRef.current !== id;
+      if (idJustChanged) {
+        const existsInData = pokemonArray.some((p) => p.key === id);
+        if (existsInData) {
+          setSearchTerm('');
+          setActiveFilters({ types1: [], types2: [], encounters: [] });
+          setMinBst('');
+          setMaxBst('');
+          setMoveFilter('');
+        } else {
+          navigate(`/pokemon/${filteredPokemon[0].key}`, { replace: true });
+        }
+      } else {
+        navigate(`/pokemon/${filteredPokemon[0].key}`, { replace: true });
+      }
     }
-  }, [filteredPokemon, id, navigate]);
+    prevIdRef.current = id;
+  }, [filteredPokemon, id, navigate, pokemonArray]);
 
   const removeFilter = (cat: keyof PokemonActiveFilters, value: string) => {
     setActiveFilters((prev) => ({ ...prev, [cat]: prev[cat].filter((v) => v !== value) }));
@@ -203,6 +232,7 @@ export default function PokemonPage() {
   const clearAll = () => {
     setSearchTerm('');
     setShowObtainableOnly(false);
+    setShowEvolvesWithItem(false);
     setActiveFilters({ types1: [], types2: [], encounters: [] });
     setMinBst('');
     setMaxBst('');
@@ -217,6 +247,8 @@ export default function PokemonPage() {
         setSearchTerm={setSearchTerm}
         showObtainableOnly={showObtainableOnly}
         setShowObtainableOnly={setShowObtainableOnly}
+        showEvolvesWithItem={showEvolvesWithItem}
+        setShowEvolvesWithItem={setShowEvolvesWithItem}
         activeFilters={activeFilters}
         setActiveFilters={setActiveFilters}
         removeFilter={removeFilter}

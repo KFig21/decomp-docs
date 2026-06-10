@@ -96,23 +96,24 @@
                 flex-direction: row;
                 align-items: flex-start;
                 gap: 10px;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding: 4px;
                 flex: 1;
+                min-width: 0;
 
-                &::-webkit-scrollbar {
-                    height: 8px;
+                // Groups wrapper — wraps when two groups of 3 can't fit side by side
+                .loc-party-groups {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    flex: 1;
+                    min-width: 0;
                 }
 
-                &::-webkit-scrollbar-track {
-                    background: color-mix(in srgb, var(--containerBgColor), transparent 50%);
-                    border-radius: 4px;
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    background: var(--containerBorderColor);
-                    border-radius: 4px;
+                // Each group holds up to 3 cards; flex-basis matches 3 × 150px cards + 2 gaps
+                .loc-party-group {
+                    display: grid;
+                    grid-template-columns: repeat(3, 150px);
+                    gap: 10px;
+                    flex: 1 1 470px;
                 }
             }
         }

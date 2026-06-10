@@ -3,11 +3,17 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
 import AbilitySidebar from './components/abilitySidebar/AbilitySidebar';
-import AbilityFilterBar, { type AbilitySortOption } from './components/abilityFilterBar/AbilityFilterBar';
-import AbilityDetailPage from './AbilityDetailPage';
+import AbilityFilterBar, {
+  type AbilitySortOption,
+} from './components/abilityFilterBar/AbilityFilterBar';
+import AbilityDetailPage from './components/abilityDetailPage/AbilityDetailPage';
 import './styles.scss';
 
-function sortAbilities(abilities: any[], sort: AbilitySortOption, counts: Record<string, number>): any[] {
+function sortAbilities(
+  abilities: any[],
+  sort: AbilitySortOption,
+  counts: Record<string, number>,
+): any[] {
   const arr = [...abilities];
   switch (sort) {
     case 'alpha-asc':

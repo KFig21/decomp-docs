@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
-import ItemDetailPage from './ItemDetailPage';
+import ItemDetailPage from './components/itemDetailPage/ItemDetailPage';
 import ItemSidebar from './components/itemSidebar/ItemSidebar';
 import ItemFilterBar from './components/itemFilterBar/ItemFilterBar';
 import './styles.scss';
@@ -57,6 +57,7 @@ export default function ItemsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({ pockets: [], methods: [] });
+  const [evolutionOnly, setEvolutionOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('alpha-asc');
 
   const itemsArray = (Array.isArray(items) ? items : Object.values(items || {})) as any[];
@@ -75,11 +76,12 @@ export default function ItemsPage() {
         const locs: any[] = item.locations ?? [];
         if (!locs.some((l) => activeFilters.methods.includes(l.method))) return false;
       }
+      if (evolutionOnly && !item.isEvolutionItem) return false;
       return true;
     });
 
     return sortItems(filtered, sortBy);
-  }, [itemsArray, searchTerm, activeFilters, sortBy]);
+  }, [itemsArray, searchTerm, activeFilters, evolutionOnly, sortBy]);
 
   useEffect(() => {
     if (!id && filteredItems.length > 0) {
@@ -103,6 +105,7 @@ export default function ItemsPage() {
   const clearAll = () => {
     setSearchTerm('');
     setActiveFilters({ pockets: [], methods: [] });
+    setEvolutionOnly(false);
   };
 
   return (
@@ -112,6 +115,8 @@ export default function ItemsPage() {
         setSearchTerm={setSearchTerm}
         activeFilters={activeFilters}
         setActiveFilters={setActiveFilters}
+        evolutionOnly={evolutionOnly}
+        setEvolutionOnly={setEvolutionOnly}
         removeFilter={removeFilter}
         clearAll={clearAll}
         sortBy={sortBy}

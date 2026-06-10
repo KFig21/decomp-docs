@@ -1,0 +1,103 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+// ── Detail pane ───────────────────────────────────────────────────────────────
+.pokemon-detail-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 36px;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+// ── Shared subcomponent styles ────────────────────────────────────────────────
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+
+    th,
+    td {
+        border: 1px solid var(--containerBorderColor);
+        padding: 6px 12px;
+        text-align: left;
+        background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    }
+
+    th {
+        background-color: color-mix(in srgb, var(--backgroundColor), black 40%);
+
+        &.center {
+            text-align: center;
+        }
+    }
+
+    td.center {
+        text-align: center;
+    }
+}
+
+.empty-state {
+    color: rgba(255, 255, 255, 0.35);
+    font-style: italic;
+    font-size: 0.9rem;
+    padding-bottom: 16px;
+}
+
+.pokemon-card-style {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        padding: 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+    }
+
+    &.collapsed {
+        .section-header {
+            border-bottom: none;
+        }
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
+
+// ── Back to top button ────────────────────────────────────────────────────────
+.back-to-top {
+    position: fixed;
+    bottom: 48px;
+    right: 28px;
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--containerBgColor);
+    backdrop-filter: blur(8px);
+    color: var(--fontColor);
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+
+    &:hover {
+        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+        border-color: var(--primaryColor);
+        color: var(--primaryColor);
+        transform: translateY(-2px);
+    }
+}

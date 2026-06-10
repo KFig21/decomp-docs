@@ -6,7 +6,7 @@ import { useData } from '../../contexts/dataContext';
 import { TrainerTabProvider } from '../../contexts/trainerTabContext';
 import TrainerSidebar from './components/trainerSidebar/TrainerSidebar';
 import TrainerFilterBar from './components/trainerFilterBar/TrainerFilterBar';
-import TrainerDetailPage from './TrainerDetailPage';
+import TrainerDetailPage from './components/trainerDetailPage/TrainerDetailPage';
 import './styles.scss';
 
 export type TrainerActiveFilters = {
@@ -78,8 +78,7 @@ export default function TrainersPage() {
       ).size;
 
       const maxLevel = placedVariants.reduce((max: number, v: any) => {
-        const vMax =
-          (v.party ?? []).reduce((m: number, p: any) => Math.max(m, p.level ?? 0), 0);
+        const vMax = (v.party ?? []).reduce((m: number, p: any) => Math.max(m, p.level ?? 0), 0);
         return Math.max(max, vMax);
       }, 0);
 

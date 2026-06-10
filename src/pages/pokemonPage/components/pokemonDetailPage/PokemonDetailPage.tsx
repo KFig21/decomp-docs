@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useData } from '../../contexts/dataContext';
-import HeaderCard from './components/headerCard/HeaderCard';
-import EvolutionFamily from './components/evolutionFamily/EvolutionFamily';
-import BaseStats from './components/baseStats/BaseStats';
-import Learnset from './components/learnset/Learnset';
-import TmHmLearnset from './components/learnset/TmHmLearnset';
-import WildLocations from './components/wildLocations/WildLocations';
-import TrainersBlock from './components/trainersBlock/TrainersBlock';
-import PokemonHeldItems from './components/pokemonHeldItems/PokemonHeldItems';
-import JsonDebug from './components/jsonDebug/JsonDebug';
+import { useData } from '../../../../contexts/dataContext';
+import HeaderCard from '../headerCard/HeaderCard';
+import EvolutionFamily from '../evolutionFamily/EvolutionFamily';
+import BaseStats from '../baseStats/BaseStats';
+import Learnset from '../learnset/Learnset';
+import TmHmLearnset from '../learnset/TmHmLearnset';
+import WildLocations from '../wildLocations/WildLocations';
+import TrainersBlock from '../trainersBlock/TrainersBlock';
+import PokemonHeldItems from '../pokemonHeldItems/PokemonHeldItems';
+import JsonDebug from '../jsonDebug/JsonDebug';
 import './styles.scss';
 
 export default function PokemonDetailPage() {

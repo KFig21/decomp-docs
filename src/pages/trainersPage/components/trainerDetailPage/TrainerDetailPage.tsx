@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useData } from '../../contexts/dataContext';
-import TrainerHeaderCard from './components/trainerHeaderCard/TrainerHeaderCard';
-import TrainerBattleCard from './components/trainerBattleCard/TrainerBattleCard';
-import JsonDebug from '../pokemonPage/components/jsonDebug/JsonDebug';
+import { useData } from '../../../../contexts/dataContext';
+import TrainerHeaderCard from '../trainerHeaderCard/TrainerHeaderCard';
+import TrainerBattleCard from '../trainerBattleCard/TrainerBattleCard';
+import JsonDebug from '../../../pokemonPage/components/jsonDebug/JsonDebug';
+import './styles.scss';
 
 export default function TrainerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,12 +17,6 @@ export default function TrainerDetailPage() {
     [group],
   );
 
-  if (!group || placedVariants.length === 0) {
-    return <div className="trainers-detail-pane">Trainer not found.</div>;
-  }
-
-  const representative = placedVariants[0];
-
   // Group placed variants by location (mapKey). Each group = one "battle".
   const battles: any[][] = useMemo(() => {
     const map = new Map<string, any[]>();
@@ -32,6 +27,12 @@ export default function TrainerDetailPage() {
     }
     return Array.from(map.values());
   }, [placedVariants]);
+
+  if (!group || placedVariants.length === 0) {
+    return <div className="trainers-detail-pane">Trainer not found.</div>;
+  }
+
+  const representative = placedVariants[0];
 
   return (
     <div className="trainers-detail-pane">

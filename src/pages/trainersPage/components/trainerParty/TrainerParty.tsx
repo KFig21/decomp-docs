@@ -238,7 +238,7 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
   );
 }
 
-// ── Party grid (3 × 2) ────────────────────────────────────────────────────────
+// ── Party grid — two groups of 3, wraps to stacked rows when space is tight ───
 
 type Props = {
   party: any[];
@@ -250,10 +250,20 @@ export default function TrainerParty({ party, exportMode = false }: Props) {
     return <p className="empty-state">No party data available.</p>;
   }
 
+  // Split into groups of up to 3
+  const groups: any[][] = [];
+  for (let i = 0; i < party.length; i += 3) {
+    groups.push(party.slice(i, i + 3));
+  }
+
   return (
-    <div className="trainer-party-grid">
-      {party.map((mon: any, i: number) => (
-        <PartyPokemonCard key={i} pokemon={mon} exportMode={exportMode} />
+    <div className="trainer-party-groups">
+      {groups.map((group, gi) => (
+        <div key={gi} className="trainer-party-group">
+          {group.map((mon: any, i: number) => (
+            <PartyPokemonCard key={gi * 3 + i} pokemon={mon} exportMode={exportMode} />
+          ))}
+        </div>
       ))}
     </div>
   );

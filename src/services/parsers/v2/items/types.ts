@@ -38,6 +38,8 @@ export interface ParsedItem {
   locations: ItemLocationRef[];
   wildHolders?: WildHolderRef[];
   isPlaced?: boolean;
+  /** True if this item is used as the trigger for at least one EVO_ITEM or EVO_TRADE_ITEM evolution */
+  isEvolutionItem?: boolean;
 }
 
 export interface WildHolderRef {

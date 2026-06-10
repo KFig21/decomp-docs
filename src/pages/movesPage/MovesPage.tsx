@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/dataContext';
 import MoveSidebar from './components/moveSidebar/MoveSidebar';
 import MoveFilterBar from './components/moveFilterBar/MoveFilterBar';
-import MoveDetailPage from './MoveDetailPage';
+import MoveDetailPage from './components/moveDetailPage/MoveDetailPage';
 import './styles.scss';
 
 export type MoveActiveFilters = {
@@ -182,7 +182,17 @@ export default function MovesPage() {
     });
 
     return applySort(filtered, sortBy);
-  }, [movesArray, searchTerm, activeFilters, sortBy, hasTmOnly, tmByMove, minPower, maxPower, learnableMoveKeys]);
+  }, [
+    movesArray,
+    searchTerm,
+    activeFilters,
+    sortBy,
+    hasTmOnly,
+    tmByMove,
+    minPower,
+    maxPower,
+    learnableMoveKeys,
+  ]);
 
   useEffect(() => {
     if (!id && filteredMoves.length > 0) {

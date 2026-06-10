@@ -19,7 +19,7 @@
             width: 100%;
             cursor: pointer;
             border-bottom: 1px solid var(--containerBorderColor);
-            padding: 2px 12px;
+            padding: 2px 8px;
             display: grid;
             grid-template-columns: 60px 120px auto 85px;
             align-items: center;
@@ -67,7 +67,7 @@
             }
 
             .pokemon-bst {
-                font-size: 0.9rem;
+                font-size: 0.75rem;
                 color: var(--fadedFont);
                 text-align: right;
             }

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from 'react-router-dom';
-import { useData } from '../../contexts/dataContext';
-import MoveHeaderCard from './components/moveHeaderCard/MoveHeaderCard';
-import MoveTmInfo from './components/moveTmInfo/MoveTmInfo';
-import LevelUpLearners from './components/moveLearners/LevelUpLearners';
-import TmLearners from './components/moveLearners/TmLearners';
-import TutorLearners from './components/moveLearners/TutorLearners';
+import './styles.scss';
+import { useData } from '../../../../contexts/dataContext';
+import MoveHeaderCard from './../../components/moveHeaderCard/MoveHeaderCard';
+import MoveTmInfo from './../../components/moveTmInfo/MoveTmInfo';
+import LevelUpLearners from './../../components/moveLearners/LevelUpLearners';
+import TmLearners from './../../components/moveLearners/TmLearners';
+import TutorLearners from './../../components/moveLearners/TutorLearners';
 
 type Props = {
   tmByMove: Record<string, any>;
