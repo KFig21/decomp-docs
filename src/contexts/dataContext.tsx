@@ -8,9 +8,12 @@ import type { ParsedTrainerVariant } from '../services/parsers/v2/trainers/types
 import type { ParsedAttack } from '../services/parsers/v2/moves/types';
 import type { ParsedAbility } from '../services/parsers/v2/abilities';
 import type { ParsedWeather } from '../services/parsers/v2/weather/types';
+import type { ParsedTypeChart } from '../services/parsers/v2/typeChart/types';
 
 interface DataContextProps {
   isRestoring: boolean;
+  typeChart: ParsedTypeChart | null;
+  setTypeChart: (c: ParsedTypeChart | null) => void;
   locations: Record<string, LocationRoot>;
   setLocations: (l: Record<string, LocationRoot>) => void;
   pokemon: Record<string, ParsedPokemon>;
@@ -31,6 +34,8 @@ interface DataContextProps {
 
 const DataContext = createContext<DataContextProps>({
   isRestoring: true,
+  typeChart: null,
+  setTypeChart: () => {},
   locations: {},
   setLocations: () => {},
   pokemon: {},
@@ -54,6 +59,7 @@ export const useData = () => useContext(DataContext);
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isRestoring, setIsRestoring] = useState(true);
+  const [typeChart, setTypeChart] = useState<ParsedTypeChart | null>(null);
   const [locations, setLocations] = useState<Record<string, LocationRoot>>({});
   const [pokemon, setPokemon] = useState<Record<string, ParsedPokemon>>({});
   const [items, setItems] = useState<Record<string, ParsedItem>>({});
@@ -67,6 +73,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     async function loadSavedData() {
       try {
+        const savedTypeChart = await AppDB.get('typeChart');
         const savedLocations = await AppDB.get('locations');
         const savedPokemon = await AppDB.get('pokemon');
         const savedItems = await AppDB.get('items');
@@ -76,6 +83,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const savedNatures = await AppDB.get('natures');
         const savedWeathers = await AppDB.get('weathers');
 
+        if (savedTypeChart) setTypeChart(savedTypeChart);
         if (savedLocations) setLocations(savedLocations);
         if (savedPokemon) setPokemon(savedPokemon);
         if (savedItems) setItems(savedItems);
@@ -102,6 +110,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     async function saveCurrentData() {
       try {
+        if (typeChart && Object.keys(typeChart).length) await AppDB.set('typeChart', typeChart);
         if (Object.keys(locations).length) await AppDB.set('locations', locations);
         if (Object.keys(pokemon).length) await AppDB.set('pokemon', pokemon);
         if (Object.keys(items).length) await AppDB.set('items', items);
@@ -115,12 +124,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
     saveCurrentData();
-  }, [locations, pokemon, items, trainers, moves, abilities, natures, weathers, isRestoring]);
+  }, [typeChart, locations, pokemon, items, trainers, moves, abilities, natures, weathers, isRestoring]);
 
   return (
     <DataContext.Provider
       value={{
         isRestoring,
+        typeChart,
+        setTypeChart,
         locations,
         setLocations,
         pokemon,

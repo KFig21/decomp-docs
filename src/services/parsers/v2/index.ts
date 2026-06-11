@@ -10,6 +10,7 @@ import { parseMoves } from './moves/moves';
 import { parseNatures } from './natures';
 import { markItemsPlaced, markPokemonObtainable } from './obtainability';
 import { parsePokemon } from './pokemon';
+import { parseTypeChart } from './typeChart';
 import { attachWildHeldItems } from './pokemon/attatchers/heldItems';
 import { parseTrainers } from './trainers';
 
@@ -46,6 +47,11 @@ export async function parseDecompV2(
         attach: 98,
         complete: 100,
       };
+
+  if (onProgress) onProgress('Parsing type chart...', m.moves - 1);
+  await delay(100);
+  if (checkCancel?.()) throw new Error('CANCELLED');
+  const typeChart = parseTypeChart({ files });
 
   if (onProgress) onProgress('Parsing moves...', m.moves);
   await delay(500);
@@ -130,6 +136,7 @@ export async function parseDecompV2(
   if (onProgress) onProgress('Complete!', m.complete);
   await delay(500);
 
+  console.log('Parsed type chart:', typeChart);
   console.log('Parsed moves:', moves);
   console.log('Parsed items:', items);
   console.log('Parsed abilities:', abilities);
@@ -140,5 +147,5 @@ export async function parseDecompV2(
   console.log('Parsed locations:', locations);
 
   // ── Return ALL parsed data including abilities and natures ────────────────
-  return { moves, items, abilities, natures, pokemon, trainers, weathers, locations };
+  return { typeChart, moves, items, abilities, natures, pokemon, trainers, weathers, locations };
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react';
 import { getOffensive, getDefensive } from '../typeChart';
+import { useData } from '../../../../contexts/dataContext';
 import TypeHeaderCard from '../typeHeaderCard/TypeHeaderCard';
 import TypeMatchups from '../typeMatchups/TypeMatchups';
 import TypePokemonList from '../typePokemonList/TypePokemonList';
@@ -16,10 +17,17 @@ type Props = {
 };
 
 export default function TypeDetailPage({ typeId, pokemonArray, movesArray, primaryOnly, showUnreleased }: Props) {
+  const { typeChart } = useData();
   const typeLower = typeId.toLowerCase();
 
-  const offensive = useMemo(() => getOffensive(typeLower), [typeLower]);
-  const defensive = useMemo(() => getDefensive(typeLower), [typeLower]);
+  const offensive = useMemo(
+    () => typeChart ? getOffensive(typeLower, typeChart) : { superEffective: [], notVeryEffective: [], noEffect: [] },
+    [typeLower, typeChart],
+  );
+  const defensive = useMemo(
+    () => typeChart ? getDefensive(typeLower, typeChart) : { weakTo: [], resistantTo: [], immuneTo: [] },
+    [typeLower, typeChart],
+  );
 
   // Keys of moves learnable by at least one Pokemon in this dataset
   const learnableMoveKeys = useMemo(() => {

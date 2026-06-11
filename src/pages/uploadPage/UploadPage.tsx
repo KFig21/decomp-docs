@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function UploadPage({ projectName, setProjectName }: Props) {
-  const { setLocations, setPokemon, setItems, setTrainers, setMoves, setAbilities, setNatures, setWeathers } =
+  const { setLocations, setPokemon, setItems, setTrainers, setMoves, setAbilities, setNatures, setWeathers, setTypeChart } =
     useData();
 
   const navigate = useNavigate();
@@ -86,6 +86,7 @@ export default function UploadPage({ projectName, setProjectName }: Props) {
       );
 
       // ── Push everything into DataContext ──────────────────────────────────
+      if (result.typeChart) setTypeChart(result.typeChart);
       setLocations(result.locations);
       setPokemon(result.pokemon);
       setItems(result.items);
