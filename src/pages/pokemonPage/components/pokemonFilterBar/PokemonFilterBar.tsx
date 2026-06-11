@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useRef, useState, useEffect } from 'react';
 import type { PokemonActiveFilters } from '../../PokemonPage';
+import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
 import './styles.scss';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -83,7 +84,7 @@ const TYPE2_COLOR = '#8e44ad';
 
 interface MultiDropdownProps {
   label: string;
-  options: { value: string; label: string; icon?: string; color?: string }[];
+  options: { value: string; label: string; icon?: React.ReactNode; color?: string }[];
   selected: string[];
   onToggle: (v: string) => void;
   accentColor?: string;
@@ -271,6 +272,7 @@ export default function PokemonFilterBar({
     value: t,
     label: t,
     color: TYPE_COLORS[t.toLowerCase()],
+    icon: <TypeIconBadge type={t} size={14} />,
   }));
 
   const encounterOptions = ENCOUNTER_OPTIONS.map((e) => ({ ...e, color: ENCOUNTER_COLOR }));

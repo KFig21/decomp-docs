@@ -161,7 +161,7 @@ export default function TmHmLearnset({ learnset }: Props) {
                         )}
                       </td>
                       <td className="center">{moveType ? <TypeBadge type={moveType} /> : '—'}</td>
-                      <td className="center"><CategoryBadge raw={move?.category || move?.split} /></td>
+                      <td className="center"><CategoryBadge raw={move?.category || move?.split} showIcon /></td>
                       <td className="center">{formatNumber(move?.power)}</td>
                       <td className="center">{move?.accuracy ? `${move.accuracy}%` : '—'}</td>
                       <td className="center">{formatNumber(move?.pp)}</td>

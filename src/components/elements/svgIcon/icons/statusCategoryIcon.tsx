@@ -4,10 +4,10 @@ export const statusCategoryIcon = {
   viewBox: '0 0 24 24',
   path: (
     <>
-      {/* Left semicircle — filled */}
-      <path d="M 12 2 A 10 10 0 0 0 12 22 Z" />
-      {/* Full circle outline */}
-      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      {/* Left semicircle — always white so it's visible on the gray badge */}
+      <path d="M 12 2 A 10 10 0 0 0 12 22 Z" fill="white" />
+      {/* Full circle outline — always white */}
+      <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="1.8" />
     </>
   ),
 };
