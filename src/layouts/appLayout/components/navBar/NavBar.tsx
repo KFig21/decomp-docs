@@ -14,6 +14,11 @@ const trainersIconPath = (
   </>
 );
 
+const typesIconPath = (
+  // Simple diamond / gem shape representing type icons
+  <path d="M12 2L4 9l8 13 8-13L12 2zm0 3.5L17.5 9 12 19.5 6.5 9 12 5.5z" />
+);
+
 const movesIconPath = (
   <>
     {/* Simple crossed-swords icon composed of two path elements */}
@@ -77,6 +82,15 @@ export default function NavBar() {
       path: '/abilities',
       label: 'Abilities',
       icon: <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>,
+    },
+    {
+      path: '/types',
+      label: 'Types',
+      icon: (
+        <SvgIcon viewBox="0 0 24 24" width={18}>
+          {typesIconPath}
+        </SvgIcon>
+      ),
     },
   ];
 

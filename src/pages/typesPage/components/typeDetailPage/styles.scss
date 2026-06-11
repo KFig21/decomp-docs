@@ -1,0 +1,244 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.type-detail-page {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.type-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid;
+
+    &__name {
+        font-size: 2.2rem;
+        font-weight: 900;
+        margin: 0;
+        text-transform: capitalize;
+    }
+
+    &__counts {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        color: var(--fadedFont);
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    &__sep {
+        opacity: 0.4;
+    }
+}
+
+// ── Matchup grid ─────────────────────────────────────────────────────────────
+.type-matchups-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.type-matchups-card {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &__title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--fadedFont);
+        margin: 0 0 4px 0;
+    }
+
+    &__empty {
+        font-size: 0.82rem;
+        color: var(--fadedFont);
+        margin: 0;
+    }
+}
+
+.matchup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &__label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    &__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+}
+
+.type-matchup-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px 2px 4px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.12s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+// ── Section (Pokémon / Moves) ─────────────────────────────────────────────────
+.type-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__title {
+        font-size: 1rem;
+        font-weight: 800;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--fontColor);
+    }
+
+    &__count {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+        color: var(--primaryColor);
+        border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 60%);
+    }
+
+    &__empty {
+        color: var(--fadedFont);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+}
+
+// ── Pokémon grid ─────────────────────────────────────────────────────────────
+.type-pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+}
+
+.type-pokemon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px 8px;
+    border-radius: 8px;
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+    cursor: pointer;
+
+    &:hover {
+        background: color-mix(in srgb, var(--containerBgColor), white 6%);
+        border-color: var(--primaryColor);
+    }
+
+    &__name {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--fontColor);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    &__types {
+        display: flex;
+        gap: 3px;
+    }
+}
+
+// ── Moves list ────────────────────────────────────────────────────────────────
+.type-moves-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.type-move-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 48px 52px 52px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: var(--fontColor);
+    background: var(--backgroundColor);
+    border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 50%);
+    transition: background 0.12s;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: color-mix(in srgb, var(--containerBgColor), white 4%);
+    }
+
+    &__cat {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    &__name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__power,
+    &__acc,
+    &__pp {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--fadedFont);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}

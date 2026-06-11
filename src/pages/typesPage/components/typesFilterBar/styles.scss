@@ -1,0 +1,16 @@
+// Reuses shared filter bar classes from pokemonFilterBar/styles.scss
+// (items-search-input, filter-bar__controls, ms-dropdown, obtainable-toggle,
+//  filter-clear-all, active-pill)
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.types-filter-bar {
+    background-color: var(--containerBgColor);
+    border-bottom: 1px solid var(--containerBorderColor);
+    padding: 8px 16px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: $filterbarHeight;
+}

@@ -7,6 +7,7 @@ import PokemonSprite from '../../../../components/elements/sprites/pokemon/Pokem
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
 import TmSprite from '../../../../components/elements/sprites/TmSprite';
+import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
 import SvgIcon from '../../../../components/elements/svgIcon/SvgIcon';
 import { locationsIcon } from '../../../../components/elements/svgIcon/icons/locationsIcon';
 import { pokemonIcon } from '../../../../components/elements/svgIcon/icons/pokemonIcon';
@@ -23,7 +24,7 @@ type Props = {
 type HistoryItem = {
   path: string;
   label: string;
-  category: 'locations' | 'pokemon' | 'items' | 'trainers' | 'moves' | 'abilities' | 'unknown';
+  category: 'locations' | 'pokemon' | 'items' | 'trainers' | 'moves' | 'abilities' | 'types' | 'unknown';
   isRoot: boolean;
   id?: string;
 };
@@ -62,7 +63,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
           rootSegment === 'locations' ||
           rootSegment === 'trainers' ||
           rootSegment === 'moves' ||
-          rootSegment === 'abilities'
+          rootSegment === 'abilities' ||
+          rootSegment === 'types'
         ) {
           category = rootSegment;
         }
@@ -75,6 +77,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
           if (category === 'pokemon') label = formatReadableName(id.replace('SPECIES_', ''));
           else if (category === 'items') label = formatReadableName(id.replace('ITEM_', ''));
           else if (category === 'abilities') label = formatReadableName(id.replace('ABILITY_', ''));
+          else if (category === 'moves') label = formatReadableName(id.replace('MOVE_', ''));
+          else if (category === 'types') label = id.charAt(0).toUpperCase() + id.slice(1);
           else if (category === 'trainers') {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const trainerGroup = (trainers as any)[id];
@@ -133,6 +137,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
         return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
       if (h.category === 'abilities')
         return <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>;
+      if (h.category === 'types')
+        return <SvgIcon viewBox="0 0 24 24"><path d="M12 2L4 9l8 13 8-13L12 2zm0 3.5L17.5 9 12 19.5 6.5 9 12 5.5z" /></SvgIcon>;
     } else {
       if (h.category === 'pokemon' && h.id && pokemon) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,6 +174,8 @@ export default function Breadcrumbs({ currentPage }: Props) {
         return <SvgIcon viewBox={movesIcon.viewBox}>{movesIcon.path}</SvgIcon>;
       if (h.category === 'abilities')
         return <SvgIcon viewBox={abilitiesIcon.viewBox}>{abilitiesIcon.path}</SvgIcon>;
+      if (h.category === 'types' && h.id)
+        return <TypeIconBadge type={h.id} size={20} />;
     }
     return null;
   };
