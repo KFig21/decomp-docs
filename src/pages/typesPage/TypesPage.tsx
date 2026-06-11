@@ -18,6 +18,7 @@ export default function TypesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<TypeSortOption>('alpha');
   const [primaryOnly, setPrimaryOnly] = useState(false);
+  const [showUnreleased, setShowUnreleased] = useState(false);
 
   const pokemonArray = useMemo(
     () => (Array.isArray(pokemon) ? pokemon : Object.values(pokemon)) as any[],
@@ -35,7 +36,7 @@ export default function TypesPage() {
 
       const pokemonCount = pokemonArray.filter((mon: any) => {
         if (mon.baseSpeciesKey) return false;
-        if (!mon.isSeen && !mon.isObtainable) return false;
+        if (!showUnreleased && !mon.isSeen && !mon.isObtainable) return false;
         const types = (mon.types ?? []) as string[];
         if (primaryOnly) {
           return (types[0] ?? '').replace(/^TYPE_/i, '').toLowerCase() === typeLower;
@@ -52,7 +53,7 @@ export default function TypesPage() {
       stats[type] = { pokemonCount, moveCount };
     }
     return stats;
-  }, [pokemonArray, movesArray, primaryOnly]);
+  }, [pokemonArray, movesArray, primaryOnly, showUnreleased]);
 
   const filteredTypes = useMemo(() => {
     let result = [...TYPE_OPTIONS];
@@ -77,6 +78,7 @@ export default function TypesPage() {
     setSearchTerm('');
     setSortBy('alpha');
     setPrimaryOnly(false);
+    setShowUnreleased(false);
   };
 
   return (
@@ -88,6 +90,8 @@ export default function TypesPage() {
         setSortBy={setSortBy}
         primaryOnly={primaryOnly}
         setPrimaryOnly={setPrimaryOnly}
+        showUnreleased={showUnreleased}
+        setShowUnreleased={setShowUnreleased}
         clearAll={clearAll}
       />
       <div className="types-page-content">
@@ -99,6 +103,7 @@ export default function TypesPage() {
               pokemonArray={pokemonArray}
               movesArray={movesArray}
               primaryOnly={primaryOnly}
+              showUnreleased={showUnreleased}
             />
           ) : (
             <div className="empty-selection">

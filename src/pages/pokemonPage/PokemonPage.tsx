@@ -23,6 +23,7 @@ export default function PokemonPage() {
   const [showEvolvesWithItem, setShowEvolvesWithItem] = useState(false);
   const prevIdRef = useRef<string | undefined>(undefined);
   const [showObtainableOnly, setShowObtainableOnly] = useState(false);
+  const [showUnreleased, setShowUnreleased] = useState(false);
   const [activeFilters, setActiveFilters] = useState<PokemonActiveFilters>({
     types1: [],
     types2: [],
@@ -86,7 +87,7 @@ export default function PokemonPage() {
 
       // Obtainability
       if (showObtainableOnly && !mon.isObtainable) return false;
-      if (!showObtainableOnly && !mon.isSeen && !mon.isObtainable) return false;
+      if (!showObtainableOnly && !showUnreleased && !mon.isSeen && !mon.isObtainable) return false;
 
       // Name search
       if (searchTerm && !mon.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
@@ -210,6 +211,7 @@ export default function PokemonPage() {
     pokemonArray,
     searchTerm,
     showObtainableOnly,
+    showUnreleased,
     activeFilters,
     minBst,
     maxBst,
@@ -257,6 +259,7 @@ export default function PokemonPage() {
     setSearchTerm('');
     setShowObtainableOnly(false);
     setShowEvolvesWithItem(false);
+    setShowUnreleased(false);
     setActiveFilters({ types1: [], types2: [], encounters: [] });
     setMinBst('');
     setMaxBst('');
@@ -274,6 +277,8 @@ export default function PokemonPage() {
         setShowObtainableOnly={setShowObtainableOnly}
         showEvolvesWithItem={showEvolvesWithItem}
         setShowEvolvesWithItem={setShowEvolvesWithItem}
+        showUnreleased={showUnreleased}
+        setShowUnreleased={setShowUnreleased}
         activeFilters={activeFilters}
         setActiveFilters={setActiveFilters}
         removeFilter={removeFilter}

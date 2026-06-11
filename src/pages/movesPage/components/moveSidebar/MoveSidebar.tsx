@@ -9,6 +9,7 @@ type Props = {
   filteredMoves: any[];
   activeId?: string;
   tmByMove: Record<string, any>;
+  learnableMoveKeys: Set<string>;
 };
 
 const CATEGORY_ICON: Record<string, string> = {
@@ -17,7 +18,7 @@ const CATEGORY_ICON: Record<string, string> = {
   Status: '🔮',
 };
 
-export default function MoveSidebar({ filteredMoves, activeId, tmByMove }: Props) {
+export default function MoveSidebar({ filteredMoves, activeId, tmByMove, learnableMoveKeys }: Props) {
   const activeRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -36,13 +37,14 @@ export default function MoveSidebar({ filteredMoves, activeId, tmByMove }: Props
         const typeName = normalizeTypeName(move.type);
         const category = normalizeMoveCategory(move.category || move.split);
         const hasTm = !!tmByMove[move.key];
+        const isUnreleased = !learnableMoveKeys.has(move.key);
 
         return (
           <Link
             key={move.key}
             ref={isActive ? activeRef : null}
             to={`/moves/${move.key}`}
-            className={`moves-sidebar-item ${isActive ? 'active' : ''}`}
+            className={`moves-sidebar-item ${isActive ? 'active' : ''} ${isUnreleased ? 'moves-sidebar-item--unreleased' : ''}`}
           >
             <div className="move-type-col">
               {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} noLink />}

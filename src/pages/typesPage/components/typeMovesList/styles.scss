@@ -28,6 +28,11 @@
         background: color-mix(in srgb, var(--containerBgColor), white 4%);
     }
 
+    &--unreleased {
+        opacity: 0.4;
+        filter: saturate(0.4);
+    }
+
     &__cat {
         font-size: 0.9rem;
         text-align: center;

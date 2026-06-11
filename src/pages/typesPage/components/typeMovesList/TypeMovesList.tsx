@@ -4,6 +4,7 @@ import './styles.scss';
 
 type Props = {
   moves: any[];
+  unreleasedKeys?: Set<string>;
 };
 
 const CATEGORY_ICON: Record<string, string> = {
@@ -20,7 +21,7 @@ function normalizeCat(raw: string | undefined): string {
   return 'Status';
 }
 
-export default function TypeMovesList({ moves }: Props) {
+export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
   return (
     <section className="type-section">
       <h2 className="type-section__title">
@@ -34,7 +35,7 @@ export default function TypeMovesList({ moves }: Props) {
           {moves.map((move: any) => {
             const category = normalizeCat(move.category || move.split);
             return (
-              <Link key={move.key} to={`/moves/${move.key}`} className="type-move-row">
+              <Link key={move.key} to={`/moves/${move.key}`} className={`type-move-row${unreleasedKeys?.has(move.key) ? ' type-move-row--unreleased' : ''}`}>
                 <span className="type-move-row__cat" title={category}>{CATEGORY_ICON[category]}</span>
                 <span className="type-move-row__name">{move.name}</span>
                 <span className="type-move-row__power">{move.power ? `${move.power}` : '—'}</span>

@@ -217,6 +217,8 @@ interface Props {
   setShowObtainableOnly: (v: boolean) => void;
   showEvolvesWithItem: boolean;
   setShowEvolvesWithItem: (v: boolean) => void;
+  showUnreleased: boolean;
+  setShowUnreleased: (v: boolean) => void;
   activeFilters: PokemonActiveFilters;
   setActiveFilters: React.Dispatch<React.SetStateAction<PokemonActiveFilters>>;
   removeFilter: (cat: keyof PokemonActiveFilters, value: string) => void;
@@ -241,6 +243,8 @@ export default function PokemonFilterBar({
   setShowObtainableOnly,
   showEvolvesWithItem,
   setShowEvolvesWithItem,
+  showUnreleased,
+  setShowUnreleased,
   activeFilters,
   setActiveFilters,
   removeFilter,
@@ -276,6 +280,7 @@ export default function PokemonFilterBar({
     searchTerm ||
     showObtainableOnly ||
     showEvolvesWithItem ||
+    showUnreleased ||
     activeFilters.types1.length > 0 ||
     activeFilters.types2.length > 0 ||
     activeFilters.encounters.length > 0 ||
@@ -386,6 +391,16 @@ export default function PokemonFilterBar({
           />
           Evolves with item
         </label>
+
+        {/* Show unreleased toggle */}
+        <label className="obtainable-toggle obtainable-toggle--unreleased">
+          <input
+            type="checkbox"
+            checked={showUnreleased}
+            onChange={(e) => setShowUnreleased(e.target.checked)}
+          />
+          Show unreleased
+        </label>
       </div>
 
       {/* ── Active pills ── */}
@@ -404,6 +419,9 @@ export default function PokemonFilterBar({
           )}
           {showEvolvesWithItem && (
             <FilterPill label="Evolves with item" color="#e67e22" onRemove={() => setShowEvolvesWithItem(false)} />
+          )}
+          {showUnreleased && (
+            <FilterPill label="Show unreleased" color="#888" onRemove={() => setShowUnreleased(false)} />
           )}
           {activeFilters.types1.map((v) => (
             <FilterPill

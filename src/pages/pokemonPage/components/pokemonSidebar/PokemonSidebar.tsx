@@ -39,12 +39,13 @@ export default function PokemonSidebar({ filteredPokemon, activeId, selectedDex 
             ? Object.values(mon.baseStats).reduce((a: any, c: any) => Number(a) + Number(c), 0)
             : 0;
           const isActive = mon.key === activeId;
+          const isUnreleased = !mon.isSeen && !mon.isObtainable;
 
           return (
             <div
               key={mon.key}
               ref={isActive ? activeItemRef : null}
-              className={`pokemon-list-item ${isActive ? 'active' : ''}`}
+              className={`pokemon-list-item ${isActive ? 'active' : ''} ${isUnreleased ? 'pokemon-list-item--unreleased' : ''}`}
               onClick={() => navigate(`/pokemon/${mon.key}`)}
             >
               <div className="sprite-wrapper">

@@ -6,9 +6,10 @@ import './styles.scss';
 
 type Props = {
   pokemon: any[];
+  unreleasedKeys?: Set<string>;
 };
 
-export default function TypePokemonList({ pokemon }: Props) {
+export default function TypePokemonList({ pokemon, unreleasedKeys }: Props) {
   return (
     <section className="type-section">
       <h2 className="type-section__title">
@@ -22,7 +23,7 @@ export default function TypePokemonList({ pokemon }: Props) {
           {pokemon.map((mon: any) => {
             const uniqueTypes = Array.from(new Set(mon.types ?? [])).filter(Boolean) as string[];
             return (
-              <Link key={mon.key} to={`/pokemon/${mon.key}`} className="type-pokemon-card">
+              <Link key={mon.key} to={`/pokemon/${mon.key}`} className={`type-pokemon-card${unreleasedKeys?.has(mon.key) ? ' type-pokemon-card--unreleased' : ''}`}>
                 <PokemonSprite name={mon.name} size={48} />
                 <span className="type-pokemon-card__name">{mon.name}</span>
                 <div className="type-pokemon-card__types">

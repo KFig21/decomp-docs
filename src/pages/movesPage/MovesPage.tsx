@@ -95,6 +95,7 @@ export default function MovesPage() {
   });
   const [sortBy, setSortBy] = useState<MoveSortOption>('alpha-asc');
   const [hasTmOnly, setHasTmOnly] = useState(false);
+  const [showUnreleased, setShowUnreleased] = useState(false);
   const [minPower, setMinPower] = useState('');
   const [maxPower, setMaxPower] = useState('');
 
@@ -150,7 +151,7 @@ export default function MovesPage() {
     const filtered = (movesArray as any[]).filter((move) => {
       if (move.key === 'MOVE_NONE') return false;
       if (!move.name || move.name === '????' || move.name === 'None') return false;
-      if (!learnableMoveKeys.has(move.key)) return false;
+      if (!showUnreleased && !learnableMoveKeys.has(move.key)) return false;
 
       if (searchTerm && !move.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
 
@@ -188,6 +189,7 @@ export default function MovesPage() {
     activeFilters,
     sortBy,
     hasTmOnly,
+    showUnreleased,
     tmByMove,
     minPower,
     maxPower,
@@ -215,6 +217,7 @@ export default function MovesPage() {
     setActiveFilters({ types: [], categories: [], effects: [] });
     setSortBy('alpha-asc');
     setHasTmOnly(false);
+    setShowUnreleased(false);
     setMinPower('');
     setMaxPower('');
   };
@@ -230,6 +233,8 @@ export default function MovesPage() {
         setSortBy={setSortBy}
         hasTmOnly={hasTmOnly}
         setHasTmOnly={setHasTmOnly}
+        showUnreleased={showUnreleased}
+        setShowUnreleased={setShowUnreleased}
         minPower={minPower}
         setMinPower={setMinPower}
         maxPower={maxPower}
@@ -239,7 +244,7 @@ export default function MovesPage() {
         clearAll={clearAll}
       />
       <div className="moves-page-content">
-        <MoveSidebar filteredMoves={filteredMoves} activeId={id} tmByMove={tmByMove} />
+        <MoveSidebar filteredMoves={filteredMoves} activeId={id} tmByMove={tmByMove} learnableMoveKeys={learnableMoveKeys} />
         <div className="moves-detail-area">
           {id ? (
             <MoveDetailPage tmByMove={tmByMove} pokemonArray={pokemonArray} />

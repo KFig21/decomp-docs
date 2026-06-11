@@ -38,6 +38,11 @@
                 padding-left: 8px;
             }
 
+            &--unreleased {
+                opacity: 0.4;
+                filter: saturate(0.4);
+            }
+
             .sprite-wrapper {
                 display: flex;
                 justify-content: center;

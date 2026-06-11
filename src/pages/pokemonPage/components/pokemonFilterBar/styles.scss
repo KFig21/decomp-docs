@@ -146,6 +146,15 @@
         cursor: pointer;
         accent-color: var(--primaryColor);
     }
+
+    &--unreleased {
+        opacity: 0.7;
+        font-style: italic;
+
+        input[type='checkbox'] {
+            accent-color: #888;
+        }
+    }
 }
 
 .filter-clear-all {

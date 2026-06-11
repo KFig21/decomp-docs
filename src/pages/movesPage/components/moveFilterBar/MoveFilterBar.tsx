@@ -118,8 +118,9 @@ interface Props {
   searchTerm:    string; setSearchTerm:    (v: string) => void;
   activeFilters: MoveActiveFilters; setActiveFilters: React.Dispatch<React.SetStateAction<MoveActiveFilters>>;
   sortBy:        MoveSortOption; setSortBy: (v: MoveSortOption) => void;
-  hasTmOnly:     boolean; setHasTmOnly: (v: boolean) => void;
-  minPower:      string; setMinPower: (v: string) => void;
+  hasTmOnly:      boolean; setHasTmOnly: (v: boolean) => void;
+  showUnreleased: boolean; setShowUnreleased: (v: boolean) => void;
+  minPower:       string; setMinPower: (v: string) => void;
   maxPower:      string; setMaxPower: (v: string) => void;
   allEffects:    string[];
   removeFilter:  (cat: keyof MoveActiveFilters, value: string) => void;
@@ -131,6 +132,7 @@ export default function MoveFilterBar({
   activeFilters, setActiveFilters,
   sortBy, setSortBy,
   hasTmOnly, setHasTmOnly,
+  showUnreleased, setShowUnreleased,
   minPower, setMinPower, maxPower, setMaxPower,
   allEffects, removeFilter, clearAll,
 }: Props) {
@@ -145,7 +147,7 @@ export default function MoveFilterBar({
   const fxOptions   = allEffects.map((e) => ({ value: e, label: e }));
 
   const hasAnyFilter =
-    searchTerm || hasTmOnly ||
+    searchTerm || hasTmOnly || showUnreleased ||
     activeFilters.types.length > 0 || activeFilters.categories.length > 0 || activeFilters.effects.length > 0 ||
     minPower || maxPower || sortBy !== 'alpha-asc';
 
@@ -184,6 +186,11 @@ export default function MoveFilterBar({
           TM / HM only
         </label>
 
+        <label className="obtainable-toggle obtainable-toggle--unreleased">
+          <input type="checkbox" checked={showUnreleased} onChange={(e) => setShowUnreleased(e.target.checked)} />
+          Show unreleased
+        </label>
+
         {hasAnyFilter && (
           <button className="filter-clear-all" onClick={clearAll}>Clear all</button>
         )}
@@ -192,7 +199,8 @@ export default function MoveFilterBar({
       {hasAnyFilter && (
         <div className="filter-bar__pills">
           {searchTerm && <FilterPill label={`"${searchTerm}"`} onRemove={() => setSearchTerm('')} />}
-          {hasTmOnly  && <FilterPill label="TM / HM only" onRemove={() => setHasTmOnly(false)} />}
+          {hasTmOnly      && <FilterPill label="TM / HM only"   onRemove={() => setHasTmOnly(false)} />}
+          {showUnreleased && <FilterPill label="Show unreleased" color="#888" onRemove={() => setShowUnreleased(false)} />}
           {activeFilters.types.map((v) => (
             <FilterPill key={v} label={v} color={TYPE_COLORS[v.toLowerCase()]} onRemove={() => removeFilter('types', v)} />
           ))}

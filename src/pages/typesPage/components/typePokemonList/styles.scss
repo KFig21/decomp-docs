@@ -24,6 +24,11 @@
         border-color: var(--primaryColor);
     }
 
+    &--unreleased {
+        opacity: 0.4;
+        filter: saturate(0.4);
+    }
+
     &__name {
         font-size: 0.68rem;
         font-weight: 600;

@@ -62,6 +62,8 @@ interface Props {
   setSortBy: (v: TypeSortOption) => void;
   primaryOnly: boolean;
   setPrimaryOnly: (v: boolean) => void;
+  showUnreleased: boolean;
+  setShowUnreleased: (v: boolean) => void;
   clearAll: () => void;
 }
 
@@ -72,9 +74,11 @@ export default function TypesFilterBar({
   setSortBy,
   primaryOnly,
   setPrimaryOnly,
+  showUnreleased,
+  setShowUnreleased,
   clearAll,
 }: Props) {
-  const hasAnyFilter = searchTerm || primaryOnly || sortBy !== 'alpha';
+  const hasAnyFilter = searchTerm || primaryOnly || showUnreleased || sortBy !== 'alpha';
 
   return (
     <div className="types-filter-bar">
@@ -96,6 +100,15 @@ export default function TypesFilterBar({
             onChange={(e) => setPrimaryOnly(e.target.checked)}
           />
           Primary type only
+        </label>
+
+        <label className="obtainable-toggle obtainable-toggle--unreleased">
+          <input
+            type="checkbox"
+            checked={showUnreleased}
+            onChange={(e) => setShowUnreleased(e.target.checked)}
+          />
+          Show unreleased
         </label>
 
         {hasAnyFilter && (

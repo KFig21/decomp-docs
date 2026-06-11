@@ -41,6 +41,11 @@
     padding-left: 8px;
   }
 
+  &--unreleased {
+    opacity: 0.4;
+    filter: saturate(0.4);
+  }
+
   .move-type-col {
     display: flex;
     align-items: center;
