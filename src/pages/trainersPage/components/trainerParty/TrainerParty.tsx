@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
+import { CategoryIcon } from '../../../../components/elements/categoryBadge/CategoryBadge';
 import './styles.scss';
 
 // ── Move category normaliser ───────────────────────────────────────────────────
@@ -19,11 +20,6 @@ function normalizeMoveCategory(raw: string | undefined): 'Physical' | 'Special' 
   return 'Status';
 }
 
-const CATEGORY_ICON: Record<string, string> = {
-  Physical: '⚔️',
-  Special: '✨',
-  Status: '🔮',
-};
 
 // ── Showdown export builder ────────────────────────────────────────────────────
 function buildShowdownExport(mon: any): string {
@@ -217,7 +213,7 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
                   onClick={(e) => e.stopPropagation()}
                   title={`${move.name} (${category})`}
                 >
-                  <span className="move-category-icon">{CATEGORY_ICON[category]}</span>
+                  <span className="move-category-icon"><CategoryIcon raw={move.category || move.split} size={12} /></span>
                   <span className="move-name">{move.name}</span>
                 </Link>
               );

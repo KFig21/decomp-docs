@@ -2,6 +2,7 @@
 import { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import { CategoryIcon } from '../../../../components/elements/categoryBadge/CategoryBadge';
 import { normalizeMoveCategory, normalizeTypeName } from '../../MovesPage';
 import './styles.scss';
 
@@ -10,12 +11,6 @@ type Props = {
   activeId?: string;
   tmByMove: Record<string, any>;
   learnableMoveKeys: Set<string>;
-};
-
-const CATEGORY_ICON: Record<string, string> = {
-  Physical: '⚔️',
-  Special: '✨',
-  Status: '🔮',
 };
 
 export default function MoveSidebar({ filteredMoves, activeId, tmByMove, learnableMoveKeys }: Props) {
@@ -55,7 +50,7 @@ export default function MoveSidebar({ filteredMoves, activeId, tmByMove, learnab
             </div>
             <div className="move-meta-col">
               <span className="move-cat-icon" title={category}>
-                {CATEGORY_ICON[category] ?? '🔮'}
+                <CategoryIcon raw={move.category || move.split} size={14} />
               </span>
               <span className="move-power">{move.power ? `${move.power}` : '—'}</span>
             </div>

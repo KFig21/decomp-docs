@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PokemonSprite from '../../../../../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../../../../../components/elements/sprites/ItemSprite';
 import TypeIconBadge from '../../../../../../../../components/elements/typeBadge/TypeIconBadge';
+import { CategoryIcon } from '../../../../../../../../components/elements/categoryBadge/CategoryBadge';
 import type { ParsedTrainerPokemon } from '../../../../../../../../services/parsers/v2/trainers/types';
 import './styles.scss';
 
@@ -20,11 +21,6 @@ function normalizeMoveCategory(raw: string | undefined): 'Physical' | 'Special' 
   return 'Status';
 }
 
-const CATEGORY_ICON: Record<string, string> = {
-  Physical: '⚔️',
-  Special: '✨',
-  Status: '🔮',
-};
 
 function buildShowdownExport(mon: any): string {
   const lines: string[] = [];
@@ -200,7 +196,7 @@ export default function TrainerPokemonCard({
                   onClick={(e) => e.stopPropagation()}
                   title={`${move.name} (${category})`}
                 >
-                  <span className="loc-move-icon">{CATEGORY_ICON[category]}</span>
+                  <span className="loc-move-icon"><CategoryIcon raw={(move as any).category || (move as any).split} size={12} /></span>
                   <span className="loc-move-name">{move.name}</span>
                 </Link>
               );
