@@ -40,7 +40,7 @@ export default function MapCard({ location, isOverworld = false }: Props) {
 
       {isOpen && (
         <div className="content">
-          {location.mapImage && <Map location={location} parentOpen={isOpen} />}
+          {location.mapImage && <Map location={location} />}
 
           {location.trainers && location.trainers.length > 0 && (
             <Trainers trainers={location.trainers} parentOpen={isOpen} />

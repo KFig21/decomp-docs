@@ -1,42 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './../../../styles.scss';
 import type { LocationMap } from '../../../../../../../services/parsers/v2/locations/types';
 import CollapseToggle from '../../../../../../../components/elements/collapseToggle/CollapseToggle';
+import MapModal from './MapModal';
 
 type Props = {
   location: LocationMap;
-  expandAll?: boolean;
-  parentOpen?: boolean;
 };
 
-export default function Map({ location, expandAll = true, parentOpen = true }: Props) {
+export default function Map({ location }: Props) {
   const [isOpen, setIsOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  const mapImageSrc = location.mapImage
-    ? location.mapImage.startsWith('data:')
-      ? location.mapImage
-      : `data:image/png;base64,${location.mapImage}`
-    : '';
+  if (!location.mapImage) return null;
 
-  useEffect(() => {
-    if (expandAll || parentOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsOpen(true);
-    }
-  }, [expandAll, parentOpen]);
-
-  // Close modal on ESC
-  useEffect(() => {
-    if (!showModal) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowModal(false);
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [showModal]);
+  const mapImageSrc = location.mapImage.startsWith('data:')
+    ? location.mapImage
+    : `data:image/png;base64,${location.mapImage}`;
 
   return (
     <>
@@ -48,28 +28,24 @@ export default function Map({ location, expandAll = true, parentOpen = true }: P
 
         {isOpen && (
           <div className="content">
-            {mapImageSrc && (
-              <div className="map-container">
-                <img
-                  src={mapImageSrc}
-                  alt={`Map of ${location.name}`}
-                  className="generated-map clickable"
-                  onClick={() => setShowModal(true)}
-                />
-              </div>
-            )}
+            <div className="map-container">
+              <img
+                src={mapImageSrc}
+                alt={`Map of ${location.name}`}
+                className="generated-map clickable"
+                onClick={() => setShowModal(true)}
+              />
+            </div>
           </div>
         )}
       </div>
 
-      {/* Modal */}
       {showModal && (
-        // TODO: Fix modal, does not show all of large images, they can get cutoff
-        <div className="map-modal-backdrop" onClick={() => setShowModal(false)}>
-          <div className="map-modal-content" onClick={() => setShowModal(false)}>
-            <img src={mapImageSrc} alt={`Map of ${location.name}`} className="map-modal-image" />
-          </div>
-        </div>
+        <MapModal
+          src={mapImageSrc}
+          alt={`Map of ${location.name}`}
+          onClose={() => setShowModal(false)}
+        />
       )}
     </>
   );

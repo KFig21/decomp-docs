@@ -205,29 +205,51 @@
     inset: 0;
     background-color: color-mix(in srgb, var(--containerBgColor), var(--backgroundColor) 50%);
     backdrop-filter: blur(6px);
+    z-index: 1000;
+    // Backdrop is the scroll container — this prevents large maps from being clipped at the top
+    overflow: auto;
+    cursor: zoom-out;
+}
+
+.map-modal-close {
+    // Stays visible in the top-right corner even while scrolling
+    position: sticky;
+    top: 12px;
+    float: right;
+    margin: 12px 12px 0 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    flex-shrink: 0;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
 }
 
 .map-modal-content {
-    width: 100vw;
-    height: 100vh;
-    overflow: auto;
+    // min-height: 100% ensures flex centering works when the image is smaller than the viewport.
+    // When the image is larger, the content grows and the backdrop scrolls from the top.
+    min-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
 .map-modal-image {
-    padding: 0;
     display: block;
-    margin: 0 auto;
+    // Never exceed viewport width (with padding accounted for)
+    max-width: calc(100vw - 40px);
     height: auto;
-    width: 100%;
-    min-width: 50vw;
-    max-width: 800px;
-    object-fit: contain;
     cursor: zoom-out;
 }
