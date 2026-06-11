@@ -1,0 +1,54 @@
+@use '../../../../styles/colors.scss' as *;
+
+.type-moves-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.type-move-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 48px 52px 52px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: var(--fontColor);
+    background: var(--backgroundColor);
+    border-bottom: 1px solid color-mix(in srgb, var(--containerBorderColor), transparent 50%);
+    transition: background 0.12s;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: color-mix(in srgb, var(--containerBgColor), white 4%);
+    }
+
+    &__cat {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    &__name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__power,
+    &__acc,
+    &__pp {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--fadedFont);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}

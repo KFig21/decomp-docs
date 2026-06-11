@@ -45,7 +45,7 @@ export default function MoveSidebar({ filteredMoves, activeId, tmByMove }: Props
             className={`moves-sidebar-item ${isActive ? 'active' : ''}`}
           >
             <div className="move-type-col">
-              {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} />}
+              {typeName && <TypeBadge type={`TYPE_${typeName.toUpperCase()}`} noLink />}
             </div>
             <div className="move-name-col">
               <span className="move-name">{move.name}</span>

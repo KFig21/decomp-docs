@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
@@ -65,9 +65,13 @@ export default function ItemEvolutions({ item }: Props) {
 }
 
 function EvoPokemonCard({ mon, isResult = false }: { mon: any; isResult?: boolean }) {
+  const navigate = useNavigate();
   return (
-    <Link
-      to={`/pokemon/${mon.key}`}
+    <div
+      role="link"
+      tabIndex={0}
+      onClick={() => navigate(`/pokemon/${mon.key}`)}
+      onKeyDown={(e) => e.key === 'Enter' && navigate(`/pokemon/${mon.key}`)}
       className={`item-evo-card ${isResult ? 'item-evo-card--result' : ''}`}
     >
       <PokemonSprite name={mon.name} size={72} />
@@ -81,6 +85,6 @@ function EvoPokemonCard({ mon, isResult = false }: { mon: any; isResult?: boolea
           </div>
         )}
       </div>
-    </Link>
+    </div>
   );
 }
