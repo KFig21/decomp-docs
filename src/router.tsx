@@ -9,6 +9,7 @@ import MovesPage from './pages/movesPage/MovesPage';
 import TrainersPage from './pages/trainersPage/TrainersPage';
 import AbilitiesPage from './pages/abilitiesPage/AbilitiesPage';
 import TypesPage from './pages/typesPage/TypesPage';
+import HelpPage from './pages/helpPage/HelpPage';
 import ErrorPage from './pages/errorPage/ErrorPage';
 import { useData } from './contexts/dataContext';
 import LoadingScreen from './components/elements/loadingScreen/LoadingScreen';
@@ -59,6 +60,7 @@ export function CreateRouter() {
         { path: '/abilities/:id', element: <AbilitiesPage /> },
         { path: '/types', element: <TypesPage /> },
         { path: '/types/:id', element: <TypesPage /> },
+        { path: '/help', element: <HelpPage /> },
       ],
     },
   ]);

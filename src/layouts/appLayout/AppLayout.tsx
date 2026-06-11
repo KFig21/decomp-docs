@@ -60,8 +60,8 @@ export default function AppLayout({ projectName }: Props) {
             <span className="sidebar-brand__label">{projectName || 'Decomp Docs'}</span>
           </div>
 
-          {/* Page navigation (hidden on upload page) */}
-          {!isUploadPage && <NavBar />}
+          {/* Page navigation */}
+          <NavBar hideDataPages={isUploadPage} />
         </div>
 
         <div className="sidebar-bottom">

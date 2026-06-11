@@ -1,0 +1,332 @@
+@use './../../styles/index.scss' as *;
+@use './../../styles/colors.scss' as *;
+
+.help-page {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+}
+
+.help-content {
+    width: 100%;
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.help-header {
+    border-bottom: 1px solid var(--borderColor);
+    padding-bottom: 1.25rem;
+
+    &__title {
+        margin: 0 0 0.35rem;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--fontColor);
+    }
+
+    &__sub {
+        margin: 0;
+        color: var(--fadedFont);
+        font-size: 0.95rem;
+    }
+}
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+
+.help-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    &__title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--fontColor);
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid var(--borderColor);
+
+        code {
+            font-size: 1rem;
+            background: var(--containerBgColor);
+            border: 1px solid var(--containerBorderColor);
+            border-radius: 4px;
+            padding: 1px 6px;
+        }
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--fadedFont);
+        line-height: 1.6;
+    }
+
+    code {
+        font-size: 0.85rem;
+        background: var(--containerBgColor);
+        border: 1px solid var(--containerBorderColor);
+        border-radius: 4px;
+        padding: 1px 5px;
+        color: var(--fontColor);
+    }
+}
+
+// ── Supported bases list ──────────────────────────────────────────────────────
+
+.help-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    li {
+        font-size: 0.9rem;
+        color: var(--fadedFont);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+            content: '•';
+            color: var(--primaryColor);
+            font-weight: bold;
+        }
+
+        strong {
+            color: var(--fontColor);
+        }
+    }
+}
+
+.help-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+    color: var(--primaryColor);
+    border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 60%);
+    border-radius: 4px;
+    padding: 1px 6px;
+}
+
+// ── Link cards ────────────────────────────────────────────────────────────────
+
+.help-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.help-link-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--fontColor);
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+        border-color: var(--primaryColor);
+        background: color-mix(in srgb, var(--primaryColor), transparent 94%);
+
+        .help-link-card__arrow {
+            color: var(--primaryColor);
+        }
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        color: var(--fadedFont);
+        flex-shrink: 0;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__name {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    &__url {
+        font-size: 0.75rem;
+        color: var(--fadedFont);
+    }
+
+    &__arrow {
+        font-size: 0.9rem;
+        color: var(--fadedFont);
+        transition: color 0.15s;
+        flex-shrink: 0;
+    }
+}
+
+// ── Steps ─────────────────────────────────────────────────────────────────────
+
+.help-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.help-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    &__num {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--primaryColor), transparent 82%);
+        color: var(--primaryColor);
+        border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 60%);
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+    }
+
+    &__text {
+        font-size: 0.9rem;
+        color: var(--fadedFont);
+        line-height: 1.5;
+
+        strong {
+            color: var(--fontColor);
+            font-weight: 600;
+        }
+
+        code {
+            font-size: 0.82rem;
+            background: var(--containerBgColor);
+            border: 1px solid var(--containerBorderColor);
+            border-radius: 4px;
+            padding: 1px 5px;
+            color: var(--fontColor);
+        }
+    }
+}
+
+// ── Config container (tabs + code block as one bordered unit) ─────────────────
+
+.help-config {
+    border: 1px solid var(--borderColor);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.help-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--borderColor);
+    background: color-mix(in srgb, var(--containerBgColor), var(--backgroundColor) 40%);
+}
+
+.help-tab {
+    padding: 0.45rem 0.9rem;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--borderColor);
+    color: var(--fadedFont);
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    &:hover:not(&--active) {
+        color: var(--fontColor);
+        background: color-mix(in srgb, var(--containerBorderColor), transparent 60%);
+    }
+
+    &--active {
+        color: var(--fontColor);
+        background: var(--containerBgColor);
+        box-shadow: inset 0 -2px 0 var(--primaryColor);
+    }
+}
+
+// ── Code block ────────────────────────────────────────────────────────────────
+
+.help-code-block {
+    position: relative;
+    background: var(--containerBgColor);
+    min-height: 420px;
+
+    pre {
+        margin: 0;
+        padding: 1rem 1.25rem;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        overflow: auto;
+        max-height: 420px;
+        color: var(--fontColor);
+    }
+
+    // JSON syntax colouring
+    .hjson-key {
+        color: var(--primaryColor);
+    }
+
+    .hjson-str {
+        color: #78c850;
+    }
+
+    .hjson-punct {
+        color: var(--fadedFont);
+    }
+}
+
+.help-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: var(--containerBorderColor);
+    color: var(--fontColor);
+    border: 1px solid var(--borderColor);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+        background: var(--primaryColor);
+        color: var(--backgroundColor);
+        border-color: var(--primaryColor);
+    }
+
+    &--copied {
+        background: #3baf6a;
+        color: #fff;
+        border-color: #3baf6a;
+    }
+}
