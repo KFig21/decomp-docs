@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PokemonSprite from '../../../../../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../../../../../components/elements/sprites/ItemSprite';
-import TypeBadge from '../../../../../../../../components/elements/typeBadge/TypeBadge';
+import TypeIconBadge from '../../../../../../../../components/elements/typeBadge/TypeIconBadge';
 import type { ParsedTrainerPokemon } from '../../../../../../../../services/parsers/v2/trainers/types';
 import './styles.scss';
 
@@ -153,7 +153,7 @@ export default function TrainerPokemonCard({
           {species.types && (
             <div className="loc-types">
               {(species.types as string[]).filter(Boolean).map((t) => (
-                <TypeBadge key={t} type={t} />
+                <TypeIconBadge key={t} type={t} size={18} />
               ))}
             </div>
           )}

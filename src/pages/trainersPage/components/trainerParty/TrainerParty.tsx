@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
-import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
 import './styles.scss';
 
 // ── Move category normaliser ───────────────────────────────────────────────────
@@ -160,7 +160,7 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
           {species.types && (
             <div className="party-types">
               {species.types.filter(Boolean).map((t: string) => (
-                <TypeBadge key={t} type={t} />
+                <TypeIconBadge key={t} type={t} size={18} />
               ))}
             </div>
           )}
