@@ -20,9 +20,11 @@ export default function PokemonSprite({ name, speciesKey, size = 64 }: Props) {
     const rawConstant = speciesKey.replace('SPECIES_', '');
 
     // Attempt to recreate the base constant to isolate the suffix
-    // "Mr. Mime" -> "MR_MIME"
+    // "Mr. Mime" -> "MR_MIME", "Nidoran♂" -> "NIDORANM" (gender symbols → letter first)
     const expectedBaseName = name
       .toUpperCase()
+      .replace('♂', 'M')
+      .replace('♀', 'F')
       .replace(/[^A-Z0-9]/g, '_')
       .replace(/_+/g, '_')
       .replace(/_$/, '');
