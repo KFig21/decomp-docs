@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
-import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
+import TypePokemonGrid from './TypePokemonGrid';
+import TypePokemonTable from './TypePokemonTable';
 import './styles.scss';
 
 type Props = {
@@ -11,8 +10,11 @@ type Props = {
   unreleasedKeys?: Set<string>;
 };
 
+type ViewMode = 'grid' | 'table';
+
 export default function TypePokemonList({ pokemon, unreleasedKeys }: Props) {
   const [isOpen, setIsOpen] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
 
   return (
     <section className={`type-card-style ${isOpen ? '' : 'collapsed'}`}>
@@ -20,31 +22,29 @@ export default function TypePokemonList({ pokemon, unreleasedKeys }: Props) {
         <CollapseToggle isOpen={isOpen} />
         Pokémon
         <span className="type-section__count">{pokemon.length}</span>
+        <div className="view-mode-toggle" onClick={(e) => e.stopPropagation()}>
+          <button
+            className={`view-mode-toggle__btn ${viewMode === 'table' ? 'view-mode-toggle__btn--active' : ''}`}
+            onClick={() => setViewMode('table')}
+            title="Table view"
+          >
+            ≡
+          </button>
+          <button
+            className={`view-mode-toggle__btn ${viewMode === 'grid' ? 'view-mode-toggle__btn--active' : ''}`}
+            onClick={() => setViewMode('grid')}
+            title="Grid view"
+          >
+            ⊞
+          </button>
+        </div>
       </div>
       {isOpen && (
         <div className="content">
-          {pokemon.length === 0 ? (
-            <p className="type-section__empty">No Pokémon found for this type.</p>
-          ) : (
-            <div className="type-pokemon-grid">
-              {pokemon.map((mon: any) => {
-                const uniqueTypes = Array.from(new Set(mon.types ?? [])).filter(Boolean) as string[];
-                return (
-                  <Link
-                    key={mon.key}
-                    to={`/pokemon/${mon.key}`}
-                    className={`type-pokemon-card${unreleasedKeys?.has(mon.key) ? ' type-pokemon-card--unreleased' : ''}`}
-                  >
-                    <PokemonSprite name={mon.name} size={48} />
-                    <span className="type-pokemon-card__name">{mon.name}</span>
-                    <div className="type-pokemon-card__types">
-                      {uniqueTypes.map((t) => <TypeIconBadge key={t} type={t} size={16} />)}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          {viewMode === 'grid'
+            ? <TypePokemonGrid pokemon={pokemon} unreleasedKeys={unreleasedKeys} />
+            : <TypePokemonTable pokemon={pokemon} unreleasedKeys={unreleasedKeys} />
+          }
         </div>
       )}
     </section>
