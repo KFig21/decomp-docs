@@ -1,15 +1,40 @@
 @use '../../../../styles/index.scss' as *;
-@use '../../../../styles/colors.scss' as *;
 
-// Maps SCSS names to CSS custom properties from colors.scss
-$method-colors: (
-    overworld:  '--methodOverworld',
-    hidden:     '--methodHidden',
-    mart:       '--methodMart',
-    npc:        '--methodNpc',
-    berry-tree: '--methodBerryTree',
-    other:      '--catGray',
-);
+// ── Mixins ────────────────────────────────────────────────────────────────────
+// Centralise the repeated color-mix patterns so each method block stays a one-liner.
+
+@mixin method-chip-colors($color) {
+    background-color: color-mix(in srgb, $color, transparent 82%);
+    color: $color;
+    border-color: color-mix(in srgb, $color, transparent 60%);
+
+    &:hover {
+        background-color: color-mix(in srgb, $color, transparent 65%);
+    }
+
+    &.method-chip--active {
+        background-color: $color;
+        color: white;
+        border-color: $color;
+        box-shadow: 0 0 0 3px color-mix(in srgb, $color, transparent 65%);
+
+        &:hover {
+            background-color: color-mix(in srgb, $color, black 10%);
+        }
+    }
+}
+
+@mixin method-badge-colors($color) {
+    background-color: color-mix(in srgb, $color, transparent 82%);
+    color: $color;
+    border: 1px solid color-mix(in srgb, $color, transparent 55%);
+}
+
+@mixin method-row-accent($color) {
+    border-left: 3px solid color-mix(in srgb, $color, transparent 40%);
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
 
 .item-locations {
     .section-header {
@@ -28,6 +53,8 @@ $method-colors: (
     }
 }
 
+// ── Method filter chips (section header) ──────────────────────────────────────
+
 .method-chip {
     display: inline-flex;
     align-items: center;
@@ -43,28 +70,12 @@ $method-colors: (
     font-family: inherit;
     transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
 
-    @each $name, $var in $method-colors {
-        &--#{$name} {
-            background-color: color-mix(in srgb, var(#{$var}), transparent 82%);
-            color: var(#{$var});
-            border-color: color-mix(in srgb, var(#{$var}), transparent 60%);
-
-            &:hover {
-                background-color: color-mix(in srgb, var(#{$var}), transparent 65%);
-            }
-
-            &.method-chip--active {
-                background-color: var(#{$var});
-                color: white;
-                border-color: var(#{$var});
-                box-shadow: 0 0 0 3px color-mix(in srgb, var(#{$var}), transparent 65%);
-
-                &:hover {
-                    background-color: color-mix(in srgb, var(#{$var}), black 10%);
-                }
-            }
-        }
-    }
+    &--overworld  { @include method-chip-colors(var(--methodOverworld)); }
+    &--hidden     { @include method-chip-colors(var(--methodHidden)); }
+    &--mart       { @include method-chip-colors(var(--methodMart)); }
+    &--npc        { @include method-chip-colors(var(--methodNpc)); }
+    &--berry-tree { @include method-chip-colors(var(--methodBerryTree)); }
+    &--other      { @include method-chip-colors(var(--catGray)); }
 
     &--clear {
         background: color-mix(in srgb, var(--fontColor), transparent 90%);
@@ -80,6 +91,8 @@ $method-colors: (
     }
 }
 
+// ── Method badge (table cell) ─────────────────────────────────────────────────
+
 .method-badge {
     display: inline-flex;
     align-items: center;
@@ -90,14 +103,15 @@ $method-colors: (
     border-radius: 6px;
     white-space: nowrap;
 
-    @each $name, $var in $method-colors {
-        &--#{$name} {
-            background-color: color-mix(in srgb, var(#{$var}), transparent 82%);
-            color: var(#{$var});
-            border: 1px solid color-mix(in srgb, var(#{$var}), transparent 55%);
-        }
-    }
+    &--overworld  { @include method-badge-colors(var(--methodOverworld)); }
+    &--hidden     { @include method-badge-colors(var(--methodHidden)); }
+    &--mart       { @include method-badge-colors(var(--methodMart)); }
+    &--npc        { @include method-badge-colors(var(--methodNpc)); }
+    &--berry-tree { @include method-badge-colors(var(--methodBerryTree)); }
+    &--other      { @include method-badge-colors(var(--catGray)); }
 }
+
+// ── Locations table ───────────────────────────────────────────────────────────
 
 .locations-table {
     .map-name {
@@ -111,11 +125,13 @@ $method-colors: (
         font-variant-numeric: tabular-nums;
     }
 
-    @each $name, $var in $method-colors {
-        .loc-row--#{$name} td:first-child {
-            border-left: 3px solid color-mix(in srgb, var(#{$var}), transparent 40%);
-        }
-    }
+    // Left-border accent per method row
+    .loc-row--overworld  td:first-child { @include method-row-accent(var(--methodOverworld)); }
+    .loc-row--hidden     td:first-child { @include method-row-accent(var(--methodHidden)); }
+    .loc-row--mart       td:first-child { @include method-row-accent(var(--methodMart)); }
+    .loc-row--npc        td:first-child { @include method-row-accent(var(--methodNpc)); }
+    .loc-row--berry-tree td:first-child { @include method-row-accent(var(--methodBerryTree)); }
+    .loc-row--other      td:first-child { @include method-row-accent(var(--catGray)); }
 }
 
 .no-results {

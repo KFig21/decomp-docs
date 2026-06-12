@@ -6,23 +6,14 @@ import './styles.scss';
 
 type Props = { locations?: any[] };
 
-// mod maps the data method key -> CSS class suffix
-// berry_tree (underscore) -> berry-tree (hyphen) to match SCSS map key
-const METHOD_MOD: Record<string, string> = {
-  overworld: 'overworld',
-  hidden:    'hidden',
-  mart:      'mart',
-  npc:       'npc',
-  berry_tree:'berry-tree',
-};
+// Data uses underscores (berry_tree); CSS classes use hyphens (berry-tree).
+const methodKey = (method: string) => method.replace(/_/g, '-');
 
 function MethodBadge({ method }: { method: string }) {
-  const label = METHOD_LABELS[method] ?? method;
-  const mod = METHOD_MOD[method] ?? 'other';
   return (
-    <span className={`method-badge method-badge--${mod}`}>
+    <span className={`method-badge method-badge--${methodKey(method)}`}>
       <MethodCircle method={method} size={18} />
-      {label}
+      {METHOD_LABELS[method] ?? method}
     </span>
   );
 }
@@ -49,12 +40,11 @@ export default function ItemLocations({ locations }: Props) {
         <div className="method-summary">
           {Object.entries(methodCounts).map(([method, count]) => {
             const label = METHOD_LABELS[method] ?? method;
-            const mod = METHOD_MOD[method] ?? 'other';
             const isActive = activeMethod === method;
             return (
               <button
                 key={method}
-                className={`method-chip method-chip--${mod} ${isActive ? 'method-chip--active' : ''}`}
+                className={`method-chip method-chip--${methodKey(method)} ${isActive ? 'method-chip--active' : ''}`}
                 onClick={() => toggleMethod(method)}
                 title={isActive ? 'Click to show all' : `Filter to ${label} only`}
               >
@@ -89,9 +79,8 @@ export default function ItemLocations({ locations }: Props) {
             </thead>
             <tbody>
               {displayed.map((loc, i) => {
-                const mod = METHOD_MOD[loc.method] ?? 'other';
                 return (
-                  <tr key={i} className={`loc-row loc-row--${mod}`}>
+                  <tr key={i} className={`loc-row loc-row--${methodKey(loc.method)}`}>
                     <td>
                       <Link to={`/locations/${loc.location}`} className="location-link">
                         {loc.location}
