@@ -3,6 +3,7 @@ import type { FileContent } from '../../fileReader';
 import { parseAbilities } from './abilities';
 import { parseItems } from './items';
 import { attachItemLocations } from './items/attachItemLocations';
+import { attachItemMoves } from './items/attachItemMoves';
 import { markEvolutionItems } from './items/markEvolutionItems';
 import { parseLocations } from './locations';
 import { parseWeathers } from './weather';
@@ -62,6 +63,9 @@ export async function parseDecompV2(
   await delay(500);
   if (checkCancel?.()) throw new Error('CANCELLED');
   const items = parseItems({ files });
+
+  // ── Link TM/HM items to their moves ──────────────────────────────────────
+  attachItemMoves(items, moves);
 
   if (onProgress) onProgress('Parsing abilities...', m.abilities);
   await delay(500);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './../../styles.scss';
 import Trainers from '../trainers/Trainers';
 import ItemsSection from '../items/Items';
+import MartSection from '../mart/Mart';
 import EncounterTable from '../encounters/EncounterTables';
 import Map from './map/Map';
 import type { LocationMap } from '../../../../../../services/parsers/v2/locations/types';
@@ -56,6 +57,10 @@ export default function MapCard({ location, isOverworld = false }: Props) {
 
           {location.items && location.items.length > 0 && (
             <ItemsSection items={location.items} parentOpen={isOpen} />
+          )}
+
+          {location.hasMart && (
+            <MartSection mapName={location.name} />
           )}
         </div>
       )}

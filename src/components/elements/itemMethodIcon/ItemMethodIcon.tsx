@@ -1,6 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import '../itemPocketIcon/styles.scss';
 import './styles.scss';
+import RockIcon from './icons/RockIcon';
+import MagnifyingGlassIcon from './icons/MagnifyingGlassIcon';
+import DollarIcon from './icons/DollarIcon';
+import GiftIcon from './icons/GiftIcon';
+import TreeIcon from './icons/TreeIcon';
 
 // ── Labels ────────────────────────────────────────────────────────────────────
 
@@ -11,68 +16,6 @@ export const METHOD_LABELS: Record<string, string> = {
   npc:        'NPC Gift',
   berry_tree: 'Berry Tree',
 };
-
-// ── SVG Icons ─────────────────────────────────────────────────────────────────
-
-/** Rock silhouette — overworld */
-function RockIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M5 17 Q3 13 5 9 Q8 4 13 5 Q18 4 21 9 Q23 13 20 17 Q17 21 12 21 Q7 21 5 17 Z" />
-      <path d="M10 9 L9 13 L11 12 L10 16" stroke="white" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-    </svg>
-  );
-}
-
-/** Magnifying glass — hidden */
-function MagnifyingGlassIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        d="M10 2 A8 8 0 1 1 10 18 A8 8 0 1 1 10 2 Z M10 5.5 A4.5 4.5 0 1 1 10 14.5 A4.5 4.5 0 1 1 10 5.5 Z"
-      />
-      <path d="M14.5 15 L20.5 21 Q21.5 22 20.5 23 Q19.5 24 18.5 23 L12.5 17 Z" />
-    </svg>
-  );
-}
-
-/** Coin with dollar sign — mart */
-function DollarIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="10" />
-      <text x="12" y="17" textAnchor="middle" fontSize="14" fontWeight="900" fontFamily="sans-serif" fill="white">
-        $
-      </text>
-    </svg>
-  );
-}
-
-/** Gift box — NPC gift */
-function GiftIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <rect x="3" y="12" width="18" height="10" rx="1.5" />
-      <rect x="2" y="8" width="20" height="5" rx="1.5" />
-      <rect x="10.5" y="8" width="3" height="14" fill="white" opacity="0.35" />
-      <rect x="2" y="11" width="20" height="2" fill="white" opacity="0.35" />
-      <path d="M12 8 C10 5 6 4 7 8 Z" fill="white" opacity="0.45" />
-      <path d="M12 8 C14 5 18 4 17 8 Z" fill="white" opacity="0.45" />
-    </svg>
-  );
-}
-
-/** Pine tree — berry tree */
-function TreeIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <rect x="10" y="19" width="4" height="4" rx="0.5" />
-      <polygon points="12,2 21,15 3,15" />
-      <polygon points="12,9 22,21 2,21" />
-    </svg>
-  );
-}
 
 // ── Icon selector ─────────────────────────────────────────────────────────────
 
@@ -91,7 +34,6 @@ export function MethodIcon({ method, size = 16 }: { method: string; size?: numbe
 
 export function MethodCircle({ method, size = 20 }: { method: string; size?: number }) {
   if (!METHOD_LABELS[method]) return null;
-  // Normalize key for CSS class: berry_tree -> berry-tree
   const cssKey = method.replace(/_/g, '-');
   const iconSize = Math.round(size * 0.6);
   return (

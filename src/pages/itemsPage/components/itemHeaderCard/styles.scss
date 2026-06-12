@@ -101,6 +101,20 @@
             }
         }
 
+        .tm-move-link {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primaryColor);
+            text-decoration: none;
+            border: 1px solid var(--primaryColor);
+            border-radius: 999px;
+            padding: 3px 10px;
+
+            &:hover {
+                background: color-mix(in srgb, var(--primaryColor), transparent 88%);
+            }
+        }
+
         .item-description {
             display: flex;
             align-items: center;

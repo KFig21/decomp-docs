@@ -9,15 +9,6 @@ type Props = { locations?: any[] };
 // Data uses underscores (berry_tree); CSS classes use hyphens (berry-tree).
 const methodKey = (method: string) => method.replace(/_/g, '-');
 
-function MethodBadge({ method }: { method: string }) {
-  return (
-    <span className={`method-badge method-badge--${methodKey(method)}`}>
-      <MethodCircle method={method} size={18} />
-      {METHOD_LABELS[method] ?? method}
-    </span>
-  );
-}
-
 export default function ItemLocations({ locations }: Props) {
   const [activeMethod, setActiveMethod] = useState<string | null>(null);
 
@@ -88,7 +79,10 @@ export default function ItemLocations({ locations }: Props) {
                     </td>
                     <td className="map-name">{loc.map}</td>
                     <td className="center">
-                      <MethodBadge method={loc.method} />
+                      <div className="method-cell">
+                        <MethodCircle method={loc.method} size={18} />
+                        <span className="method-label">{METHOD_LABELS[loc.method] ?? loc.method}</span>
+                      </div>
                     </td>
                     <td className="center qty-cell">
                       {loc.method === 'mart' ? '∞' : loc.quantity}

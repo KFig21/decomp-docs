@@ -1,5 +1,7 @@
 // decomp-docs/src/services/parsers/v2/items/types.ts
 
+import type { ParsedAttack } from '../moves/types';
+
 export type RawIdentifier = string;
 
 /**
@@ -7,10 +9,6 @@ export type RawIdentifier = string;
  * are used (vanilla vs expansion pockets differ slightly).
  */
 export type PocketCategory = 'items' | 'balls' | 'tms' | 'berries' | 'key-items';
-
-export interface ItemLocationRef {
-  mapScript: string;
-}
 
 export interface ParsedItem {
   key: RawIdentifier;
@@ -35,7 +33,10 @@ export interface ParsedItem {
   flingPower?: number;
   secondaryId?: string;
 
-  locations: ItemLocationRef[];
+  /** For TM/HM items — the move this disc teaches */
+  move?: ParsedAttack;
+
+  locations: ItemLocation[];
   wildHolders?: WildHolderRef[];
   isPlaced?: boolean;
   /** True if this item is used as the trigger for at least one EVO_ITEM or EVO_TRADE_ITEM evolution */

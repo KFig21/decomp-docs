@@ -1,0 +1,19 @@
+@use '../../../../../../styles/index.scss' as *;
+
+.mart-section {
+    &__count {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--fadedFont);
+        margin-left: 4px;
+    }
+}
+
+.mart-table {
+    .mart-price {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--successColor);
+        white-space: nowrap;
+    }
+}

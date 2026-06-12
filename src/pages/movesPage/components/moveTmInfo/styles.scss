@@ -43,6 +43,16 @@
     }
   }
 
+  .tm-item-link {
+    font-weight: 700;
+    color: var(--fontColor);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--primaryColor);
+    }
+  }
+
   .map-name {
     font-size: 0.83rem;
     color: var(--fadedFont);

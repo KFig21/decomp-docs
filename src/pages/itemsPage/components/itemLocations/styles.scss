@@ -24,12 +24,6 @@
     }
 }
 
-@mixin method-badge-colors($color) {
-    background-color: color-mix(in srgb, $color, transparent 82%);
-    color: $color;
-    border: 1px solid color-mix(in srgb, $color, transparent 55%);
-}
-
 @mixin method-row-accent($color) {
     border-left: 3px solid color-mix(in srgb, $color, transparent 40%);
 }
@@ -91,24 +85,20 @@
     }
 }
 
-// ── Method badge (table cell) ─────────────────────────────────────────────────
+// ── Method cell (table cell) ──────────────────────────────────────────────────
 
-.method-badge {
-    display: inline-flex;
+.method-cell {
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 3px 10px 3px 4px;
-    border-radius: 6px;
-    white-space: nowrap;
 
-    &--overworld  { @include method-badge-colors(var(--methodOverworld)); }
-    &--hidden     { @include method-badge-colors(var(--methodHidden)); }
-    &--mart       { @include method-badge-colors(var(--methodMart)); }
-    &--npc        { @include method-badge-colors(var(--methodNpc)); }
-    &--berry-tree { @include method-badge-colors(var(--methodBerryTree)); }
-    &--other      { @include method-badge-colors(var(--catGray)); }
+    .method-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--fadedFont);
+        white-space: nowrap;
+    }
 }
 
 // ── Locations table ───────────────────────────────────────────────────────────

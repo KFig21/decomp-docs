@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link } from 'react-router-dom';
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
 import ItemPocketBadge from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
 import './styles.scss';
@@ -23,6 +24,11 @@ export default function ItemHeaderCard({ selected }: Props) {
         <div className="header-top-row">
           <div className="item-name">{selected.name || selected.key}</div>
           {selected.pocketCategory && <ItemPocketBadge pocket={selected.pocketCategory} />}
+          {selected.move && (
+            <Link to={`/moves/${selected.move.key}`} className="tm-move-link">
+              Teaches {selected.move.name}
+            </Link>
+          )}
         </div>
 
         <div className="header-bottom-row">

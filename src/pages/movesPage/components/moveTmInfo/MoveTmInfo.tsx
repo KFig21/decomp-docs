@@ -30,7 +30,9 @@ export default function MoveTmInfo({ tmItem }: Props) {
     <div className="move-card-style move-tm-info">
       <div className="section-header">
         <ItemSprite item={tmItem} size={28} />
-        <span>{isHm ? 'HM' : 'TM'}{tmNum != null ? String(tmNum).padStart(2, '0') : ''} — {tmItem.name}</span>
+        <Link to={`/items/${tmItem.key}`} className="tm-item-link">
+          {isHm ? 'HM' : 'TM'}{tmNum != null ? String(tmNum).padStart(2, '0') : ''} — {tmItem.name}
+        </Link>
       </div>
       <div className="content">
         <div className="tm-meta-row">

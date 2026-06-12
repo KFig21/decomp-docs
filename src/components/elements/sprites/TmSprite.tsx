@@ -9,8 +9,7 @@ function normalizeType(type: string): string {
 }
 
 export default function TmSprite({ type, size = 32 }: Props) {
-  if (!type) return null;
-  const name = normalizeType(type);
+  const name = type ? normalizeType(type) : 'case';
   const src = new URL(`../../../assets/sprites/tms/tm-${name}.png`, import.meta.url).href;
 
   return (

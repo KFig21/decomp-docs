@@ -76,7 +76,21 @@ export default function Breadcrumbs({ currentPage }: Props) {
           isRoot = false;
           id = segments[1];
           if (category === 'pokemon') label = formatReadableName(id.replace('SPECIES_', ''));
-          else if (category === 'items') label = formatReadableName(id.replace('ITEM_', ''));
+          else if (category === 'items') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const item = (items as any)[id];
+            if (item?.pocketCategory === 'tms') {
+              const prefix = id.startsWith('ITEM_HM') ? 'HM' : 'TM';
+              const keyNumMatch = id.match(/ITEM_(?:TM|HM)(\d+)/);
+              const nameNumMatch = item.name?.match(/^(?:TM|HM)(\d+)$/i);
+              const rawNum = (keyNumMatch ?? nameNumMatch)?.[1];
+              const num = rawNum ? String(Number(rawNum)).padStart(2, '0') : '';
+              const moveName = item.move?.name ?? formatReadableName(id.replace(/^ITEM_(?:TM|HM)\d*_?/, ''));
+              label = num ? `${prefix}${num} - ${moveName}` : `${prefix} - ${moveName}`;
+            } else {
+              label = item?.name ?? formatReadableName(id.replace('ITEM_', ''));
+            }
+          }
           else if (category === 'abilities') label = formatReadableName(id.replace('ABILITY_', ''));
           else if (category === 'moves') label = formatReadableName(id.replace('MOVE_', ''));
           else if (category === 'types') label = id.charAt(0).toUpperCase() + id.slice(1);
@@ -96,7 +110,7 @@ export default function Breadcrumbs({ currentPage }: Props) {
       if (newHistory.length > 100) newHistory.shift();
       return newHistory;
     });
-  }, [location.pathname, trainers]);
+  }, [location.pathname, trainers, items]);
 
   useEffect(() => {
     if (scrollContainerRef.current) {

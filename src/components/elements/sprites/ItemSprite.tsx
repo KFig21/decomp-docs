@@ -1,4 +1,5 @@
 import type { ParsedItem } from '../../../services/parsers/v2/items/types';
+import TmSprite from './TmSprite';
 
 type Props = {
   item: ParsedItem;
@@ -6,6 +7,10 @@ type Props = {
 };
 
 export default function ItemSprite({ item, size = 32 }: Props) {
+  if (item.pocketCategory === 'tms') {
+    return <TmSprite type={item.move?.type ?? ''} size={size} />;
+  }
+
   const safeName = item.key
     .toLowerCase()
     .replace('item_', '')
