@@ -3,17 +3,16 @@
 import { useRef, useState, useEffect } from 'react';
 import type { ActiveFilters, SortOption } from '../../ItemsPage';
 import { SORT_OPTIONS } from '../../ItemsPage';
+import { PocketCircle, POCKET_COLORS, POCKET_DISPLAY_LABELS } from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
 import './styles.scss';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-export const POCKET_OPTIONS = [
-  { value: 'items', label: 'Items' },
-  { value: 'balls', label: 'Balls' },
-  { value: 'tms', label: 'TMs & HMs' },
-  { value: 'berries', label: 'Berries' },
-  { value: 'key-items', label: 'Key Items' },
-];
+export const POCKET_OPTIONS = Object.entries(POCKET_DISPLAY_LABELS).map(([value, label]) => ({
+  value,
+  label,
+  icon: value,
+}));
 
 export const METHOD_OPTIONS = [
   { value: 'overworld', label: 'Overworld', icon: '🌿' },
@@ -31,19 +30,24 @@ export const METHOD_COLORS: Record<string, string> = {
   berry_tree: '#d43a6e',
 };
 
-export const POCKET_COLOR = '#6b7af5';
-
 // ── Dropdown ──────────────────────────────────────────────────────────────────
+
+interface DropdownOption {
+  value: string;
+  label: string;
+  icon?: string | React.ReactNode;
+}
 
 interface DropdownProps {
   label: string;
-  options: { value: string; label: string; icon?: string }[];
+  options: DropdownOption[];
   selected: string[];
   onToggle: (value: string) => void;
   pillColor?: (value: string) => string;
+  renderIcon?: (opt: DropdownOption) => React.ReactNode;
 }
 
-function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: DropdownProps) {
+function MultiSelectDropdown({ label, options, selected, onToggle, pillColor, renderIcon }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -70,6 +74,7 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: 
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             const color = pillColor?.(opt.value);
+            const icon = renderIcon ? renderIcon(opt) : (typeof opt.icon === 'string' ? opt.icon : opt.icon);
             return (
               <button
                 key={opt.value}
@@ -78,7 +83,7 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: 
                 onClick={() => onToggle(opt.value)}
               >
                 <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
-                {opt.icon && <span className="ms-dropdown__icon">{opt.icon}</span>}
+                {icon && <span className="ms-dropdown__icon">{icon}</span>}
                 <span>{opt.label}</span>
               </button>
             );
@@ -205,6 +210,7 @@ export default function ItemFilterBar({
     searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0 || evolutionOnly;
   const pocketLabel = (v: string) => POCKET_OPTIONS.find((o) => o.value === v)?.label ?? v;
   const methodOpt = (v: string) => METHOD_OPTIONS.find((o) => o.value === v);
+  const pocketColor = (v: string) => POCKET_COLORS[v] ?? '#6b7af5';
 
   return (
     <div className="items-filter-bar">
@@ -221,7 +227,8 @@ export default function ItemFilterBar({
           options={POCKET_OPTIONS}
           selected={activeFilters.pockets}
           onToggle={togglePocket}
-          pillColor={() => POCKET_COLOR}
+          pillColor={pocketColor}
+          renderIcon={(opt) => <PocketCircle pocket={opt.value} size={18} />}
         />
         <MultiSelectDropdown
           label="Method"
@@ -255,7 +262,7 @@ export default function ItemFilterBar({
             <FilterPill
               key={v}
               label={pocketLabel(v)}
-              color={POCKET_COLOR}
+              color={pocketColor(v)}
               onRemove={() => removeFilter('pockets', v)}
             />
           ))}

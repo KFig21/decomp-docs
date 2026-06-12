@@ -1,0 +1,35 @@
+.pocket-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--pocket-circle-size, 20px);
+    height: var(--pocket-circle-size, 20px);
+    border-radius: 50%;
+    background: var(--pocket-color);
+    color: #fff;
+    flex-shrink: 0;
+
+    svg {
+        display: block;
+    }
+}
+
+.item-pocket-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px 3px 4px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--pocket-color), transparent 84%);
+    border: 1px solid color-mix(in srgb, var(--pocket-color), transparent 60%);
+    white-space: nowrap;
+
+    &__label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1;
+        color: var(--pocket-color);
+    }
+}

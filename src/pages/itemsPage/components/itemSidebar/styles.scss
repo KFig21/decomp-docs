@@ -41,12 +41,22 @@
 
         .item-info {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            gap: 10px;
+            min-width: 0;
 
             .name {
                 font-weight: 600;
                 font-size: 1rem;
                 text-transform: capitalize;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .pocket-indicator {
+                display: flex;
+                align-items: center;
             }
         }
     }

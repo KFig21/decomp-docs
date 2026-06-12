@@ -7,9 +7,10 @@ type Props = {
   speciesKey?: string;
   /** Pixel size for the bounding box. Defaults to 64. */
   size?: number;
+  shiny?: boolean;
 };
 
-export default function PokemonSprite({ name, speciesKey, size = 64 }: Props) {
+export default function PokemonSprite({ name, speciesKey, size = 64, shiny = false }: Props) {
   const [imgError, setImgError] = useState(false);
 
   // 1. Start with the highly reliable base slug (e.g., "Pikachu" -> "pikachu", "Ho-Oh" -> "hooh")
@@ -41,13 +42,13 @@ export default function PokemonSprite({ name, speciesKey, size = 64 }: Props) {
     }
   }
 
-  // Reset the error state whenever the intended slug changes
+  // Reset the error state whenever the intended slug or shiny state changes
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setImgError(false);
-  }, [slug]);
+  }, [slug, shiny]);
 
-  const spriteUrl = `https://play.pokemonshowdown.com/sprites/dex/${slug}.png`;
+  const spriteUrl = `https://play.pokemonshowdown.com/sprites/${shiny ? 'dex-shiny' : 'dex'}/${slug}.png`;
 
   return (
     <div

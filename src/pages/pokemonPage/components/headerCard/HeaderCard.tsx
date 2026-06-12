@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export default function HeaderCard({ activeVariant }: Props) {
+  const [isShiny, setIsShiny] = useState(false);
+
   const uniqueTypes = Array.from(new Set(activeVariant.types ?? [])).filter(Boolean) as string[];
   const dexEntries =
     activeVariant.dexNums && Object.keys(activeVariant.dexNums).length > 0
@@ -21,7 +24,19 @@ export default function HeaderCard({ activeVariant }: Props) {
   return (
     <div className="header-card pokemon-card-style">
       <div className="sprite-showcase">
-        <PokemonSprite name={activeVariant.name} speciesKey={activeVariant.key} size={160} />
+        <PokemonSprite
+          name={activeVariant.name}
+          speciesKey={activeVariant.key}
+          size={160}
+          shiny={isShiny}
+        />
+        <button
+          className={`shiny-toggle${isShiny ? ' shiny-toggle--active' : ''}`}
+          onClick={() => setIsShiny((v) => !v)}
+          title={isShiny ? 'Show normal sprite' : 'Show shiny sprite'}
+        >
+          ✦
+        </button>
       </div>
       <div className="header-info">
         <div className="header-info-left">

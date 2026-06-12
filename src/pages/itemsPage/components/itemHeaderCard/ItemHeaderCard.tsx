@@ -1,25 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ItemSprite from '../../../../components/elements/sprites/ItemSprite';
+import ItemPocketBadge from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
 import './styles.scss';
 
 type Props = {
   selected: any;
 };
 
-const POCKET_LABELS: Record<string, string> = {
-  items: 'Items Pocket',
-  balls: 'Poké Balls',
-  tms: 'TMs & HMs',
-  berries: 'Berries',
-  'key-items': 'Key Items',
-};
-
 export default function ItemHeaderCard({ selected }: Props) {
   const buyPrice = selected.price;
   const sellPrice = selected.sellPrice;
-  const pocketLabel = selected.pocketCategory
-    ? (POCKET_LABELS[selected.pocketCategory] ?? selected.pocketCategory)
-    : null;
 
   return (
     <div className="item-header-card item-card-style">
@@ -32,7 +22,7 @@ export default function ItemHeaderCard({ selected }: Props) {
       <div className="header-info">
         <div className="header-top-row">
           <div className="item-name">{selected.name || selected.key}</div>
-          {pocketLabel && <span className="pocket-badge">{pocketLabel}</span>}
+          {selected.pocketCategory && <ItemPocketBadge pocket={selected.pocketCategory} />}
         </div>
 
         <div className="header-bottom-row">

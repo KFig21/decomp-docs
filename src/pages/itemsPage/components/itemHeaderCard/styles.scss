@@ -56,19 +56,6 @@
             text-transform: capitalize;
         }
 
-        .pocket-badge {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: color-mix(in srgb, var(--primaryColor), transparent 80%);
-            color: var(--primaryColor);
-            border: 1px solid color-mix(in srgb, var(--primaryColor), transparent 55%);
-            white-space: nowrap;
-        }
-
         .price-row {
             display: flex;
             align-items: center;
