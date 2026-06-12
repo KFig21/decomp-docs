@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { getOffensive, getDefensive } from '../typeChart';
 import { useData } from '../../../../contexts/dataContext';
 import TypeHeaderCard from '../typeHeaderCard/TypeHeaderCard';
 import TypeMatchups from '../typeMatchups/TypeMatchups';
 import TypePokemonList from '../typePokemonList/TypePokemonList';
 import TypeMovesList from '../typeMovesList/TypeMovesList';
+import TypeTopBar, { TOPBAR_HEIGHT, SECTIONS, type SectionId } from '../typeTopBar/TypeTopBar';
 import './styles.scss';
 
 type Props = {
@@ -19,6 +20,51 @@ type Props = {
 export default function TypeDetailPage({ typeId, pokemonArray, movesArray, primaryOnly, showUnreleased }: Props) {
   const { typeChart } = useData();
   const typeLower = typeId.toLowerCase();
+  const paneRef = useRef<HTMLDivElement>(null);
+  const [activeSection, setActiveSection] = useState<SectionId>('type-overview');
+
+  // Reset scroll and active section when type changes
+  useEffect(() => {
+    setActiveSection('type-overview');
+    const area = paneRef.current?.closest('.types-detail-area') as HTMLElement | null;
+    if (area) area.scrollTop = 0;
+  }, [typeId]);
+
+  // Track which section is in view via scroll
+  useEffect(() => {
+    const area = paneRef.current?.closest('.types-detail-area') as HTMLElement | null;
+    if (!area) return;
+
+    const handleScroll = () => {
+      const areaRect = area.getBoundingClientRect();
+      let current: SectionId = SECTIONS[0].id;
+      for (const { id: sId } of SECTIONS) {
+        const el = document.getElementById(sId);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top - areaRect.top <= TOPBAR_HEIGHT + 16) {
+          current = sId;
+        }
+      }
+      setActiveSection(current);
+    };
+
+    area.addEventListener('scroll', handleScroll, { passive: true });
+    return () => area.removeEventListener('scroll', handleScroll);
+  }, [typeId]);
+
+  const scrollToSection = (sectionId: SectionId) => {
+    setActiveSection(sectionId);
+    const area = paneRef.current?.closest('.types-detail-area') as HTMLElement | null;
+    const el = document.getElementById(sectionId);
+    if (!area || !el) return;
+    const offset = el.getBoundingClientRect().top - area.getBoundingClientRect().top - TOPBAR_HEIGHT;
+    area.scrollBy({ top: offset, behavior: 'smooth' });
+  };
+
+  const scrollToTop = () => {
+    const area = paneRef.current?.closest('.types-detail-area') as HTMLElement | null;
+    area?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const offensive = useMemo(
     () => typeChart ? getOffensive(typeLower, typeChart) : { superEffective: [], notVeryEffective: [], noEffect: [] },
@@ -90,11 +136,28 @@ export default function TypeDetailPage({ typeId, pokemonArray, movesArray, prima
   );
 
   return (
-    <div className="type-detail-page">
-      <TypeHeaderCard type={typeLower} pokemonCount={typePokemon.length} moveCount={typeMoves.length} />
-      <TypeMatchups offensive={offensive} defensive={defensive} />
-      <TypePokemonList pokemon={typePokemon} unreleasedKeys={unreleasedPokemonKeys} />
-      <TypeMovesList moves={typeMoves} unreleasedKeys={unreleasedMoveKeys} />
-    </div>
+    <>
+      <TypeTopBar
+        type={typeLower}
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        scrollToTop={scrollToTop}
+      />
+
+      <div className="type-detail-page" ref={paneRef}>
+        <div id="type-overview">
+          <TypeHeaderCard type={typeLower} pokemonCount={typePokemon.length} moveCount={typeMoves.length} />
+        </div>
+        <div id="type-matchups">
+          <TypeMatchups offensive={offensive} defensive={defensive} />
+        </div>
+        <div id="type-pokemon">
+          <TypePokemonList pokemon={typePokemon} unreleasedKeys={unreleasedPokemonKeys} />
+        </div>
+        <div id="type-moves">
+          <TypeMovesList moves={typeMoves} unreleasedKeys={unreleasedMoveKeys} />
+        </div>
+      </div>
+    </>
   );
 }
