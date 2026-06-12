@@ -87,6 +87,8 @@ export function parseTrainersFile(
             currentMon.level = parseInt(line.split(':')[1].trim());
           } else if (line.startsWith('IVs:')) {
             currentMon.iv = parseIVs(line);
+          } else if (line.startsWith('Ability:')) {
+            currentMon.abilityName = line.split(':')[1].trim();
           } else if (line.startsWith('- ')) {
             hasCustomMoves = true;
             const moveStr = line.replace('- ', '').trim();
@@ -224,8 +226,19 @@ function finalizeMon(monDraft: any, pokemon: Record<string, any>): ParsedTrainer
     monDraft.moves = validMoves.slice(-4);
   }
 
+  // Resolve ability: match stated name against species abilities, else default to primary
+  let ability = species.abilities?.[0] ?? null;
+  if (monDraft.abilityName) {
+    const normalized = monDraft.abilityName.toLowerCase();
+    const match = (species.abilities ?? []).find(
+      (ab: any) => ab?.name?.toLowerCase() === normalized,
+    );
+    if (match) ability = match;
+  }
+
   return {
     species,
+    ability,
     level: monDraft.level,
     iv: monDraft.iv,
     heldItem: monDraft.heldItem,

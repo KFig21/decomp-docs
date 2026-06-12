@@ -46,11 +46,18 @@
             color: var(--fontColor);
         }
 
+        .header-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+            width: 100%;
+        }
+
         .dex-nums-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 6px;
 
             &__chip {
                 display: inline-flex;
@@ -106,32 +113,9 @@
             }
         }
 
-        // NEW DROPDOWN STYLES
-        .variant-selector {
-            margin-left: auto; // Pushes the dropdown to the far right
-
-            select {
-                background-color: color-mix(in srgb, var(--backgroundColor), white 5%);
-                color: var(--fontColor);
-                border: 1px solid var(--containerBorderColor);
-                padding: 6px 12px;
-                border-radius: 4px;
-                font-weight: 600;
-                font-size: 0.9rem;
-                cursor: pointer;
-                outline: none;
-                transition: border-color 0.2s;
-
-                &:focus,
-                &:hover {
-                    border-color: var(--primaryColor);
-                }
-            }
-        }
-
         .pokedex-entry {
             display: flex;
-            margin: 12px 0 0 0; // Adjusted margin to space away from the header row
+            margin: 8px 0 0 0;
             color: var(--fontColor);
             font-size: 0.9rem;
             font-style: italic;
@@ -141,4 +125,61 @@
             border-radius: 4px;
         }
     }
+}
+
+// ── Variant family ────────────────────────────────────────────────────────────
+.variant-family__count {
+    font-size: 0.78rem;
+    color: var(--fadedFont);
+    font-weight: 500;
+}
+
+.variant-family {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+// ── Variant cards ─────────────────────────────────────────────────────────────
+.variant-family__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--containerBorderColor);
+    background: var(--backgroundColor);
+    color: var(--fontColor);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+    min-width: 72px;
+
+    &:hover {
+        background: color-mix(in srgb, var(--primaryColor), transparent 92%);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 55%);
+    }
+
+    &--active {
+        background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+        border-color: color-mix(in srgb, var(--primaryColor), transparent 40%);
+
+        .variant-family__label {
+            color: var(--primaryColor);
+            font-weight: 700;
+        }
+    }
+}
+
+.variant-family__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+    color: var(--fadedFont);
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useData } from '../../../../contexts/dataContext';
 import HeaderCard from '../headerCard/HeaderCard';
+import VariantFamily from '../headerCard/VariantFamily';
 import EvolutionFamily from '../evolutionFamily/EvolutionFamily';
 import BaseStats from '../baseStats/BaseStats';
 import Learnset from '../learnset/Learnset';
@@ -131,12 +132,15 @@ export default function PokemonDetailPage() {
       {/* ── Detail pane ──────────────────────────────────────────────────────── */}
       <div className="pokemon-detail-pane" ref={paneRef}>
         <div id="poke-overview">
-          <HeaderCard
+          <HeaderCard activeVariant={activeVariant} />
+        </div>
+        {baseSelected.variants?.length > 0 && (
+          <VariantFamily
             baseSelected={baseSelected}
             activeVariant={activeVariant}
             onVariantChange={setActiveVariant}
           />
-        </div>
+        )}
         <div id="poke-evolution">
           <EvolutionFamily selected={activeVariant} />
         </div>

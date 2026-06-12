@@ -6,30 +6,17 @@ import { dexTypeLabel } from '../pokemonFilterBar/PokemonFilterBar';
 import './styles.scss';
 
 type Props = {
-  baseSelected: any;
   activeVariant: any;
-  onVariantChange: (variant: any) => void;
 };
 
-export default function HeaderCard({ baseSelected, activeVariant, onVariantChange }: Props) {
+export default function HeaderCard({ activeVariant }: Props) {
   const uniqueTypes = Array.from(new Set(activeVariant.types ?? [])).filter(Boolean) as string[];
-  const hasVariants = baseSelected.variants && baseSelected.variants.length > 0;
-
-  // Helper to format raw constant names nicely (e.g., "SPECIES_PIKACHU_ALOLA" -> "Alola")
-  const formatVariantName = (key: string, baseKey: string) => {
-    if (key === baseKey) return 'Base Form';
-    return key.replace(`${baseKey}_`, '').replace(/_/g, ' ');
-  };
-
-  const handleVariantSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedKey = e.target.value;
-    if (selectedKey === baseSelected.key) {
-      onVariantChange(baseSelected);
-    } else {
-      const found = baseSelected.variants.find((v: any) => v.key === selectedKey);
-      if (found) onVariantChange(found);
-    }
-  };
+  const dexEntries =
+    activeVariant.dexNums && Object.keys(activeVariant.dexNums).length > 0
+      ? Object.entries(activeVariant.dexNums as Record<string, number>)
+      : typeof activeVariant.natDexNum === 'number'
+        ? [['NATIONAL_DEX', activeVariant.natDexNum] as [string, number]]
+        : [];
 
   return (
     <div className="header-card pokemon-card-style">
@@ -39,7 +26,6 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
       <div className="header-info">
         <div className="header-info-left">
           <div className="pokemon-name">{activeVariant.name}</div>
-
           <div className="pokemon-types">
             {uniqueTypes.map((type) => (
               <TypeBadge key={type} type={type} />
@@ -60,29 +46,10 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
                   ))
               : 'None'}
           </div>
-
-          {hasVariants && (
-            <div className="variant-selector">
-              <select value={activeVariant.key} onChange={handleVariantSelect}>
-                <option value={baseSelected.key}>Base Form</option>
-                {baseSelected.variants.map((v: any) => (
-                  <option key={v.key} value={v.key}>
-                    {formatVariantName(v.key, baseSelected.key)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
         </div>
 
-        {(() => {
-          const dexEntries =
-            activeVariant.dexNums && Object.keys(activeVariant.dexNums).length > 0
-              ? Object.entries(activeVariant.dexNums as Record<string, number>)
-              : typeof activeVariant.natDexNum === 'number'
-                ? [['NATIONAL_DEX', activeVariant.natDexNum] as [string, number]]
-                : [];
-          return dexEntries.length > 0 ? (
+        {dexEntries.length > 0 && (
+          <div className="header-meta-row">
             <div className="dex-nums-row">
               {dexEntries.map(([dexType, num]) => (
                 <span key={dexType} className="dex-nums-row__chip">
@@ -91,8 +58,8 @@ export default function HeaderCard({ baseSelected, activeVariant, onVariantChang
                 </span>
               ))}
             </div>
-          ) : null;
-        })()}
+          </div>
+        )}
 
         {activeVariant.pokedexEntry && (
           <p className="pokedex-entry">"{activeVariant.pokedexEntry}"</p>

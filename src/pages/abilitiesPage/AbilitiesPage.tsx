@@ -7,6 +7,7 @@ import AbilityFilterBar, {
   type AbilitySortOption,
 } from './components/abilityFilterBar/AbilityFilterBar';
 import AbilityDetailPage from './components/abilityDetailPage/AbilityDetailPage';
+import { isThreatAbility } from '../../constants/threatAbilities';
 import './styles.scss';
 
 function sortAbilities(
@@ -36,6 +37,8 @@ export default function AbilitiesPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<AbilitySortOption>('alpha-asc');
+  const [showUnreleased, setShowUnreleased] = useState(false);
+  const [showThreatAbilitiesOnly, setShowThreatAbilitiesOnly] = useState(false);
 
   const abilitiesArray = useMemo(() => Object.values(abilities || {}) as any[], [abilities]);
   const pokemonArray = useMemo(() => Object.values(pokemon || {}) as any[], [pokemon]);
@@ -56,17 +59,34 @@ export default function AbilitiesPage() {
     return counts;
   }, [pokemonArray]);
 
+  // Count for ALL Pokémon (including unreleased)
+  const allPokemonCountByAbility = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const mon of pokemonArray) {
+      const seen = new Set<string>();
+      for (const ab of mon.abilities ?? []) {
+        if (ab?.key && !seen.has(ab.key)) {
+          seen.add(ab.key);
+          counts[ab.key] = (counts[ab.key] ?? 0) + 1;
+        }
+      }
+    }
+    return counts;
+  }, [pokemonArray]);
+
+  const activeCountByAbility = showUnreleased ? allPokemonCountByAbility : pokemonCountByAbility;
+
   const filteredAbilities = useMemo(() => {
     const filtered = abilitiesArray.filter((ab) => {
       if (ab.key === 'ABILITY_NONE') return false;
       if (!ab.name) return false;
-      // Only show abilities at least one seen Pokémon has
-      if ((pokemonCountByAbility[ab.key] ?? 0) === 0) return false;
+      if ((activeCountByAbility[ab.key] ?? 0) === 0) return false;
       if (searchTerm && !ab.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      if (showThreatAbilitiesOnly && !isThreatAbility(ab.key)) return false;
       return true;
     });
-    return sortAbilities(filtered, sortBy, pokemonCountByAbility);
-  }, [abilitiesArray, searchTerm, sortBy, pokemonCountByAbility]);
+    return sortAbilities(filtered, sortBy, activeCountByAbility);
+  }, [abilitiesArray, searchTerm, sortBy, activeCountByAbility, showThreatAbilitiesOnly]);
 
   useEffect(() => {
     if (!id && filteredAbilities.length > 0) {
@@ -88,16 +108,23 @@ export default function AbilitiesPage() {
         sortBy={sortBy}
         setSortBy={setSortBy}
         totalCount={filteredAbilities.length}
+        showUnreleased={showUnreleased}
+        setShowUnreleased={setShowUnreleased}
+        showThreatAbilitiesOnly={showThreatAbilitiesOnly}
+        setShowThreatAbilitiesOnly={setShowThreatAbilitiesOnly}
       />
       <div className="abilities-page-content">
         <AbilitySidebar
           filteredAbilities={filteredAbilities}
           activeId={id}
-          pokemonCountByAbility={pokemonCountByAbility}
+          pokemonCountByAbility={activeCountByAbility}
         />
         <div className="abilities-detail-area">
           {id ? (
-            <AbilityDetailPage pokemonArray={pokemonArray} />
+            <AbilityDetailPage
+              pokemonArray={pokemonArray}
+              showUnreleased={showUnreleased}
+            />
           ) : (
             <div className="empty-selection">
               <h2>Select an Ability</h2>

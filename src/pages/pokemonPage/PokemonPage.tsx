@@ -262,13 +262,16 @@ export default function PokemonPage() {
     if (id && filteredPokemon.length > 0 && !filteredPokemon.find((p) => p.key === id)) {
       const idJustChanged = prevIdRef.current !== id;
       if (idJustChanged) {
-        const existsInData = pokemonArray.some((p) => p.key === id);
-        if (existsInData) {
+        const targetMon = pokemonArray.find((p) => p.key === id);
+        if (targetMon) {
           setSearchTerm('');
           setActiveFilters({ types1: [], types2: [], encounters: [], threatMoves: [] });
           setMinBst('');
           setMaxBst('');
           setMoveFilter('');
+          if (!targetMon.isSeen && !targetMon.isObtainable) {
+            setShowUnreleased(true);
+          }
         } else {
           navigate(`/pokemon/${filteredPokemon[0].key}`, { replace: true });
         }

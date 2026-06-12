@@ -1,3 +1,4 @@
+import type { ParsedAbility } from '../abilities';
 import type { ParsedItem } from '../items/types';
 import type { ParsedAttack } from '../moves/types';
 import type { ParsedNature } from '../natures/types';
@@ -38,6 +39,7 @@ export interface ParsedTrainerVariant {
 
 export interface ParsedTrainerPokemon {
   species: ParsedPokemon;
+  ability: ParsedAbility | null; // explicit if stated in .party file, else species primary
   level: number;
   iv: number;
   heldItem?: ParsedItem;

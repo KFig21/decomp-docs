@@ -1,0 +1,98 @@
+@use '../../../../styles/index.scss' as *;
+@use '../../../../styles/colors.scss' as *;
+
+.ability-trainers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 16px;
+
+    .trainer-usage-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        overflow-x: hidden;
+
+        .trainer-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .trainer-location-info {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                color: var(--fadedFont);
+                font-size: 0.85rem;
+                background-color: var(--backgroundColor);
+                border: 1px solid var(--containerBorderColor);
+                border-bottom: none;
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+                padding: 5px 14px;
+
+                .location-name {
+                    font-weight: 700;
+                    color: var(--primaryColor);
+                    font-size: 0.88rem;
+                    text-decoration: none;
+                    transition: opacity 0.15s;
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+
+                .map-name {
+                    font-weight: 500;
+                    color: var(--fadedFont);
+                    font-size: 0.82rem;
+                }
+            }
+        }
+
+        .trainer-party-container {
+            border-radius: 12px;
+            border-top-left-radius: 0px;
+            display: flex;
+            flex-direction: row;
+            background-color: var(--containerBgColor);
+            border: 1px solid var(--containerBorderColor);
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+
+            .trainer-party-full {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 10px;
+                flex: 1;
+                min-width: 0;
+
+                .trainer-party-left {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .loc-party-groups {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    flex: 1;
+                    min-width: 0;
+                }
+
+                .loc-party-group {
+                    display: grid;
+                    grid-template-columns: repeat(3, 150px);
+                    gap: 10px;
+                    flex: 1 1 470px;
+                }
+            }
+        }
+    }
+}
