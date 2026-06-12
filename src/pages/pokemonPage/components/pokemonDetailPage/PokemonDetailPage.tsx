@@ -12,24 +12,8 @@ import WildLocations from '../wildLocations/WildLocations';
 import TrainersBlock from '../trainersBlock/TrainersBlock';
 import PokemonHeldItems from '../pokemonHeldItems/PokemonHeldItems';
 import JsonDebug from '../jsonDebug/JsonDebug';
-import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
-import TypeBadge from '../../../../components/elements/typeBadge/TypeBadge';
+import PokemonTopBar, { TOPBAR_HEIGHT, SECTIONS, type SectionId } from '../pokemonTopBar/PokemonTopBar';
 import './styles.scss';
-
-const TOPBAR_HEIGHT = 52;
-
-const SECTIONS = [
-  { id: 'poke-overview',   label: 'Overview' },
-  { id: 'poke-evolution',  label: 'Evolution' },
-  { id: 'poke-stats',      label: 'Stats' },
-  { id: 'poke-held-items', label: 'Held Items' },
-  { id: 'poke-moves',      label: 'Moves' },
-  { id: 'poke-tmhm',       label: 'TM / Tutor' },
-  { id: 'poke-locations',  label: 'Locations' },
-  { id: 'poke-trainers',   label: 'Trainers' },
-] as const;
-
-type SectionId = (typeof SECTIONS)[number]['id'];
 
 export default function PokemonDetailPage() {
   const { pokemon } = useData();
@@ -99,35 +83,12 @@ export default function PokemonDetailPage() {
   return (
     <>
       {/* ── Sticky top bar ───────────────────────────────────────────────────── */}
-      <div className="pokemon-detail-topbar">
-        <div className="pokemon-detail-topbar__identity" onClick={scrollToTop}>
-          <PokemonSprite name={activeVariant.name} size={38} />
-          <span className="pokemon-detail-topbar__name">{activeVariant.name}</span>
-          {activeVariant.types && (
-            <div className="pokemon-detail-topbar__types">
-              {(activeVariant.types as string[]).filter(Boolean).map((t: string) => (
-                <TypeBadge key={t} type={t} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <nav className="pokemon-detail-topbar__nav">
-          {SECTIONS.map(({ id: sId, label }) => (
-            <button
-              key={sId}
-              className={`poke-nav-link ${activeSection === sId ? 'poke-nav-link--active' : ''}`}
-              onClick={() => sId === 'poke-overview' ? scrollToTop() : scrollToSection(sId)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        <button className="poke-back-to-top" onClick={scrollToTop} title="Back to top">
-          ↑ Top
-        </button>
-      </div>
+      <PokemonTopBar
+        activeVariant={activeVariant}
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        scrollToTop={scrollToTop}
+      />
 
       {/* ── Detail pane ──────────────────────────────────────────────────────── */}
       <div className="pokemon-detail-pane" ref={paneRef}>
