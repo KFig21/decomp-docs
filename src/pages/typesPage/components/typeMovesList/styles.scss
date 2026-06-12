@@ -1,5 +1,16 @@
 @use '../../../../styles/colors.scss' as *;
 
+// ── Filter controls row ───────────────────────────────────────────────────────
+.type-moves-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--containerBorderColor);
+}
+
+// ── Moves table ───────────────────────────────────────────────────────────────
 .type-moves-table {
     width: auto;
     border-collapse: collapse;
