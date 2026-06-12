@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import type { ActiveFilters, SortOption } from '../../ItemsPage';
 import { SORT_OPTIONS } from '../../ItemsPage';
 import { PocketCircle, POCKET_COLORS, POCKET_DISPLAY_LABELS } from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
+import { MethodCircle, METHOD_COLORS, METHOD_LABELS } from '../../../../components/elements/itemMethodIcon/ItemMethodIcon';
 import './styles.scss';
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -14,21 +15,12 @@ export const POCKET_OPTIONS = Object.entries(POCKET_DISPLAY_LABELS).map(([value,
   icon: value,
 }));
 
-export const METHOD_OPTIONS = [
-  { value: 'overworld', label: 'Overworld', icon: '🌿' },
-  { value: 'hidden', label: 'Hidden', icon: '🔍' },
-  { value: 'mart', label: 'Mart', icon: '🛒' },
-  { value: 'npc', label: 'NPC Gift', icon: '🎁' },
-  { value: 'berry_tree', label: 'Berry Tree', icon: '🍒' },
-];
+export const METHOD_OPTIONS = Object.entries(METHOD_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
 
-export const METHOD_COLORS: Record<string, string> = {
-  overworld: '#3baf6a',
-  hidden: '#8a63d2',
-  mart: '#d4862f',
-  npc: '#3a9bd4',
-  berry_tree: '#d43a6e',
-};
+export { METHOD_COLORS };
 
 // ── Dropdown ──────────────────────────────────────────────────────────────────
 
@@ -236,6 +228,7 @@ export default function ItemFilterBar({
           selected={activeFilters.methods}
           onToggle={toggleMethod}
           pillColor={(v) => METHOD_COLORS[v] ?? '#7a8a9a'}
+          renderIcon={(opt) => <MethodCircle method={opt.value} size={18} />}
         />
         <SortDropdown value={sortBy} onChange={setSortBy} />
         <label className="obtainable-toggle">
@@ -271,7 +264,7 @@ export default function ItemFilterBar({
             return (
               <FilterPill
                 key={v}
-                label={opt ? `${opt.icon} ${opt.label}` : v}
+                label={opt ? opt.label : v}
                 color={METHOD_COLORS[v]}
                 onRemove={() => removeFilter('methods', v)}
               />

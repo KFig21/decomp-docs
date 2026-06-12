@@ -31,10 +31,10 @@ $method-colors: (
 .method-chip {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     font-size: 0.72rem;
     font-weight: 600;
-    padding: 4px 11px;
+    padding: 4px 10px 4px 5px;
     border-radius: 999px;
     letter-spacing: 0.02em;
     border: 1px solid transparent;
@@ -83,17 +83,12 @@ $method-colors: (
 .method-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 0.78rem;
     font-weight: 600;
-    padding: 3px 10px;
+    padding: 3px 10px 3px 4px;
     border-radius: 6px;
     white-space: nowrap;
-
-    &__icon {
-        font-size: 0.85rem;
-        line-height: 1;
-    }
 
     @each $name, $var in $method-colors {
         &--#{$name} {

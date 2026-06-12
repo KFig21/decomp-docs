@@ -1,26 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MethodCircle, METHOD_LABELS } from '../../../../components/elements/itemMethodIcon/ItemMethodIcon';
 import './styles.scss';
 
 type Props = { locations?: any[] };
 
 // mod maps the data method key -> CSS class suffix
 // berry_tree (underscore) -> berry-tree (hyphen) to match SCSS map key
-const METHOD_META: Record<string, { label: string; icon: string; mod: string }> = {
-  overworld: { label: 'Overworld', icon: '🌿', mod: 'overworld' },
-  hidden: { label: 'Hidden', icon: '🔍', mod: 'hidden' },
-  mart: { label: 'Mart', icon: '🛒', mod: 'mart' },
-  npc: { label: 'NPC Gift', icon: '🎁', mod: 'npc' },
-  berry_tree: { label: 'Berry Tree', icon: '🍒', mod: 'berry-tree' },
+const METHOD_MOD: Record<string, string> = {
+  overworld: 'overworld',
+  hidden:    'hidden',
+  mart:      'mart',
+  npc:       'npc',
+  berry_tree:'berry-tree',
 };
 
 function MethodBadge({ method }: { method: string }) {
-  const meta = METHOD_META[method] ?? { label: method, icon: '📦', mod: 'other' };
+  const label = METHOD_LABELS[method] ?? method;
+  const mod = METHOD_MOD[method] ?? 'other';
   return (
-    <span className={`method-badge method-badge--${meta.mod}`}>
-      <span className="method-badge__icon">{meta.icon}</span>
-      {meta.label}
+    <span className={`method-badge method-badge--${mod}`}>
+      <MethodCircle method={method} size={18} />
+      {label}
     </span>
   );
 }
@@ -46,16 +48,18 @@ export default function ItemLocations({ locations }: Props) {
         <span>Locations</span>
         <div className="method-summary">
           {Object.entries(methodCounts).map(([method, count]) => {
-            const meta = METHOD_META[method] ?? { label: method, icon: '📦', mod: 'other' };
+            const label = METHOD_LABELS[method] ?? method;
+            const mod = METHOD_MOD[method] ?? 'other';
             const isActive = activeMethod === method;
             return (
               <button
                 key={method}
-                className={`method-chip method-chip--${meta.mod} ${isActive ? 'method-chip--active' : ''}`}
+                className={`method-chip method-chip--${mod} ${isActive ? 'method-chip--active' : ''}`}
                 onClick={() => toggleMethod(method)}
-                title={isActive ? 'Click to show all' : `Filter to ${meta.label} only`}
+                title={isActive ? 'Click to show all' : `Filter to ${label} only`}
               >
-                {meta.icon} {meta.label} ×{count}
+                <MethodCircle method={method} size={16} />
+                {label} ×{count}
               </button>
             );
           })}
@@ -85,7 +89,7 @@ export default function ItemLocations({ locations }: Props) {
             </thead>
             <tbody>
               {displayed.map((loc, i) => {
-                const mod = METHOD_META[loc.method]?.mod ?? 'other';
+                const mod = METHOD_MOD[loc.method] ?? 'other';
                 return (
                   <tr key={i} className={`loc-row loc-row--${mod}`}>
                     <td>
