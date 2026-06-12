@@ -1,215 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { useRef, useState, useEffect } from 'react';
 import type { PokemonActiveFilters } from '../../PokemonPage';
-import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
+import PokemonFilterControls from './PokemonFilterControls';
+import PokemonFilterPills from './PokemonFilterPills';
 import './styles.scss';
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const SORT_OPTIONS = [
-  { value: 'pokedex', label: 'Pokédex #' },
-  { value: 'alpha', label: 'A → Z' },
-  { value: 'bst', label: 'BST (High → Low)' },
-  { value: 'type', label: 'Primary Type' },
-];
-
-/** "NATIONAL_DEX" → "National", "HOENN_DEX" → "Hoenn" */
-export function dexTypeLabel(dexType: string): string {
-  return dexType
-    .replace(/_DEX$/, '')
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ');
-}
-
-export const TYPE_OPTIONS = [
-  'Normal',
-  'Fire',
-  'Water',
-  'Electric',
-  'Grass',
-  'Ice',
-  'Fighting',
-  'Poison',
-  'Ground',
-  'Flying',
-  'Psychic',
-  'Bug',
-  'Rock',
-  'Ghost',
-  'Dragon',
-  'Dark',
-  'Steel',
-  'Fairy',
-];
-
-export const ENCOUNTER_OPTIONS = [
-  { value: 'Land', label: 'Tall Grass', icon: '🌿' },
-  { value: 'Surfing', label: 'Surfing', icon: '🌊' },
-  { value: 'Rock Smash', label: 'Rock Smash', icon: '🪨' },
-  { value: 'Old Rod', label: 'Old Rod', icon: '🎣' },
-  { value: 'Good Rod', label: 'Good Rod', icon: '🎣' },
-  { value: 'Super Rod', label: 'Super Rod', icon: '🎣' },
-  { value: 'Static', label: 'Static / Gift', icon: '⭐' },
-];
-
-// Type colours for pills/badges
-export const TYPE_COLORS: Record<string, string> = {
-  normal: '#a8a878',
-  fire: '#f08030',
-  water: '#6890f0',
-  electric: '#f8d030',
-  grass: '#78c850',
-  ice: '#98d8d8',
-  fighting: '#c03028',
-  poison: '#a040a0',
-  ground: '#e0c068',
-  flying: '#a890f0',
-  psychic: '#f85888',
-  bug: '#a8b820',
-  rock: '#b8a038',
-  ghost: '#705898',
-  dragon: '#7038f8',
-  dark: '#705848',
-  steel: '#b8b8d0',
-  fairy: '#ee99ac',
-};
-
-const ENCOUNTER_COLOR = '#3a9bd4';
-const TYPE1_COLOR = '#e67e22';
-const TYPE2_COLOR = '#8e44ad';
-
-// ── Shared dropdown ───────────────────────────────────────────────────────────
-
-interface MultiDropdownProps {
-  label: string;
-  options: { value: string; label: string; icon?: React.ReactNode; color?: string }[];
-  selected: string[];
-  onToggle: (v: string) => void;
-  accentColor?: string;
-}
-
-function MultiDropdown({ label, options, selected, onToggle, accentColor }: MultiDropdownProps) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-
-  return (
-    <div className={`ms-dropdown ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
-      <button
-        className={`ms-dropdown__trigger ${selected.length > 0 ? 'ms-dropdown__trigger--active' : ''}`}
-        style={
-          selected.length > 0 && accentColor ? ({ '--trigger-color': accentColor } as any) : {}
-        }
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span>{label}</span>
-        {selected.length > 0 && <span className="ms-dropdown__count">{selected.length}</span>}
-        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <div className="ms-dropdown__menu">
-          {options.map((opt) => {
-            const isSelected = selected.includes(opt.value);
-            const color = opt.color ?? accentColor;
-            return (
-              <button
-                key={opt.value}
-                className={`ms-dropdown__option ${isSelected ? 'ms-dropdown__option--selected' : ''}`}
-                style={isSelected && color ? ({ '--opt-color': color } as any) : {}}
-                onClick={() => onToggle(opt.value)}
-              >
-                <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
-                {opt.icon && <span className="ms-dropdown__icon">{opt.icon}</span>}
-                <span>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Single-select sort dropdown
-function SortDropdown({
-  value,
-  onChange,
-  options,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  options: { value: string; label: string }[];
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-
-  const currentLabel = options.find((o) => o.value === value)?.label ?? 'Sort';
-
-  return (
-    <div className={`ms-dropdown ms-dropdown--sort ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
-      <button className="ms-dropdown__trigger" onClick={() => setOpen((v) => !v)}>
-        <span>↕ {currentLabel}</span>
-        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <div className="ms-dropdown__menu">
-          {options.map((opt) => (
-            <button
-              key={opt.value}
-              className={`ms-dropdown__option ${value === opt.value ? 'ms-dropdown__option--selected' : ''}`}
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-              }}
-            >
-              <span className="ms-dropdown__checkbox">{value === opt.value ? '✓' : ''}</span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Filter pill
-function FilterPill({
-  label,
-  color,
-  onRemove,
-}: {
-  label: string;
-  color?: string;
-  onRemove: () => void;
-}) {
-  return (
-    <span className="active-pill" style={color ? ({ '--pill-color': color } as any) : {}}>
-      {label}
-      <button className="active-pill__close" onClick={onRemove}>
-        ×
-      </button>
-    </span>
-  );
-}
-
-// ── PokemonFilterBar ──────────────────────────────────────────────────────────
+// Re-export constants used by other pages (e.g. MoveFilterBar, TypesPage)
+export { TYPE_OPTIONS, TYPE_COLORS, ENCOUNTER_OPTIONS, dexTypeLabel } from './constants';
 
 interface Props {
   searchTerm: string;
@@ -268,16 +64,8 @@ export default function PokemonFilterBar({
       [cat]: prev[cat].includes(v) ? prev[cat].filter((x) => x !== v) : [...prev[cat], v],
     }));
 
-  const typeOptions = TYPE_OPTIONS.map((t) => ({
-    value: t,
-    label: t,
-    color: TYPE_COLORS[t.toLowerCase()],
-    icon: <TypeIconBadge type={t} size={14} />,
-  }));
-
-  const encounterOptions = ENCOUNTER_OPTIONS.map((e) => ({ ...e, color: ENCOUNTER_COLOR }));
-
   const defaultDex = availableDexTypes[0] ?? 'NATIONAL_DEX';
+
   const hasAnyFilter =
     searchTerm ||
     showObtainableOnly ||
@@ -294,186 +82,58 @@ export default function PokemonFilterBar({
 
   return (
     <div className="pokemon-filter-bar">
-      {/* ── Controls row ── */}
-      <div className="filter-bar__controls">
-        <input
-          className="items-search-input"
-          type="text"
-          placeholder="Search Pokémon…"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <PokemonFilterControls
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        activeFilters={activeFilters}
+        onToggleType1={toggle('types1')}
+        onToggleType2={toggle('types2')}
+        onToggleEncounter={toggle('encounters')}
+        showObtainableOnly={showObtainableOnly}
+        setShowObtainableOnly={setShowObtainableOnly}
+        showEvolvesWithItem={showEvolvesWithItem}
+        setShowEvolvesWithItem={setShowEvolvesWithItem}
+        showUnreleased={showUnreleased}
+        setShowUnreleased={setShowUnreleased}
+        minBst={minBst}
+        setMinBst={setMinBst}
+        maxBst={maxBst}
+        setMaxBst={setMaxBst}
+        moveFilter={moveFilter}
+        setMoveFilter={setMoveFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        availableDexTypes={availableDexTypes}
+        selectedDex={selectedDex}
+        setSelectedDex={setSelectedDex}
+      />
 
-        <MultiDropdown
-          label="Type 1"
-          options={typeOptions}
-          selected={activeFilters.types1}
-          onToggle={toggle('types1')}
-          accentColor={TYPE1_COLOR}
-        />
-
-        <MultiDropdown
-          label="Type 2"
-          options={typeOptions}
-          selected={activeFilters.types2}
-          onToggle={toggle('types2')}
-          accentColor={TYPE2_COLOR}
-        />
-
-        <MultiDropdown
-          label="Encounter"
-          options={encounterOptions}
-          selected={activeFilters.encounters}
-          onToggle={toggle('encounters')}
-          accentColor={ENCOUNTER_COLOR}
-        />
-
-        {availableDexTypes.length > 1 && (
-          <div className="dex-selector">
-            <span className="dex-selector__label">Dex</span>
-            {availableDexTypes.map((dexType) => (
-              <button
-                key={dexType}
-                className={`dex-selector__btn ${selectedDex === dexType ? 'dex-selector__btn--active' : ''}`}
-                onClick={() => setSelectedDex(dexType)}
-              >
-                {dexTypeLabel(dexType)}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <SortDropdown value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} />
-
-        {/* BST range */}
-        <div className="bst-range">
-          <span className="bst-range__label">BST</span>
-          <input
-            type="number"
-            placeholder="Min"
-            value={minBst}
-            onChange={(e) => setMinBst(e.target.value)}
-            className="bst-range__input"
-          />
-          <span className="bst-range__sep">–</span>
-          <input
-            type="number"
-            placeholder="Max"
-            value={maxBst}
-            onChange={(e) => setMaxBst(e.target.value)}
-            className="bst-range__input"
-          />
-        </div>
-
-        {/* Move search */}
-        <input
-          className="items-search-input items-search-input--move"
-          type="text"
-          placeholder="Learnable move…"
-          value={moveFilter}
-          onChange={(e) => setMoveFilter(e.target.value)}
-        />
-
-        {/* Obtainable toggle */}
-        <label className="obtainable-toggle">
-          <input
-            type="checkbox"
-            checked={showObtainableOnly}
-            onChange={(e) => setShowObtainableOnly(e.target.checked)}
-          />
-          Obtainable only
-        </label>
-
-        {/* Evolves with item toggle */}
-        <label className="obtainable-toggle">
-          <input
-            type="checkbox"
-            checked={showEvolvesWithItem}
-            onChange={(e) => setShowEvolvesWithItem(e.target.checked)}
-          />
-          Evolves with item
-        </label>
-
-        {/* Show unreleased toggle */}
-        <label className="obtainable-toggle obtainable-toggle--unreleased">
-          <input
-            type="checkbox"
-            checked={showUnreleased}
-            onChange={(e) => setShowUnreleased(e.target.checked)}
-          />
-          Show unreleased
-        </label>
-      </div>
-
-      {/* ── Active pills ── */}
       {hasAnyFilter && (
-        <div className="filter-bar__pills">
-          {hasAnyFilter && (
-            <button className="filter-clear-all" onClick={clearAll}>
-              Clear all
-            </button>
-          )}
-          {searchTerm && (
-            <FilterPill label={`"${searchTerm}"`} onRemove={() => setSearchTerm('')} />
-          )}
-          {showObtainableOnly && (
-            <FilterPill label="Obtainable only" onRemove={() => setShowObtainableOnly(false)} />
-          )}
-          {showEvolvesWithItem && (
-            <FilterPill label="Evolves with item" color="#e67e22" onRemove={() => setShowEvolvesWithItem(false)} />
-          )}
-          {showUnreleased && (
-            <FilterPill label="Show unreleased" color="#888" onRemove={() => setShowUnreleased(false)} />
-          )}
-          {activeFilters.types1.map((v) => (
-            <FilterPill
-              key={`t1-${v}`}
-              label={`Type: ${v}`}
-              color={TYPE_COLORS[v.toLowerCase()] ?? TYPE1_COLOR}
-              onRemove={() => removeFilter('types1', v)}
-            />
-          ))}
-          {activeFilters.types2.map((v) => (
-            <FilterPill
-              key={`t2-${v}`}
-              label={`& Type: ${v}`}
-              color={TYPE2_COLOR}
-              onRemove={() => removeFilter('types2', v)}
-            />
-          ))}
-          {activeFilters.encounters.map((v) => (
-            <FilterPill
-              key={`enc-${v}`}
-              label={ENCOUNTER_OPTIONS.find((e) => e.value === v)?.label ?? v}
-              color={ENCOUNTER_COLOR}
-              onRemove={() => removeFilter('encounters', v)}
-            />
-          ))}
-          {(minBst || maxBst) && (
-            <FilterPill
-              label={`BST ${minBst || '0'} – ${maxBst || '∞'}`}
-              onRemove={() => {
-                setMinBst('');
-                setMaxBst('');
-              }}
-            />
-          )}
-          {moveFilter && (
-            <FilterPill label={`Move: ${moveFilter}`} onRemove={() => setMoveFilter('')} />
-          )}
-          {availableDexTypes.length > 1 && selectedDex !== defaultDex && (
-            <FilterPill
-              label={`Dex: ${dexTypeLabel(selectedDex)}`}
-              onRemove={() => setSelectedDex(defaultDex)}
-            />
-          )}
-          {sortBy !== 'pokedex' && (
-            <FilterPill
-              label={`Sort: ${SORT_OPTIONS.find((o) => o.value === sortBy)?.label}`}
-              onRemove={() => setSortBy('pokedex')}
-            />
-          )}
-        </div>
+        <PokemonFilterPills
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          showObtainableOnly={showObtainableOnly}
+          setShowObtainableOnly={setShowObtainableOnly}
+          showEvolvesWithItem={showEvolvesWithItem}
+          setShowEvolvesWithItem={setShowEvolvesWithItem}
+          showUnreleased={showUnreleased}
+          setShowUnreleased={setShowUnreleased}
+          activeFilters={activeFilters}
+          removeFilter={removeFilter}
+          clearAll={clearAll}
+          minBst={minBst}
+          setMinBst={setMinBst}
+          maxBst={maxBst}
+          setMaxBst={setMaxBst}
+          moveFilter={moveFilter}
+          setMoveFilter={setMoveFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          availableDexTypes={availableDexTypes}
+          selectedDex={selectedDex}
+          defaultDex={defaultDex}
+          setSelectedDex={setSelectedDex}
+        />
       )}
     </div>
   );

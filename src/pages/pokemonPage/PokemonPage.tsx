@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,7 +46,9 @@ export default function PokemonPage() {
     });
     return [
       'NATIONAL_DEX',
-      ...Array.from(types).filter((t) => t !== 'NATIONAL_DEX').sort(),
+      ...Array.from(types)
+        .filter((t) => t !== 'NATIONAL_DEX')
+        .sort(),
     ].filter((t) => types.has(t));
   }, [pokemonArray]);
 
@@ -77,6 +80,7 @@ export default function PokemonPage() {
     return map;
   }, [locations]);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const filteredPokemon = useMemo(() => {
     const result = pokemonArray.filter((mon) => {
       if (mon.name === '??????????') return false;
@@ -185,8 +189,10 @@ export default function PokemonPage() {
     // Sort
     if (sortBy === 'pokedex') {
       result.sort((a, b) => {
-        const aNum = a.dexNums?.[selectedDex] ?? (typeof a.natDexNum === 'number' ? a.natDexNum : 99999);
-        const bNum = b.dexNums?.[selectedDex] ?? (typeof b.natDexNum === 'number' ? b.natDexNum : 99999);
+        const aNum =
+          a.dexNums?.[selectedDex] ?? (typeof a.natDexNum === 'number' ? a.natDexNum : 99999);
+        const bNum =
+          b.dexNums?.[selectedDex] ?? (typeof b.natDexNum === 'number' ? b.natDexNum : 99999);
         return aNum - bNum;
       });
     } else if (sortBy === 'alpha') {

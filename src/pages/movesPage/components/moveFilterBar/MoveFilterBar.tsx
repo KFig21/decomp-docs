@@ -1,6 +1,4 @@
 // decomp-docs/src/pages/movesPage/components/moveFilterBar/MoveFilterBar.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect } from 'react';
 import type { MoveActiveFilters, MoveSortOption } from '../../MovesPage';
 import { MOVE_SORT_OPTIONS } from '../../MovesPage';
 import {
@@ -9,6 +7,9 @@ import {
 } from '../../../pokemonPage/components/pokemonFilterBar/PokemonFilterBar';
 import { CategoryIcon } from '../../../../components/elements/categoryBadge/CategoryBadge';
 import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
+import MultiDropdown from '../../../../components/filterBar/MultiDropdown';
+import SortDropdown from '../../../../components/filterBar/SortDropdown';
+import FilterPill from '../../../../components/filterBar/FilterPill';
 import './styles.scss';
 
 const CATEGORY_OPTIONS = [
@@ -22,132 +23,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   Special: '#6890f0',
   Status: '#a040a0',
 };
-
-// ── Shared dropdown ───────────────────────────────────────────────────────────
-function MultiDropdown({
-  label,
-  options,
-  selected,
-  onToggle,
-  accentColor,
-  maxHeight,
-}: {
-  label: string;
-  options: { value: string; label: string; icon?: React.ReactNode; color?: string }[];
-  selected: string[];
-  onToggle: (v: string) => void;
-  accentColor?: string;
-  maxHeight?: number;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-
-  return (
-    <div className={`ms-dropdown ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
-      <button
-        className={`ms-dropdown__trigger ${selected.length > 0 ? 'ms-dropdown__trigger--active' : ''}`}
-        style={
-          selected.length > 0 && accentColor ? ({ '--trigger-color': accentColor } as any) : {}
-        }
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span>{label}</span>
-        {selected.length > 0 && <span className="ms-dropdown__count">{selected.length}</span>}
-        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <div className="ms-dropdown__menu" style={maxHeight ? { maxHeight } : {}}>
-          {options.map((opt) => {
-            const isSelected = selected.includes(opt.value);
-            const color = opt.color ?? accentColor;
-            return (
-              <button
-                key={opt.value}
-                className={`ms-dropdown__option ${isSelected ? 'ms-dropdown__option--selected' : ''}`}
-                style={isSelected && color ? ({ '--opt-color': color } as any) : {}}
-                onClick={() => onToggle(opt.value)}
-              >
-                <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
-                {opt.icon && <span className="ms-dropdown__icon">{opt.icon}</span>}
-                <span>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SortDropdown({
-  value,
-  onChange,
-}: {
-  value: MoveSortOption;
-  onChange: (v: MoveSortOption) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-  const label = MOVE_SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Sort';
-  return (
-    <div className={`ms-dropdown ms-dropdown--sort ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
-      <button className="ms-dropdown__trigger" onClick={() => setOpen((v) => !v)}>
-        <span>↕ {label}</span>
-        <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <div className="ms-dropdown__menu">
-          {MOVE_SORT_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              className={`ms-dropdown__option ${value === opt.value ? 'ms-dropdown__option--selected' : ''}`}
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-              }}
-            >
-              <span className="ms-dropdown__checkbox">{value === opt.value ? '✓' : ''}</span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function FilterPill({
-  label,
-  color,
-  onRemove,
-}: {
-  label: string;
-  color?: string;
-  onRemove: () => void;
-}) {
-  return (
-    <span className="active-pill" style={color ? ({ '--pill-color': color } as any) : {}}>
-      {label}
-      <button className="active-pill__close" onClick={onRemove}>
-        ×
-      </button>
-    </span>
-  );
-}
 
 // ── MoveFilterBar ─────────────────────────────────────────────────────────────
 interface Props {
@@ -252,9 +127,12 @@ export default function MoveFilterBar({
           maxHeight={280}
         />
 
-        <SortDropdown value={sortBy} onChange={setSortBy} />
+        <SortDropdown
+          value={sortBy}
+          onChange={(v) => setSortBy(v as MoveSortOption)}
+          options={MOVE_SORT_OPTIONS}
+        />
 
-        {/* Power range */}
         <div className="bst-range">
           <span className="bst-range__label">Power</span>
           <input
