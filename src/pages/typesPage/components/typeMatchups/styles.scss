@@ -11,21 +11,10 @@
 }
 
 .type-matchups-card {
-    background: var(--containerBgColor);
-    border: 1px solid var(--containerBorderColor);
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    &__title {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--fadedFont);
-        margin: 0 0 4px 0;
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
     &__empty {

@@ -44,19 +44,23 @@ export default function TypeMatchups({ offensive, defensive }: Props) {
 
   return (
     <div className="type-matchups-grid">
-      <div className="type-matchups-card">
-        <h3 className="type-matchups-card__title">Offensive</h3>
-        <MatchupSection title="Super effective →" types={offensive.superEffective} accent="#3baf6a" />
-        <MatchupSection title="Not very effective →" types={offensive.notVeryEffective} accent="#d4862f" />
-        <MatchupSection title="No effect →" types={offensive.noEffect} accent="#ef4444" />
-        {offensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness against all types.</p>}
+      <div className="type-card-style type-matchups-card">
+        <div className="section-header">Offensive</div>
+        <div className="content">
+          <MatchupSection title="Super effective →" types={offensive.superEffective} accent="#3baf6a" />
+          <MatchupSection title="Not very effective →" types={offensive.notVeryEffective} accent="#d4862f" />
+          <MatchupSection title="No effect →" types={offensive.noEffect} accent="#ef4444" />
+          {offensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness against all types.</p>}
+        </div>
       </div>
-      <div className="type-matchups-card">
-        <h3 className="type-matchups-card__title">Defensive</h3>
-        <MatchupSection title="Weak to ←" types={defensive.weakTo} accent="#ef4444" />
-        <MatchupSection title="Resistant to ←" types={defensive.resistantTo} accent="#3baf6a" />
-        <MatchupSection title="Immune to ←" types={defensive.immuneTo} accent="#6890f0" />
-        {defensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness from all types.</p>}
+      <div className="type-card-style type-matchups-card">
+        <div className="section-header">Defensive</div>
+        <div className="content">
+          <MatchupSection title="Weak to ←" types={defensive.weakTo} accent="#ef4444" />
+          <MatchupSection title="Resistant to ←" types={defensive.resistantTo} accent="#3baf6a" />
+          <MatchupSection title="Immune to ←" types={defensive.immuneTo} accent="#6890f0" />
+          {defensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness from all types.</p>}
+        </div>
       </div>
     </div>
   );

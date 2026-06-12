@@ -10,6 +10,26 @@
     width: 100%;
 }
 
+// ── Shared card shell (matches item-card-style / move-card-style) ─────────────
+.type-card-style {
+    background: var(--containerBgColor);
+    border: 1px solid var(--containerBorderColor);
+    border-radius: 8px;
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        padding: 16px;
+        border-bottom: 1px solid var(--containerBorderColor);
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
+
 // ── Section wrapper (shared by TypePokemonList and TypeMovesList) ──────────────
 .type-section {
     display: flex;

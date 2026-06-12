@@ -13,7 +13,7 @@ export default function TypeHeaderCard({ type, pokemonCount, moveCount }: Props)
   const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
-    <div className="type-header-card" style={{ borderColor: typeColor }}>
+    <div className="type-card-style type-header-card" style={{ borderColor: typeColor }}>
       <TypeIconBadge type={type} size={48} />
       <h1 className="type-header-card__name" style={{ color: typeColor }}>{typeLabel}</h1>
       <div className="type-header-card__counts">
