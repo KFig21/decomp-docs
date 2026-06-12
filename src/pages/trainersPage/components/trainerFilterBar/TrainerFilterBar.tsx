@@ -2,6 +2,11 @@
 import { useRef, useState, useEffect } from 'react';
 import type { TrainerActiveFilters, TrainerSortOption } from '../../TrainersPage';
 import { TRAINER_SORT_OPTIONS } from '../../TrainersPage';
+import {
+  THREAT_MOVE_OPTIONS,
+  THREAT_MOVE_COLOR,
+  THREAT_MOVE_ALL,
+} from '../../../../constants/threatMoves';
 import './styles.scss';
 
 export const BATTLE_TYPE_OPTIONS = [
@@ -9,24 +14,10 @@ export const BATTLE_TYPE_OPTIONS = [
   { value: 'double', label: 'Double Battle' },
 ];
 
-// Normalized value = move name lowercased with spaces/hyphens removed
-export const THREAT_MOVE_OPTIONS = [
-  { value: 'metronome', label: 'Metronome' },
-  { value: 'perishsong', label: 'Perish Song' },
-  { value: 'destinybond', label: 'Destiny Bond' },
-  { value: 'selfdestruct', label: 'Self-Destruct' },
-  { value: 'explosion', label: 'Explosion' },
-  { value: 'counter', label: 'Counter' },
-  { value: 'mirrorcoat', label: 'Mirror Coat' },
-  { value: 'fissure', label: 'Fissure' },
-  { value: 'sheercold', label: 'Sheer Cold' },
-  { value: 'guillotine', label: 'Guillotine' },
-  { value: 'horndrill', label: 'Horn Drill' },
-];
+export { THREAT_MOVE_OPTIONS, THREAT_MOVE_COLOR };
 
 export const CLASS_COLOR = '#6b7af5';
 export const BATTLE_TYPE_COLOR = '#d4862f';
-export const THREAT_MOVE_COLOR = '#c0392b';
 
 // ── Multi-select dropdown ──────────────────────────────────────────────────────
 
@@ -194,12 +185,21 @@ export default function TrainerFilterBar({
   const classOptions = allClasses.map((c) => ({ value: c, label: c }));
 
   const toggleThreatMove = (v: string) =>
-    setActiveFilters((prev) => ({
-      ...prev,
-      threatMoves: prev.threatMoves.includes(v)
-        ? prev.threatMoves.filter((x) => x !== v)
-        : [...prev.threatMoves, v],
-    }));
+    setActiveFilters((prev) => {
+      if (v === THREAT_MOVE_ALL) {
+        return {
+          ...prev,
+          threatMoves: prev.threatMoves.includes(THREAT_MOVE_ALL) ? [] : [THREAT_MOVE_ALL],
+        };
+      }
+      const withoutAll = prev.threatMoves.filter((x) => x !== THREAT_MOVE_ALL);
+      return {
+        ...prev,
+        threatMoves: withoutAll.includes(v)
+          ? withoutAll.filter((x) => x !== v)
+          : [...withoutAll, v],
+      };
+    });
 
   const hasAnyFilter =
     searchTerm ||
@@ -211,7 +211,9 @@ export default function TrainerFilterBar({
     BATTLE_TYPE_OPTIONS.find((o) => o.value === v)?.label ?? v;
 
   const threatMoveLabel = (v: string) =>
-    THREAT_MOVE_OPTIONS.find((o) => o.value === v)?.label ?? v;
+    v === THREAT_MOVE_ALL
+      ? 'Any Threat Move'
+      : (THREAT_MOVE_OPTIONS.find((o) => o.value === v)?.label ?? v);
 
   return (
     <div className="trainers-filter-bar">
@@ -239,7 +241,10 @@ export default function TrainerFilterBar({
         />
         <MultiSelectDropdown
           label="Threat Moves"
-          options={THREAT_MOVE_OPTIONS}
+          options={[
+            { value: THREAT_MOVE_ALL, label: 'Show All' },
+            ...THREAT_MOVE_OPTIONS,
+          ]}
           selected={activeFilters.threatMoves}
           onToggle={toggleThreatMove}
           pillColor={() => THREAT_MOVE_COLOR}

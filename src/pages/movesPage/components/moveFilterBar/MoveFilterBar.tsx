@@ -10,6 +10,7 @@ import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBad
 import MultiDropdown from '../../../../components/filterBar/MultiDropdown';
 import SortDropdown from '../../../../components/filterBar/SortDropdown';
 import FilterPill from '../../../../components/filterBar/FilterPill';
+import { THREAT_MOVE_COLOR } from '../../../../constants/threatMoves';
 import './styles.scss';
 
 const CATEGORY_OPTIONS = [
@@ -36,6 +37,8 @@ interface Props {
   setHasTmOnly: (v: boolean) => void;
   showUnreleased: boolean;
   setShowUnreleased: (v: boolean) => void;
+  showThreatMovesOnly: boolean;
+  setShowThreatMovesOnly: (v: boolean) => void;
   minPower: string;
   setMinPower: (v: string) => void;
   maxPower: string;
@@ -56,6 +59,8 @@ export default function MoveFilterBar({
   setHasTmOnly,
   showUnreleased,
   setShowUnreleased,
+  showThreatMovesOnly,
+  setShowThreatMovesOnly,
   minPower,
   setMinPower,
   maxPower,
@@ -67,7 +72,9 @@ export default function MoveFilterBar({
   const toggle = (cat: keyof MoveActiveFilters) => (v: string) =>
     setActiveFilters((prev) => ({
       ...prev,
-      [cat]: prev[cat].includes(v) ? prev[cat].filter((x) => x !== v) : [...prev[cat], v],
+      [cat]: (prev[cat] as string[]).includes(v)
+        ? (prev[cat] as string[]).filter((x) => x !== v)
+        : [...(prev[cat] as string[]), v],
     }));
 
   const typeOptions = TYPE_OPTIONS.map((t) => ({
@@ -86,6 +93,7 @@ export default function MoveFilterBar({
     activeFilters.types.length > 0 ||
     activeFilters.categories.length > 0 ||
     activeFilters.effects.length > 0 ||
+    showThreatMovesOnly ||
     minPower ||
     maxPower ||
     sortBy !== 'alpha-asc';
@@ -126,6 +134,18 @@ export default function MoveFilterBar({
           accentColor="#a8b820"
           maxHeight={280}
         />
+
+        <label
+          className="obtainable-toggle"
+          style={showThreatMovesOnly ? ({ '--toggle-color': THREAT_MOVE_COLOR } as React.CSSProperties) : {}}
+        >
+          <input
+            type="checkbox"
+            checked={showThreatMovesOnly}
+            onChange={(e) => setShowThreatMovesOnly(e.target.checked)}
+          />
+          Threat moves only
+        </label>
 
         <SortDropdown
           value={sortBy}
@@ -214,6 +234,13 @@ export default function MoveFilterBar({
               onRemove={() => removeFilter('effects', v)}
             />
           ))}
+          {showThreatMovesOnly && (
+            <FilterPill
+              label="Threat moves only"
+              color={THREAT_MOVE_COLOR}
+              onRemove={() => setShowThreatMovesOnly(false)}
+            />
+          )}
           {(minPower || maxPower) && (
             <FilterPill
               label={`Power ${minPower || '0'} – ${maxPower || '∞'}`}

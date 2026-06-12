@@ -7,12 +7,18 @@ import PokemonSprite from '../../components/elements/sprites/pokemon/PokemonSpri
 import PokemonDetailPage from './components/pokemonDetailPage/PokemonDetailPage';
 import PokemonSidebar from './components/pokemonSidebar/PokemonSidebar';
 import PokemonFilterBar from './components/pokemonFilterBar/PokemonFilterBar';
+import {
+  normalizeThreatMoveName,
+  THREAT_MOVE_ALL,
+  THREAT_MOVE_OPTIONS,
+} from '../../constants/threatMoves';
 import './styles.scss';
 
 export type PokemonActiveFilters = {
   types1: string[]; // first type constraint (OR within set)
   types2: string[]; // second type constraint (OR within set, AND with types1)
   encounters: string[]; // encounter method filter (OR within set)
+  threatMoves: string[]; // must learn at least one of the selected threat moves
 };
 
 export default function PokemonPage() {
@@ -29,6 +35,7 @@ export default function PokemonPage() {
     types1: [],
     types2: [],
     encounters: [],
+    threatMoves: [],
   });
   const [minBst, setMinBst] = useState('');
   const [maxBst, setMaxBst] = useState('');
@@ -152,6 +159,21 @@ export default function PokemonPage() {
         if (!hasLevelUp && !hasTmHm) return false;
       }
 
+      // Threat move filter — Pokémon must be able to learn at least one selected threat move.
+      // "__all__" sentinel matches any move in the full threat list.
+      if (activeFilters.threatMoves.length > 0) {
+        const matchList = activeFilters.threatMoves.includes(THREAT_MOVE_ALL)
+          ? THREAT_MOVE_OPTIONS.map((o) => o.value)
+          : activeFilters.threatMoves;
+        const learnsThreat = (learnset: any[]) =>
+          learnset?.some((l: any) => {
+            const name = typeof l.move === 'string' ? l.move : l.move?.name;
+            if (!name) return false;
+            return matchList.includes(normalizeThreatMoveName(name));
+          });
+        if (!learnsThreat(mon.levelUpLearnset) && !learnsThreat(mon.tmhmLearnset)) return false;
+      }
+
       // Encounter filter (multi-select, OR within)
       if (activeFilters.encounters.length > 0) {
         const methods = encounterMethodsByMon.get(mon.key);
@@ -243,7 +265,7 @@ export default function PokemonPage() {
         const existsInData = pokemonArray.some((p) => p.key === id);
         if (existsInData) {
           setSearchTerm('');
-          setActiveFilters({ types1: [], types2: [], encounters: [] });
+          setActiveFilters({ types1: [], types2: [], encounters: [], threatMoves: [] });
           setMinBst('');
           setMaxBst('');
           setMoveFilter('');
@@ -266,7 +288,7 @@ export default function PokemonPage() {
     setShowObtainableOnly(false);
     setShowEvolvesWithItem(false);
     setShowUnreleased(false);
-    setActiveFilters({ types1: [], types2: [], encounters: [] });
+    setActiveFilters({ types1: [], types2: [], encounters: [], threatMoves: [] });
     setMinBst('');
     setMaxBst('');
     setMoveFilter('');

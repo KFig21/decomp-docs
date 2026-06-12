@@ -6,6 +6,10 @@ import { useData } from '../../contexts/dataContext';
 import MoveSidebar from './components/moveSidebar/MoveSidebar';
 import MoveFilterBar from './components/moveFilterBar/MoveFilterBar';
 import MoveDetailPage from './components/moveDetailPage/MoveDetailPage';
+import {
+  normalizeThreatMoveName,
+  THREAT_MOVE_OPTIONS,
+} from '../../constants/threatMoves';
 import './styles.scss';
 
 export type MoveActiveFilters = {
@@ -93,6 +97,7 @@ export default function MovesPage() {
     categories: [],
     effects: [],
   });
+  const [showThreatMovesOnly, setShowThreatMovesOnly] = useState(false);
   const [sortBy, setSortBy] = useState<MoveSortOption>('alpha-asc');
   const [hasTmOnly, setHasTmOnly] = useState(false);
   const [showUnreleased, setShowUnreleased] = useState(false);
@@ -175,6 +180,12 @@ export default function MovesPage() {
         if (!activeFilters.effects.some((f) => effectLabels.includes(f))) return false;
       }
 
+      // Threat move toggle — show only moves whose name is in the threat list
+      if (showThreatMovesOnly) {
+        const normalized = normalizeThreatMoveName(move.name ?? '');
+        if (!THREAT_MOVE_OPTIONS.some((o) => o.value === normalized)) return false;
+      }
+
       if (hasTmOnly && !tmByMove[move.key]) return false;
       if (minPower && (move.power ?? 0) < Number(minPower)) return false;
       if (maxPower && (move.power ?? 0) > Number(maxPower)) return false;
@@ -194,6 +205,7 @@ export default function MovesPage() {
     minPower,
     maxPower,
     learnableMoveKeys,
+    showThreatMovesOnly,
   ]);
 
   useEffect(() => {
@@ -215,6 +227,7 @@ export default function MovesPage() {
   const clearAll = () => {
     setSearchTerm('');
     setActiveFilters({ types: [], categories: [], effects: [] });
+    setShowThreatMovesOnly(false);
     setSortBy('alpha-asc');
     setHasTmOnly(false);
     setShowUnreleased(false);
@@ -235,6 +248,8 @@ export default function MovesPage() {
         setHasTmOnly={setHasTmOnly}
         showUnreleased={showUnreleased}
         setShowUnreleased={setShowUnreleased}
+        showThreatMovesOnly={showThreatMovesOnly}
+        setShowThreatMovesOnly={setShowThreatMovesOnly}
         minPower={minPower}
         setMinPower={setMinPower}
         maxPower={maxPower}

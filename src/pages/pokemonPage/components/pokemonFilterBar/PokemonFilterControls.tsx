@@ -7,6 +7,7 @@ import DexSelector from './components/DexSelector';
 import PokemonSort from './components/PokemonSort';
 import BstRange from './components/BstRange';
 import FilterCheckbox from './components/FilterCheckbox';
+import ThreatMovesDropdown from './components/ThreatMovesDropdown';
 // import MoveSearch from './components/MoveSearch';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
   onToggleType1: (v: string) => void;
   onToggleType2: (v: string) => void;
   onToggleEncounter: (v: string) => void;
+  onToggleThreatMove: (v: string) => void;
   showObtainableOnly: boolean;
   setShowObtainableOnly: (v: boolean) => void;
   showEvolvesWithItem: boolean;
@@ -26,8 +28,8 @@ interface Props {
   setMinBst: (v: string) => void;
   maxBst: string;
   setMaxBst: (v: string) => void;
-  moveFilter: string;
-  setMoveFilter: (v: string) => void;
+  moveFilter?: string;
+  setMoveFilter?: (v: string) => void;
   sortBy: string;
   setSortBy: (v: string) => void;
   availableDexTypes: string[];
@@ -42,6 +44,7 @@ export default function PokemonFilterControls({
   onToggleType1,
   onToggleType2,
   onToggleEncounter,
+  onToggleThreatMove,
   showObtainableOnly,
   setShowObtainableOnly,
   showEvolvesWithItem,
@@ -52,8 +55,8 @@ export default function PokemonFilterControls({
   setMinBst,
   maxBst,
   setMaxBst,
-  moveFilter,
-  setMoveFilter,
+  // moveFilter,
+  // setMoveFilter,
   sortBy,
   setSortBy,
   availableDexTypes,
@@ -66,6 +69,7 @@ export default function PokemonFilterControls({
       <Type1Dropdown selected={activeFilters.types1} onToggle={onToggleType1} />
       <Type2Dropdown selected={activeFilters.types2} onToggle={onToggleType2} />
       <EncounterDropdown selected={activeFilters.encounters} onToggle={onToggleEncounter} />
+      <ThreatMovesDropdown selected={activeFilters.threatMoves} onToggle={onToggleThreatMove} />
       <DexSelector
         availableDexTypes={availableDexTypes}
         selectedDex={selectedDex}

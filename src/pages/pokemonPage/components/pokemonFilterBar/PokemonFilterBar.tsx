@@ -2,6 +2,7 @@
 import type { PokemonActiveFilters } from '../../PokemonPage';
 import PokemonFilterControls from './PokemonFilterControls';
 import PokemonFilterPills from './PokemonFilterPills';
+import { THREAT_MOVE_ALL } from '../../../../constants/threatMoves';
 import './styles.scss';
 
 // Re-export constants used by other pages (e.g. MoveFilterBar, TypesPage)
@@ -64,6 +65,25 @@ export default function PokemonFilterBar({
       [cat]: prev[cat].includes(v) ? prev[cat].filter((x) => x !== v) : [...prev[cat], v],
     }));
 
+  // "Show All" clears individual selections and sets only the sentinel (and vice versa).
+  // Selecting any individual move while "Show All" is active drops the sentinel first.
+  const toggleThreatMove = (v: string) =>
+    setActiveFilters((prev) => {
+      if (v === THREAT_MOVE_ALL) {
+        return {
+          ...prev,
+          threatMoves: prev.threatMoves.includes(THREAT_MOVE_ALL) ? [] : [THREAT_MOVE_ALL],
+        };
+      }
+      const withoutAll = prev.threatMoves.filter((x) => x !== THREAT_MOVE_ALL);
+      return {
+        ...prev,
+        threatMoves: withoutAll.includes(v)
+          ? withoutAll.filter((x) => x !== v)
+          : [...withoutAll, v],
+      };
+    });
+
   const defaultDex = availableDexTypes[0] ?? 'NATIONAL_DEX';
 
   const hasAnyFilter =
@@ -74,6 +94,7 @@ export default function PokemonFilterBar({
     activeFilters.types1.length > 0 ||
     activeFilters.types2.length > 0 ||
     activeFilters.encounters.length > 0 ||
+    activeFilters.threatMoves.length > 0 ||
     minBst ||
     maxBst ||
     moveFilter ||
@@ -89,6 +110,7 @@ export default function PokemonFilterBar({
         onToggleType1={toggle('types1')}
         onToggleType2={toggle('types2')}
         onToggleEncounter={toggle('encounters')}
+        onToggleThreatMove={toggleThreatMove}
         showObtainableOnly={showObtainableOnly}
         setShowObtainableOnly={setShowObtainableOnly}
         showEvolvesWithItem={showEvolvesWithItem}

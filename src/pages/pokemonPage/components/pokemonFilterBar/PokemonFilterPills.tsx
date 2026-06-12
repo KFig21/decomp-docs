@@ -9,6 +9,11 @@ import {
   ENCOUNTER_COLOR,
   dexTypeLabel,
 } from './constants';
+import {
+  THREAT_MOVE_OPTIONS,
+  THREAT_MOVE_COLOR,
+  THREAT_MOVE_ALL,
+} from '../../../../constants/threatMoves';
 
 interface Props {
   searchTerm: string;
@@ -105,6 +110,18 @@ export default function PokemonFilterPills({
           label={ENCOUNTER_OPTIONS.find((e) => e.value === v)?.label ?? v}
           color={ENCOUNTER_COLOR}
           onRemove={() => removeFilter('encounters', v)}
+        />
+      ))}
+      {activeFilters.threatMoves.map((v) => (
+        <FilterPill
+          key={`threat-${v}`}
+          label={
+            v === THREAT_MOVE_ALL
+              ? 'Any Threat Move'
+              : (THREAT_MOVE_OPTIONS.find((o) => o.value === v)?.label ?? v)
+          }
+          color={THREAT_MOVE_COLOR}
+          onRemove={() => removeFilter('threatMoves', v)}
         />
       ))}
       {(minBst || maxBst) && (

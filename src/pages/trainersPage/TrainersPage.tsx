@@ -7,6 +7,10 @@ import { TrainerTabProvider } from '../../contexts/trainerTabContext';
 import TrainerSidebar from './components/trainerSidebar/TrainerSidebar';
 import TrainerFilterBar from './components/trainerFilterBar/TrainerFilterBar';
 import TrainerDetailPage from './components/trainerDetailPage/TrainerDetailPage';
+import {
+  THREAT_MOVE_ALL,
+  THREAT_MOVE_OPTIONS,
+} from '../../constants/threatMoves';
 import './styles.scss';
 
 export type TrainerActiveFilters = {
@@ -125,12 +129,15 @@ export default function TrainersPage() {
         if (wantDouble && !hasDouble) return false;
       }
       if (activeFilters.threatMoves.length > 0) {
+        const matchList = activeFilters.threatMoves.includes(THREAT_MOVE_ALL)
+          ? THREAT_MOVE_OPTIONS.map((o) => o.value)
+          : activeFilters.threatMoves;
         const hasThreat = t.placedVariants.some((v: any) =>
           (v.party ?? []).some((p: any) =>
             (p.moves ?? []).some((m: any) => {
               if (!m?.name) return false;
               const normalized = m.name.toLowerCase().replace(/[\s-]/g, '');
-              return activeFilters.threatMoves.includes(normalized);
+              return matchList.includes(normalized);
             }),
           ),
         );
