@@ -3,12 +3,12 @@
 
 // Maps SCSS names to CSS custom properties from colors.scss
 $method-colors: (
-    overworld: '--successColor',
-    hidden: '--catPurple',
-    mart: '--warningColor',
-    npc: '--catBlue',
-    berry-tree: '--catPink',
-    other: '--catGray',
+    overworld:  '--methodOverworld',
+    hidden:     '--methodHidden',
+    mart:       '--methodMart',
+    npc:        '--methodNpc',
+    berry-tree: '--methodBerryTree',
+    other:      '--catGray',
 );
 
 .item-locations {

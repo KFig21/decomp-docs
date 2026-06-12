@@ -1,18 +1,27 @@
+// ── Shared circle (pocket + method) ──────────────────────────────────────────
+
 .pocket-circle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--pocket-circle-size, 20px);
-    height: var(--pocket-circle-size, 20px);
     border-radius: 50%;
-    background: var(--pocket-color);
     color: #fff;
     flex-shrink: 0;
 
     svg {
         display: block;
     }
+
+    // ── Pocket types ──────────────────────────────────────────────────────────
+    &--items     { background: var(--pocketItems); }
+    &--balls     { background: var(--pocketBalls); }
+    &--tms       { background: var(--pocketTms); }
+    &--berries   { background: var(--pocketBerries); }
+    &--key-items { background: var(--pocketKeyItems); }
+
 }
+
+// ── Pocket badge pill ─────────────────────────────────────────────────────────
 
 .item-pocket-badge {
     display: inline-flex;
@@ -20,9 +29,17 @@
     gap: 6px;
     padding: 3px 9px 3px 4px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--pocket-color), transparent 84%);
-    border: 1px solid color-mix(in srgb, var(--pocket-color), transparent 60%);
     white-space: nowrap;
+
+    // Color variants — each sets --badge-color; base styles consume it
+    &--items     { --badge-color: var(--pocketItems); }
+    &--balls     { --badge-color: var(--pocketBalls); }
+    &--tms       { --badge-color: var(--pocketTms); }
+    &--berries   { --badge-color: var(--pocketBerries); }
+    &--key-items { --badge-color: var(--pocketKeyItems); }
+
+    background: color-mix(in srgb, var(--badge-color, var(--primaryColor)), transparent 84%);
+    border: 1px solid color-mix(in srgb, var(--badge-color, var(--primaryColor)), transparent 60%);
 
     &__label {
         font-size: 0.72rem;
@@ -30,6 +47,6 @@
         letter-spacing: 0.04em;
         text-transform: uppercase;
         line-height: 1;
-        color: var(--pocket-color);
+        color: var(--badge-color, var(--primaryColor));
     }
 }

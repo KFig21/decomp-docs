@@ -14,20 +14,19 @@
     align-items: center;
     gap: 4px;
 
-    &--physical {
-        background-color: #eb5628;
-    }
-
-    &--special {
-        background-color: #375ab2;
-    }
-
-    &--status {
-        background-color: #828282;
-    }
+    &--physical { background-color: var(--categoryPhysical); }
+    &--special  { background-color: var(--categorySpecial); }
+    &--status   { background-color: var(--categoryStatus); }
 
     &__icon {
         font-style: normal;
         line-height: 1;
     }
+}
+
+// Bare icon (no pill) — color set via currentColor
+.category-icon {
+    &--physical { color: var(--categoryPhysical); }
+    &--special  { color: var(--categorySpecial); }
+    &--status   { color: var(--categoryStatus); }
 }

@@ -32,12 +32,6 @@ export function normalizeCategory(raw?: string): MoveCategory {
   return 'status';
 }
 
-const CATEGORY_COLOR: Record<MoveCategory, string> = {
-  physical: '#eb5628',
-  special: '#375ab2',
-  status: '#828282',
-};
-
 /** Bare colored SVG icon — no badge pill, just the icon. */
 export function CategoryIcon({ raw, size = 14 }: { raw?: string; size?: number }) {
   const cat = normalizeCategory(raw);
@@ -47,7 +41,8 @@ export function CategoryIcon({ raw, size = 14 }: { raw?: string; size?: number }
       width={size}
       height={size}
       viewBox={icon.viewBox}
-      fill={CATEGORY_COLOR[cat]}
+      fill="currentColor"
+      className={`category-icon category-icon--${cat}`}
       aria-hidden="true"
       style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
     >

@@ -68,6 +68,24 @@
     align-items: center;
 }
 
+// ── Filter color classes — set --opt-color and --pill-color via cascade ────────
+// Pocket types
+.color--pocket-items     { --opt-color: var(--pocketItems);    --pill-color: var(--pocketItems); }
+.color--pocket-balls     { --opt-color: var(--pocketBalls);    --pill-color: var(--pocketBalls); }
+.color--pocket-tms       { --opt-color: var(--pocketTms);      --pill-color: var(--pocketTms); }
+.color--pocket-berries   { --opt-color: var(--pocketBerries);  --pill-color: var(--pocketBerries); }
+.color--pocket-key-items { --opt-color: var(--pocketKeyItems); --pill-color: var(--pocketKeyItems); }
+
+// Method types
+.color--method-overworld  { --opt-color: var(--methodOverworld); --pill-color: var(--methodOverworld); }
+.color--method-hidden     { --opt-color: var(--methodHidden);    --pill-color: var(--methodHidden); }
+.color--method-mart       { --opt-color: var(--methodMart);      --pill-color: var(--methodMart); }
+.color--method-npc        { --opt-color: var(--methodNpc);       --pill-color: var(--methodNpc); }
+.color--method-berry-tree { --opt-color: var(--methodBerryTree); --pill-color: var(--methodBerryTree); }
+
+// Other
+.color--evolution { --opt-color: var(--warningColor); --pill-color: var(--warningColor); }
+
 .active-pill {
     display: inline-flex;
     align-items: center;

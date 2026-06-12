@@ -3,8 +3,8 @@
 import { useRef, useState, useEffect } from 'react';
 import type { ActiveFilters, SortOption } from '../../ItemsPage';
 import { SORT_OPTIONS } from '../../ItemsPage';
-import { PocketCircle, POCKET_COLORS, POCKET_DISPLAY_LABELS } from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
-import { MethodCircle, METHOD_COLORS, METHOD_LABELS } from '../../../../components/elements/itemMethodIcon/ItemMethodIcon';
+import { PocketCircle, POCKET_DISPLAY_LABELS } from '../../../../components/elements/itemPocketIcon/ItemPocketIcon';
+import { MethodCircle, METHOD_LABELS } from '../../../../components/elements/itemMethodIcon/ItemMethodIcon';
 import './styles.scss';
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -20,14 +20,11 @@ export const METHOD_OPTIONS = Object.entries(METHOD_LABELS).map(([value, label])
   label,
 }));
 
-export { METHOD_COLORS };
-
 // ── Dropdown ──────────────────────────────────────────────────────────────────
 
 interface DropdownOption {
   value: string;
   label: string;
-  icon?: string | React.ReactNode;
 }
 
 interface DropdownProps {
@@ -35,11 +32,11 @@ interface DropdownProps {
   options: DropdownOption[];
   selected: string[];
   onToggle: (value: string) => void;
-  pillColor?: (value: string) => string;
+  optionClass?: (value: string) => string;
   renderIcon?: (opt: DropdownOption) => React.ReactNode;
 }
 
-function MultiSelectDropdown({ label, options, selected, onToggle, pillColor, renderIcon }: DropdownProps) {
+function MultiSelectDropdown({ label, options, selected, onToggle, optionClass, renderIcon }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -65,13 +62,12 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor, re
         <div className="ms-dropdown__menu">
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
-            const color = pillColor?.(opt.value);
-            const icon = renderIcon ? renderIcon(opt) : (typeof opt.icon === 'string' ? opt.icon : opt.icon);
+            const extraClass = isSelected && optionClass ? optionClass(opt.value) : '';
+            const icon = renderIcon?.(opt);
             return (
               <button
                 key={opt.value}
-                className={`ms-dropdown__option ${isSelected ? 'ms-dropdown__option--selected' : ''}`}
-                style={isSelected && color ? ({ '--opt-color': color } as any) : {}}
+                className={`ms-dropdown__option ${isSelected ? 'ms-dropdown__option--selected' : ''} ${extraClass}`}
                 onClick={() => onToggle(opt.value)}
               >
                 <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
@@ -138,15 +134,15 @@ function SortDropdown({ value, onChange }: SortDropdownProps) {
 
 function FilterPill({
   label,
-  color,
+  colorClass,
   onRemove,
 }: {
   label: string;
-  color?: string;
+  colorClass?: string;
   onRemove: () => void;
 }) {
   return (
-    <span className="active-pill" style={color ? ({ '--pill-color': color } as any) : {}}>
+    <span className={`active-pill ${colorClass ?? ''}`}>
       {label}
       <button className="active-pill__close" onClick={onRemove}>
         ×
@@ -201,8 +197,7 @@ export default function ItemFilterBar({
   const hasAnyFilter =
     searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0 || evolutionOnly;
   const pocketLabel = (v: string) => POCKET_OPTIONS.find((o) => o.value === v)?.label ?? v;
-  const methodOpt = (v: string) => METHOD_OPTIONS.find((o) => o.value === v);
-  const pocketColor = (v: string) => POCKET_COLORS[v] ?? '#6b7af5';
+  const methodLabel = (v: string) => METHOD_OPTIONS.find((o) => o.value === v)?.label ?? v;
 
   return (
     <div className="items-filter-bar">
@@ -219,7 +214,7 @@ export default function ItemFilterBar({
           options={POCKET_OPTIONS}
           selected={activeFilters.pockets}
           onToggle={togglePocket}
-          pillColor={pocketColor}
+          optionClass={(v) => `color--pocket-${v}`}
           renderIcon={(opt) => <PocketCircle pocket={opt.value} size={18} />}
         />
         <MultiSelectDropdown
@@ -227,7 +222,7 @@ export default function ItemFilterBar({
           options={METHOD_OPTIONS}
           selected={activeFilters.methods}
           onToggle={toggleMethod}
-          pillColor={(v) => METHOD_COLORS[v] ?? '#7a8a9a'}
+          optionClass={(v) => `color--method-${v.replace(/_/g, '-')}`}
           renderIcon={(opt) => <MethodCircle method={opt.value} size={18} />}
         />
         <SortDropdown value={sortBy} onChange={setSortBy} />
@@ -255,23 +250,20 @@ export default function ItemFilterBar({
             <FilterPill
               key={v}
               label={pocketLabel(v)}
-              color={pocketColor(v)}
+              colorClass={`color--pocket-${v}`}
               onRemove={() => removeFilter('pockets', v)}
             />
           ))}
-          {activeFilters.methods.map((v) => {
-            const opt = methodOpt(v);
-            return (
-              <FilterPill
-                key={v}
-                label={opt ? opt.label : v}
-                color={METHOD_COLORS[v]}
-                onRemove={() => removeFilter('methods', v)}
-              />
-            );
-          })}
+          {activeFilters.methods.map((v) => (
+            <FilterPill
+              key={v}
+              label={methodLabel(v)}
+              colorClass={`color--method-${v.replace(/_/g, '-')}`}
+              onRemove={() => removeFilter('methods', v)}
+            />
+          ))}
           {evolutionOnly && (
-            <FilterPill label="Evolution items" color="#e67e22" onRemove={() => setEvolutionOnly(false)} />
+            <FilterPill label="Evolution items" colorClass="color--evolution" onRemove={() => setEvolutionOnly(false)} />
           )}
         </div>
       )}

@@ -1,0 +1,10 @@
+// Method-specific color modifiers for .pocket-circle
+// Base .pocket-circle class is defined in itemPocketIcon/styles.scss
+
+.pocket-circle {
+    &--overworld  { background: var(--methodOverworld); }
+    &--hidden     { background: var(--methodHidden); }
+    &--mart       { background: var(--methodMart); }
+    &--npc        { background: var(--methodNpc); }
+    &--berry-tree { background: var(--methodBerryTree); }
+}
