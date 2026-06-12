@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryBadge from '../../../../components/elements/categoryBadge/CategoryBadge';
 import { normalizeCategory } from '../../../../components/elements/categoryBadge/CategoryBadge';
+import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { useData } from '../../../../contexts/dataContext';
 import './styles.scss';
 
@@ -27,6 +28,7 @@ const formatStat = (v: number | undefined) => (!v || v === 0 ? '—' : v);
 
 export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
   const { items } = useData();
+  const [isOpen, setIsOpen] = useState(true);
   const [sortCol, setSortCol] = useState<SortCol>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
 
@@ -67,14 +69,15 @@ export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
   };
 
   return (
-    <section className="type-card-style">
-      <div className="section-header">
+    <section className={`type-card-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
         Moves
         <span className="type-section__count">{moves.length}</span>
       </div>
-      {moves.length === 0 ? (
+      {isOpen && moves.length === 0 ? (
         <div className="content"><p className="type-section__empty">No moves found for this type.</p></div>
-      ) : (
+      ) : isOpen ? (
         <div className="content" style={{ overflowX: 'auto' }}>
           <table className="type-moves-table">
             <thead>
@@ -116,7 +119,7 @@ export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
             </tbody>
           </table>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }

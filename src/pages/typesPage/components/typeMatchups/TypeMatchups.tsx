@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TypeIconBadge from '../../../../components/elements/typeBadge/TypeIconBadge';
+import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
 import { TYPE_COLORS } from '../../../pokemonPage/components/pokemonFilterBar/PokemonFilterBar';
 import './styles.scss';
 
@@ -39,29 +41,41 @@ function MatchupSection({ title, types, accent }: { title: string; types: string
 }
 
 export default function TypeMatchups({ offensive, defensive }: Props) {
+  const [isOpen, setIsOpen] = useState(true);
+
   const offensiveEmpty = offensive.superEffective.length === 0 && offensive.notVeryEffective.length === 0 && offensive.noEffect.length === 0;
   const defensiveEmpty = defensive.weakTo.length === 0 && defensive.resistantTo.length === 0 && defensive.immuneTo.length === 0;
 
   return (
-    <div className="type-matchups-grid">
-      <div className="type-card-style type-matchups-card">
-        <div className="section-header">Offensive</div>
-        <div className="content">
-          <MatchupSection title="Super effective →" types={offensive.superEffective} accent="#3baf6a" />
-          <MatchupSection title="Not very effective →" types={offensive.notVeryEffective} accent="#d4862f" />
-          <MatchupSection title="No effect →" types={offensive.noEffect} accent="#ef4444" />
-          {offensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness against all types.</p>}
-        </div>
+    <div className={`type-card-style ${isOpen ? '' : 'collapsed'}`}>
+      <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
+        <CollapseToggle isOpen={isOpen} />
+        <span>Type Effectiveness</span>
       </div>
-      <div className="type-card-style type-matchups-card">
-        <div className="section-header">Defensive</div>
+      {isOpen && (
         <div className="content">
-          <MatchupSection title="Weak to ←" types={defensive.weakTo} accent="#ef4444" />
-          <MatchupSection title="Resistant to ←" types={defensive.resistantTo} accent="#3baf6a" />
-          <MatchupSection title="Immune to ←" types={defensive.immuneTo} accent="#6890f0" />
-          {defensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness from all types.</p>}
+          <div className="type-matchups-grid">
+            <div className="type-matchups-card">
+              <div className="matchups-card__title">Offensive</div>
+              <div className="matchups-card__body">
+                <MatchupSection title="Super effective →" types={offensive.superEffective} accent="#3baf6a" />
+                <MatchupSection title="Not very effective →" types={offensive.notVeryEffective} accent="#d4862f" />
+                <MatchupSection title="No effect →" types={offensive.noEffect} accent="#ef4444" />
+                {offensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness against all types.</p>}
+              </div>
+            </div>
+            <div className="type-matchups-card">
+              <div className="matchups-card__title">Defensive</div>
+              <div className="matchups-card__body">
+                <MatchupSection title="Weak to ←" types={defensive.weakTo} accent="#ef4444" />
+                <MatchupSection title="Resistant to ←" types={defensive.resistantTo} accent="#3baf6a" />
+                <MatchupSection title="Immune to ←" types={defensive.immuneTo} accent="#6890f0" />
+                {defensiveEmpty && <p className="type-matchups-card__empty">Normal effectiveness from all types.</p>}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
