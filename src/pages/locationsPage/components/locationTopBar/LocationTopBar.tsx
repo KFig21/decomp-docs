@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import type { MapNavEntry } from '../../locationUtils';
 import './styles.scss';
 
@@ -23,8 +23,33 @@ export default function LocationTopBar({
 }: Props) {
   const navRef = useRef<HTMLElement>(null);
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
-  // Auto-scroll the nav horizontally to keep the active group visible
+  const updateScrollState = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    setCanScrollLeft(nav.scrollLeft > 1);
+    setCanScrollRight(nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1);
+  }, []);
+
+  // Update scroll indicators on scroll
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    nav.addEventListener('scroll', updateScrollState, { passive: true });
+    updateScrollState();
+    return () => nav.removeEventListener('scroll', updateScrollState);
+  }, [updateScrollState]);
+
+  // Re-check after active map changes (subsections expanding changes nav width)
+  useEffect(() => {
+    // Small delay so the CSS transition has started and scrollWidth is updated
+    const id = setTimeout(updateScrollState, 50);
+    return () => clearTimeout(id);
+  }, [activeMapId, updateScrollState]);
+
+  // Auto-scroll nav to keep active group visible
   useEffect(() => {
     const nav = navRef.current;
     const group = groupRefs.current[activeMapId];
@@ -49,41 +74,49 @@ export default function LocationTopBar({
         {title}
       </span>
 
-      <nav className="loc-topbar__nav" ref={navRef}>
-        {maps.map(({ mapId, label, sections }) => {
-          const isActive = activeMapId === mapId;
-          return (
-            <div
-              key={mapId}
-              className="loc-nav-group"
-              ref={(el) => { groupRefs.current[mapId] = el; }}
-            >
-              <button
-                className={`loc-nav-pill ${isActive ? 'loc-nav-pill--active' : ''}`}
-                onClick={() => scrollToMap(mapId)}
+      <div
+        className={[
+          'loc-nav-wrapper',
+          canScrollLeft  ? 'loc-nav-wrapper--fade-left'  : '',
+          canScrollRight ? 'loc-nav-wrapper--fade-right' : '',
+        ].join(' ')}
+      >
+        <nav className="loc-topbar__nav" ref={navRef}>
+          {maps.map(({ mapId, label, sections }) => {
+            const isActive = activeMapId === mapId;
+            return (
+              <div
+                key={mapId}
+                className="loc-nav-group"
+                ref={(el) => { groupRefs.current[mapId] = el; }}
               >
-                {label}
-              </button>
+                <button
+                  className={`loc-nav-pill ${isActive ? 'loc-nav-pill--active' : ''}`}
+                  onClick={() => scrollToMap(mapId)}
+                >
+                  {label}
+                </button>
 
-              {sections.length > 0 && (
-                <div className={`loc-subsections ${isActive ? 'loc-subsections--open' : ''}`}>
-                  <div className="loc-subsections__inner">
-                    {sections.map(({ sectionId, label: sLabel }) => (
-                      <button
-                        key={sectionId}
-                        className={`loc-section-pill ${isActive && activeSectionId === sectionId ? 'loc-section-pill--active' : ''}`}
-                        onClick={() => scrollToSection(sectionId)}
-                      >
-                        {sLabel}
-                      </button>
-                    ))}
+                {sections.length > 0 && (
+                  <div className={`loc-subsections ${isActive ? 'loc-subsections--open' : ''}`}>
+                    <div className="loc-subsections__inner">
+                      {sections.map(({ sectionId, label: sLabel }) => (
+                        <button
+                          key={sectionId}
+                          className={`loc-section-pill ${isActive && activeSectionId === sectionId ? 'loc-section-pill--active' : ''}`}
+                          onClick={() => scrollToSection(sectionId)}
+                        >
+                          {sLabel}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </nav>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+      </div>
 
       <button className="loc-back-to-top" onClick={scrollToTop} title="Back to top">
         ↑ Top

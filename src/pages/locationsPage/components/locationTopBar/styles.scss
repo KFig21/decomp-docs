@@ -37,13 +37,64 @@
     &__nav {
         display: flex;
         align-items: center;
-        gap: 4px;
-        flex: 1;
+        gap: 20px;
         overflow-x: auto;
         scrollbar-width: none;
         min-width: 0;
 
-        &::-webkit-scrollbar { display: none; }
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+// ── Nav scroll fade wrapper ───────────────────────────────────────────────────
+.loc-nav-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+
+    // left fade + border
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        background: linear-gradient(to right,
+                color-mix(in srgb, var(--backgroundColor), black 2%) 0%,
+                transparent 100%);
+    }
+
+    // right fade + border
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 40px;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        background: linear-gradient(to left,
+                color-mix(in srgb, var(--backgroundColor), black 2%) 0%,
+                transparent 100%);
+    }
+
+    &--fade-left::before {
+        opacity: 1;
+    }
+
+    &--fade-right::after {
+        opacity: 1;
     }
 }
 
@@ -62,7 +113,7 @@
     padding: 3px 10px;
     border-radius: 999px;
     border: 1px solid transparent;
-    background: none;
+    background: color-mix(in srgb, var(--primaryColor), transparent 90%);
     color: var(--fadedFont);
     cursor: pointer;
     font-family: inherit;
