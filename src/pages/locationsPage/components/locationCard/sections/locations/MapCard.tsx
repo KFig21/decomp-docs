@@ -8,6 +8,7 @@ import Map from './map/Map';
 import type { LocationMap } from '../../../../../../services/parsers/v2/locations/types';
 import CollapseToggle from '../../../../../../components/elements/collapseToggle/CollapseToggle';
 import { formatReadableName } from '../../../../../../utils/functions';
+import { sanitizeMapId } from '../../../../locationUtils';
 
 type Props = {
   location: LocationMap;
@@ -17,12 +18,14 @@ type Props = {
 export default function MapCard({ location, isOverworld = false }: Props) {
   const [isOpen, setIsOpen] = useState(true);
 
+  const mapId = sanitizeMapId(location.name);
+
   const hasEncounters =
     (location.wildPokemon && location.wildPokemon.length > 0) ||
     (location.staticEncounters && location.staticEncounters.length > 0);
 
   return (
-    <div className={`map-card container-style ${isOpen ? '' : 'collapsed'}`}>
+    <div id={mapId} className={`map-card container-style ${isOpen ? '' : 'collapsed'}`}>
       <div className="section-header" onClick={() => setIsOpen(!isOpen)}>
         <CollapseToggle isOpen={isOpen} />
         <span className="title">
@@ -41,26 +44,38 @@ export default function MapCard({ location, isOverworld = false }: Props) {
 
       {isOpen && (
         <div className="content">
-          {location.mapImage && <Map location={location} />}
+          {location.mapImage && (
+            <div id={`${mapId}-map`}>
+              <Map location={location} />
+            </div>
+          )}
 
           {location.trainers && location.trainers.length > 0 && (
-            <Trainers trainers={location.trainers} parentOpen={isOpen} />
+            <div id={`${mapId}-trainers`}>
+              <Trainers trainers={location.trainers} parentOpen={isOpen} />
+            </div>
           )}
 
           {hasEncounters && (
-            <EncounterTable
-              encounterTable={location.wildPokemon}
-              staticEncounters={location.staticEncounters}
-              parentOpen={isOpen}
-            />
+            <div id={`${mapId}-encounters`}>
+              <EncounterTable
+                encounterTable={location.wildPokemon}
+                staticEncounters={location.staticEncounters}
+                parentOpen={isOpen}
+              />
+            </div>
           )}
 
           {location.items && location.items.length > 0 && (
-            <ItemsSection items={location.items} parentOpen={isOpen} />
+            <div id={`${mapId}-items`}>
+              <ItemsSection items={location.items} parentOpen={isOpen} />
+            </div>
           )}
 
           {location.hasMart && (
-            <MartSection mapName={location.name} />
+            <div id={`${mapId}-mart`}>
+              <MartSection mapName={location.name} />
+            </div>
           )}
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState, useRef, useCallback } from 'react';
+import { useMemo, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './styles.scss';
 import { useData } from '../../contexts/dataContext';
@@ -123,10 +123,6 @@ export default function LocationsPage() {
   const [filters, setFilters] = useState<LocationFilters>(DEFAULT_FILTERS);
   const detailAreaRef = useRef<HTMLDivElement>(null);
 
-  const scrollToTop = useCallback(() => {
-    detailAreaRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
   const sortedLocations = useMemo(() => {
     if (!locations) return [];
 
@@ -238,7 +234,6 @@ export default function LocationsPage() {
               <LocationDetailPage
                 location={activeLocation}
                 stats={activeStats}
-                scrollToTop={scrollToTop}
               />
             )}
           </div>
