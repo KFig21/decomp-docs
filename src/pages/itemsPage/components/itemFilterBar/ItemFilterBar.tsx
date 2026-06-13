@@ -160,6 +160,8 @@ interface Props {
   setActiveFilters: React.Dispatch<React.SetStateAction<ActiveFilters>>;
   evolutionOnly: boolean;
   setEvolutionOnly: (v: boolean) => void;
+  heldByPokemon: boolean;
+  setHeldByPokemon: (v: boolean) => void;
   removeFilter: (cat: keyof ActiveFilters, value: string) => void;
   clearAll: () => void;
   sortBy: SortOption;
@@ -173,6 +175,8 @@ export default function ItemFilterBar({
   setActiveFilters,
   evolutionOnly,
   setEvolutionOnly,
+  heldByPokemon,
+  setHeldByPokemon,
   removeFilter,
   clearAll,
   sortBy,
@@ -195,7 +199,7 @@ export default function ItemFilterBar({
     }));
 
   const hasAnyFilter =
-    searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0 || evolutionOnly;
+    searchTerm || activeFilters.pockets.length > 0 || activeFilters.methods.length > 0 || evolutionOnly || heldByPokemon;
   const pocketLabel = (v: string) => POCKET_OPTIONS.find((o) => o.value === v)?.label ?? v;
   const methodLabel = (v: string) => METHOD_OPTIONS.find((o) => o.value === v)?.label ?? v;
 
@@ -234,6 +238,14 @@ export default function ItemFilterBar({
           />
           Evolution items
         </label>
+        <label className="obtainable-toggle">
+          <input
+            type="checkbox"
+            checked={heldByPokemon}
+            onChange={(e) => setHeldByPokemon(e.target.checked)}
+          />
+          Held by Pokémon
+        </label>
         {hasAnyFilter && (
           <button className="filter-clear-all" onClick={clearAll}>
             Clear all
@@ -264,6 +276,9 @@ export default function ItemFilterBar({
           ))}
           {evolutionOnly && (
             <FilterPill label="Evolution items" colorClass="color--evolution" onRemove={() => setEvolutionOnly(false)} />
+          )}
+          {heldByPokemon && (
+            <FilterPill label="Held by Pokémon" onRemove={() => setHeldByPokemon(false)} />
           )}
         </div>
       )}

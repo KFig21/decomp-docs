@@ -58,6 +58,7 @@ export default function ItemsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({ pockets: [], methods: [] });
   const [evolutionOnly, setEvolutionOnly] = useState(false);
+  const [heldByPokemon, setHeldByPokemon] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('alpha-asc');
 
   const itemsArray = (Array.isArray(items) ? items : Object.values(items || {})) as any[];
@@ -77,11 +78,12 @@ export default function ItemsPage() {
         if (!locs.some((l) => activeFilters.methods.includes(l.method))) return false;
       }
       if (evolutionOnly && !item.isEvolutionItem) return false;
+      if (heldByPokemon && !(item.wildHolders?.length > 0)) return false;
       return true;
     });
 
     return sortItems(filtered, sortBy);
-  }, [itemsArray, searchTerm, activeFilters, evolutionOnly, sortBy]);
+  }, [itemsArray, searchTerm, activeFilters, evolutionOnly, heldByPokemon, sortBy]);
 
   useEffect(() => {
     if (!id && filteredItems.length > 0) {
@@ -106,6 +108,7 @@ export default function ItemsPage() {
     setSearchTerm('');
     setActiveFilters({ pockets: [], methods: [] });
     setEvolutionOnly(false);
+    setHeldByPokemon(false);
   };
 
   return (
@@ -117,6 +120,8 @@ export default function ItemsPage() {
         setActiveFilters={setActiveFilters}
         evolutionOnly={evolutionOnly}
         setEvolutionOnly={setEvolutionOnly}
+        heldByPokemon={heldByPokemon}
+        setHeldByPokemon={setHeldByPokemon}
         removeFilter={removeFilter}
         clearAll={clearAll}
         sortBy={sortBy}
