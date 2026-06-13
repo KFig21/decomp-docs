@@ -29,6 +29,125 @@
   }
 }
 
+// ── View mode toggle ──────────────────────────────────────────────────────────
+.learner-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--fadedFont);
+    font-size: 1.4rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+
+    &:hover {
+      color: var(--fontColor);
+      background: color-mix(in srgb, var(--fontColor), transparent 90%);
+    }
+
+    &--active {
+      color: var(--primaryColor);
+      background: color-mix(in srgb, var(--primaryColor), transparent 85%);
+      border-color: color-mix(in srgb, var(--primaryColor), transparent 55%);
+    }
+  }
+}
+
+// ── Table view ────────────────────────────────────────────────────────────────
+.learner-table {
+  width: auto;
+  border-collapse: collapse;
+  white-space: nowrap;
+
+  th,
+  td {
+    border: 1px solid var(--containerBorderColor);
+    padding: 6px 10px;
+    text-align: left;
+    background-color: color-mix(in srgb, var(--backgroundColor), black 2%);
+    font-size: 0.85rem;
+  }
+
+  th {
+    background-color: color-mix(in srgb, var(--backgroundColor), black 40%);
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--backgroundColor), black 52%);
+      }
+    }
+  }
+
+  td.center,
+  th.center {
+    text-align: center;
+  }
+
+  .col-pokemon   { min-width: 160px; }
+  .col-types     { width: 70px; }
+  .col-abilities { min-width: 160px; }
+  .col-stat      { width: 52px; }
+
+  &__stat-total {
+    font-weight: 700;
+    color: var(--primaryColor);
+  }
+
+  &__name-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fontColor);
+    font-weight: 600;
+    transition: color 0.15s;
+
+    &:hover { color: var(--primaryColor); }
+  }
+
+  &__types {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__abilities {
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+
+  &__ability-link {
+    color: var(--fontColor);
+    text-decoration: none;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--primaryColor);
+      text-decoration: underline;
+    }
+  }
+
+  &__ability-sep {
+    color: var(--fadedFont);
+  }
+}
+
+// ── Grid view (existing) ──────────────────────────────────────────────────────
 .learner-card {
   display: flex;
   flex-direction: column;

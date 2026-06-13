@@ -1,16 +1,20 @@
-// decomp-docs/src/pages/movesPage/components/moveLearners/TutorLearners.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PokemonSprite from '../../../../components/elements/sprites/pokemon/PokemonSprite';
 import CollapseToggle from '../../../../components/elements/collapseToggle/CollapseToggle';
+import LearnerGrid from './LearnerGrid';
+import LearnerTable from './LearnerTable';
 import './styles.scss';
 
 type Props = { learners: any[] };
+type ViewMode = 'grid' | 'table';
 
 export default function TutorLearners({ learners }: Props) {
   const [open, setOpen] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
   if (learners.length === 0) return null;
+
+  const entries = learners.map((mon) => ({ mon }));
 
   return (
     <div className={`move-card-style move-learners ${open ? '' : 'collapsed'}`}>
@@ -18,19 +22,29 @@ export default function TutorLearners({ learners }: Props) {
         <CollapseToggle isOpen={open} />
         <span>Tutor Learners</span>
         <span className="move-learners__count">{learners.length} Pokémon</span>
+        <div className="learner-view-toggle" onClick={(e) => e.stopPropagation()}>
+          <button
+            className={`learner-view-toggle__btn ${viewMode === 'grid' ? 'learner-view-toggle__btn--active' : ''}`}
+            onClick={() => setViewMode('grid')}
+            title="Grid view"
+          >
+            ⊞
+          </button>
+          <button
+            className={`learner-view-toggle__btn ${viewMode === 'table' ? 'learner-view-toggle__btn--active' : ''}`}
+            onClick={() => setViewMode('table')}
+            title="Table view"
+          >
+            ≡
+          </button>
+        </div>
       </div>
       {open && (
         <div className="content">
-          <div className="move-learners__grid">
-            {learners.map((mon: any) => (
-              <Link key={mon.key} to={`/pokemon/${mon.key}`} className="learner-card">
-                <div className="learner-card__sprite">
-                  <PokemonSprite name={mon.name} speciesKey={mon.key} size={52} />
-                </div>
-                <span className="learner-card__name">{mon.name}</span>
-              </Link>
-            ))}
-          </div>
+          {viewMode === 'grid'
+            ? <LearnerGrid learners={entries} />
+            : <LearnerTable learners={entries} />
+          }
         </div>
       )}
     </div>
