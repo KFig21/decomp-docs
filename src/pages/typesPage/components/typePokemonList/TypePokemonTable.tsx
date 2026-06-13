@@ -120,9 +120,14 @@ export default function TypePokemonTable({ pokemon, unreleasedKeys }: Props) {
                 </td>
                 <td>
                   <div className="type-pokemon-table__types">
-                    {uniqueTypes.map((t) => (
-                      <TypeIconBadge key={t} type={t} size={20} />
-                    ))}
+                    {uniqueTypes.map((t) => {
+                      const typeLower = t.replace(/^TYPE_/i, '').toLowerCase();
+                      return (
+                        <Link key={t} to={`/types/${typeLower}`} onClick={(e) => e.stopPropagation()}>
+                          <TypeIconBadge type={t} size={20} />
+                        </Link>
+                      );
+                    })}
                   </div>
                 </td>
                 <td className="type-pokemon-table__abilities">
