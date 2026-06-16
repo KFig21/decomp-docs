@@ -24,12 +24,7 @@ const helpIconPath = (
 );
 
 const movesIconPath = (
-  <>
-    {/* Simple crossed-swords icon composed of two path elements */}
-    <path d="M14.5 2.5l-12 12 1.5 1.5 12-12z" />
-    <path d="M2 2l3 3-1 3 3-1 3 3 1.5-1.5-3-3 1-3-3 1z" />
-    <path d="M22 22l-3-3 1-3-3 1-3-3-1.5 1.5 3 3-1 3 3-1z" />
-  </>
+  <polygon points="12,2 13.53,8.3 19.07,4.93 15.7,10.47 22,12 15.7,13.53 19.07,19.07 13.53,15.7 12,22 10.47,15.7 4.93,19.07 8.3,13.53 2,12 8.3,10.47 4.93,4.93 10.47,8.3" />
 );
 
 interface NavItem {
