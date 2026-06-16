@@ -210,4 +210,21 @@
         color: var(--fadedFont);
         flex-shrink: 0;
     }
+
+    &__sprite {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        width: 28px;
+        height: 28px;
+
+        img {
+            object-fit: contain;
+        }
+    }
+
+    // Widen the menu when sprite thumbnails are shown
+    &__menu--with-sprites {
+        min-width: 260px;
+    }
 }

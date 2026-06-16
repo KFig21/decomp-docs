@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from 'react';
+import TrainerSprite from '../../../../components/elements/sprites/TrainerSprite';
 import type { TrainerActiveFilters, TrainerSortOption } from '../../TrainersPage';
 import { TRAINER_SORT_OPTIONS } from '../../TrainersPage';
 import {
@@ -21,9 +22,15 @@ export const BATTLE_TYPE_COLOR = '#d4862f';
 
 // ── Multi-select dropdown ──────────────────────────────────────────────────────
 
+interface DropdownOption {
+  value: string;
+  label: string;
+  sprite?: string; // optional trainer pic key for class dropdown
+}
+
 interface DropdownProps {
   label: string;
-  options: { value: string; label: string }[];
+  options: DropdownOption[];
   selected: string[];
   onToggle: (value: string) => void;
   pillColor?: (value: string) => string;
@@ -41,6 +48,8 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: 
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const hasSprites = options.some((o) => o.sprite);
+
   return (
     <div className={`ms-dropdown ${open ? 'ms-dropdown--open' : ''}`} ref={ref}>
       <button
@@ -52,7 +61,7 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: 
         <span className="ms-dropdown__chevron">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
-        <div className="ms-dropdown__menu">
+        <div className={`ms-dropdown__menu ${hasSprites ? 'ms-dropdown__menu--with-sprites' : ''}`}>
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             const color = pillColor?.(opt.value);
@@ -64,6 +73,11 @@ function MultiSelectDropdown({ label, options, selected, onToggle, pillColor }: 
                 onClick={() => onToggle(opt.value)}
               >
                 <span className="ms-dropdown__checkbox">{isSelected ? '✓' : ''}</span>
+                {opt.sprite && (
+                  <span className="ms-dropdown__sprite">
+                    <TrainerSprite trainerClass={opt.sprite} sprite={opt.sprite} size={28} />
+                  </span>
+                )}
                 <span>{opt.label}</span>
               </button>
             );
@@ -151,6 +165,7 @@ interface Props {
   activeFilters: TrainerActiveFilters;
   setActiveFilters: React.Dispatch<React.SetStateAction<TrainerActiveFilters>>;
   allClasses: string[];
+  classSprites: Record<string, string>;
   sortBy: TrainerSortOption;
   setSortBy: (v: TrainerSortOption) => void;
   removeFilter: (cat: keyof TrainerActiveFilters, value: string) => void;
@@ -163,6 +178,7 @@ export default function TrainerFilterBar({
   activeFilters,
   setActiveFilters,
   allClasses,
+  classSprites,
   sortBy,
   setSortBy,
   removeFilter,
@@ -182,7 +198,7 @@ export default function TrainerFilterBar({
         : [...prev.battleTypes, v],
     }));
 
-  const classOptions = allClasses.map((c) => ({ value: c, label: c }));
+  const classOptions = allClasses.map((c) => ({ value: c, label: c, sprite: classSprites[c] }));
 
   const toggleThreatMove = (v: string) =>
     setActiveFilters((prev) => {

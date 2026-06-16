@@ -102,13 +102,23 @@ export default function TrainersPage() {
     return result;
   }, [trainers]);
 
-  // All unique trainer classes
+  // All unique trainer classes + one representative sprite per class
   const allClasses = useMemo(() => {
     const set = new Set<string>();
     for (const t of baseTrainers) {
       if (t.trainerClass) set.add(t.trainerClass);
     }
     return Array.from(set).sort();
+  }, [baseTrainers]);
+
+  const classSprites = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const t of baseTrainers) {
+      if (t.trainerClass && t.trainerPic && !map[t.trainerClass]) {
+        map[t.trainerClass] = t.trainerPic;
+      }
+    }
+    return map;
   }, [baseTrainers]);
 
   const filteredTrainers = useMemo(() => {
@@ -179,6 +189,7 @@ export default function TrainersPage() {
           activeFilters={activeFilters}
           setActiveFilters={setActiveFilters}
           allClasses={allClasses}
+          classSprites={classSprites}
           sortBy={sortBy}
           setSortBy={setSortBy}
           removeFilter={removeFilter}
