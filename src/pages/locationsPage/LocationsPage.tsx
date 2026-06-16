@@ -12,11 +12,10 @@ import LocationDetailPage from './components/locationDetailPage/LocationDetailPa
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type LocationFilters = {
-  features: string[];       // 'trainers' | 'rivals' | 'gym' | 'mart' | 'wild' | 'items'
+  features: string[];         // 'trainers' | 'rivals' | 'gym' | 'mart' | 'wild' | 'items'
   encounterMethods: string[]; // e.g. 'Tall Grass', 'Surfing'
   weather: string[];          // e.g. 'Rain', 'Sandstorm'
-  hmEvents: string[];         // e.g. 'cut', 'surf', 'waterfall'
-  tmEvents: string[];         // e.g. 'rock_smash'
+  hmEvents: string[];         // HM + TM field moves, e.g. 'cut', 'surf', 'rock_smash'
 };
 
 const DEFAULT_FILTERS: LocationFilters = {
@@ -24,8 +23,13 @@ const DEFAULT_FILTERS: LocationFilters = {
   encounterMethods: [],
   weather: [],
   hmEvents: [],
-  tmEvents: [],
 };
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+// Rod method display names — grouped under the single 'Fishing' filter option
+const FISHING_METHODS = new Set(['Old Rod', 'Good Rod', 'Super Rod', 'Fishing']);
+const isFishingMethod = (m: string) => FISHING_METHODS.has(m);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -94,7 +98,20 @@ function locationMatchesFilters(loc: LocationRoot, filters: LocationFilters, sea
   }
 
   for (const method of filters.encounterMethods) {
-    if (!maps.some((m) => m.wildPokemon?.some((t) => t.method === method))) return false;
+    if (method === 'Fishing') {
+      if (!maps.some((m) => m.wildPokemon?.some((t) => isFishingMethod(t.method)))) return false;
+    } else if (method === 'Static') {
+      if (
+        !maps.some(
+          (m) =>
+            (m.staticEncounters && m.staticEncounters.length > 0) ||
+            m.wildPokemon?.some((t) => t.method === 'Static / Gift'),
+        )
+      )
+        return false;
+    } else {
+      if (!maps.some((m) => m.wildPokemon?.some((t) => t.method === method))) return false;
+    }
   }
 
   for (const w of filters.weather) {
@@ -103,10 +120,6 @@ function locationMatchesFilters(loc: LocationRoot, filters: LocationFilters, sea
 
   for (const hm of filters.hmEvents) {
     if (!maps.some((m) => m.hmEvents?.includes(hm))) return false;
-  }
-
-  for (const tm of filters.tmEvents) {
-    if (!maps.some((m) => m.hmEvents?.includes(tm))) return false;
   }
 
   return true;
@@ -146,16 +159,32 @@ export default function LocationsPage() {
       .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
   }, [locations]);
 
-  // Collect unique encounter methods and weather values for dropdown options
+  // Collect unique encounter methods and weather values for dropdown options.
+  // Rod variants (Old Rod / Good Rod / Super Rod) are collapsed into 'Fishing'.
+  // Static encounters (staticEncounters field) surface as the 'Static' option.
   const encounterMethodOptions = useMemo(() => {
     const methods = new Set<string>();
+    let hasFishing = false;
+    let hasStatic = false;
     for (const loc of sortedLocations) {
       for (const map of Object.values(loc.maps)) {
         for (const table of map.wildPokemon ?? []) {
-          if (table.method) methods.add(table.method);
+          if (!table.method) continue;
+          if (isFishingMethod(table.method)) {
+            hasFishing = true;
+          } else if (table.method === 'Static / Gift') {
+            hasStatic = true;
+          } else {
+            methods.add(table.method);
+          }
+        }
+        if (map.staticEncounters && map.staticEncounters.length > 0) {
+          hasStatic = true;
         }
       }
     }
+    if (hasFishing) methods.add('Fishing');
+    if (hasStatic) methods.add('Static');
     return Array.from(methods).sort();
   }, [sortedLocations]);
 

@@ -141,7 +141,10 @@ function stripPrefix(key: string): string {
 }
 
 function toDisplayName(fragment: string): string {
-  return fragment.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  return fragment
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function inferCategory(key: string): WeatherCategory {

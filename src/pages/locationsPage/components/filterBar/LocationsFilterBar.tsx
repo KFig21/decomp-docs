@@ -15,16 +15,13 @@ export const FEATURE_OPTIONS = [
   { value: 'items', label: 'Items', icon: '📦' },
 ];
 
-export const HM_OPTIONS = [
+export const FIELD_MOVE_OPTIONS = [
   { value: 'cut', label: 'Cut', icon: '🌿' },
   { value: 'surf', label: 'Surf', icon: '🌊' },
   { value: 'waterfall', label: 'Waterfall', icon: '💧' },
   { value: 'strength', label: 'Strength', icon: '🪨' },
   { value: 'flash', label: 'Flash', icon: '🔦' },
   { value: 'dive', label: 'Dive', icon: '🐠' },
-];
-
-export const TM_OPTIONS = [
   { value: 'rock_smash', label: 'Rock Smash', icon: '💥' },
 ];
 
@@ -52,16 +49,13 @@ const FEATURE_COLORS: Record<string, string> = {
   items: '#9c6ee8',
 };
 
-const HM_COLORS: Record<string, string> = {
+const FIELD_MOVE_COLORS: Record<string, string> = {
   cut: '#58a87a',
   surf: '#3a9bd4',
   waterfall: '#5bc4e8',
   strength: '#c87a3a',
   flash: '#e8d43a',
   dive: '#3a6ae8',
-};
-
-const TM_COLORS: Record<string, string> = {
   rock_smash: '#c87a3a',
 };
 
@@ -178,8 +172,7 @@ export default function LocationsFilterBar({
     filters.features.length > 0 ||
     filters.encounterMethods.length > 0 ||
     filters.weather.length > 0 ||
-    filters.hmEvents.length > 0 ||
-    filters.tmEvents.length > 0;
+    filters.hmEvents.length > 0;
 
   const encMethodOpts = encounterMethodOptions.map((m) => ({ value: m, label: m }));
   const weatherOpts = weatherOptions.map((w) => ({ value: w, label: w }));
@@ -218,18 +211,11 @@ export default function LocationsFilterBar({
           pillColor={() => '#5bc4e8'}
         />
         <MultiSelectDropdown
-          label="HM Events"
-          options={HM_OPTIONS}
+          label="Field Moves"
+          options={FIELD_MOVE_OPTIONS}
           selected={filters.hmEvents}
           onToggle={toggle('hmEvents')}
-          pillColor={(v) => HM_COLORS[v] ?? '#7a8a9a'}
-        />
-        <MultiSelectDropdown
-          label="TM Events"
-          options={TM_OPTIONS}
-          selected={filters.tmEvents}
-          onToggle={toggle('tmEvents')}
-          pillColor={(v) => TM_COLORS[v] ?? '#7a8a9a'}
+          pillColor={(v) => FIELD_MOVE_COLORS[v] ?? '#7a8a9a'}
         />
         {hasAnyFilter && (
           <button className="filter-clear-all" onClick={clearAll}>
@@ -271,24 +257,13 @@ export default function LocationsFilterBar({
             />
           ))}
           {filters.hmEvents.map((v) => {
-            const opt = HM_OPTIONS.find((o) => o.value === v);
+            const opt = FIELD_MOVE_OPTIONS.find((o) => o.value === v);
             return (
               <FilterPill
                 key={v}
                 label={opt ? `${opt.icon} ${opt.label}` : v}
-                color={HM_COLORS[v]}
+                color={FIELD_MOVE_COLORS[v]}
                 onRemove={() => removeFilter('hmEvents', v)}
-              />
-            );
-          })}
-          {filters.tmEvents.map((v) => {
-            const opt = TM_OPTIONS.find((o) => o.value === v);
-            return (
-              <FilterPill
-                key={v}
-                label={opt ? `${opt.icon} ${opt.label}` : v}
-                color={TM_COLORS[v]}
-                onRemove={() => removeFilter('tmEvents', v)}
               />
             );
           })}
