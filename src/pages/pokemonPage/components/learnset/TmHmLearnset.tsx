@@ -125,6 +125,7 @@ export default function TmHmLearnset({ learnset }: Props) {
                   <th className="center col-power">Power</th>
                   <th className="center col-acc">Acc.</th>
                   <th className="center col-pp">PP</th>
+                  <th className="col-desc">Description</th>
                 </tr>
               </thead>
               <tbody>
@@ -165,6 +166,7 @@ export default function TmHmLearnset({ learnset }: Props) {
                       <td className="center">{formatNumber(move?.power)}</td>
                       <td className="center">{move?.accuracy ? `${move.accuracy}%` : '—'}</td>
                       <td className="center">{formatNumber(move?.pp)}</td>
+                      <td className="col-desc">{move?.description || '—'}</td>
                     </tr>
                   );
                 })}

@@ -104,6 +104,10 @@
 // ── Locations table ───────────────────────────────────────────────────────────
 
 .locations-table {
+    tbody tr:hover td {
+        background-color: color-mix(in srgb, var(--primaryColor), transparent 90%);
+    }
+
     .map-name {
         font-size: 0.85rem;
         color: var(--fadedFont);

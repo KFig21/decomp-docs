@@ -25,13 +25,44 @@
         text-align: center;
     }
 
-    .col-level  { width: 55px; }
-    .col-method { width: 70px; }
-    .col-type   { width: 110px; }
-    .col-cat    { width: 110px; }
-    .col-power  { width: 65px; }
-    .col-acc    { width: 65px; }
-    .col-pp     { width: 50px; }
+    tbody tr:hover td {
+        background-color: color-mix(in srgb, var(--primaryColor), transparent 90%);
+    }
+
+    .col-level {
+        width: 55px;
+    }
+
+    .col-method {
+        width: 70px;
+    }
+
+    .col-type {
+        width: 110px;
+    }
+
+    .col-cat {
+        width: 110px;
+    }
+
+    .col-power {
+        width: 65px;
+    }
+
+    .col-acc {
+        width: 65px;
+    }
+
+    .col-pp {
+        width: 50px;
+    }
+
+    .col-desc {
+        font-size: 0.78rem;
+        color: var(--fadedFont);
+        white-space: nowrap;
+        font-style: italic;
+    }
 }
 
 // ── Move / TM links in learnset tables ───────────────────────────────────────

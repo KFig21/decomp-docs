@@ -301,6 +301,7 @@ export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
                     <th className="center col-power sortable" onClick={() => handleSort('power')}>Power{sortIndicator('power')}</th>
                     <th className="center col-acc sortable" onClick={() => handleSort('accuracy')}>Accuracy{sortIndicator('accuracy')}</th>
                     <th className="center col-pp sortable" onClick={() => handleSort('pp')}>PP{sortIndicator('pp')}</th>
+                    <th className="col-desc">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -327,6 +328,7 @@ export default function TypeMovesList({ moves, unreleasedKeys }: Props) {
                         <td className="center">{formatStat(move.power)}</td>
                         <td className="center">{move.accuracy != null && move.accuracy > 0 ? `${move.accuracy}%` : '—'}</td>
                         <td className="center">{formatStat(move.pp)}</td>
+                        <td className="col-desc">{move.description || '—'}</td>
                       </tr>
                     );
                   })}

@@ -43,10 +43,15 @@
         text-align: center;
     }
 
+    tbody tr:hover td {
+        background-color: color-mix(in srgb, var(--primaryColor), transparent 90%);
+    }
+
     .col-cat   { width: 120px; }
     .col-power { width: 70px; }
     .col-acc   { width: 80px; }
     .col-pp    { width: 55px; }
+    .col-desc  { font-size: 0.78rem; color: var(--fadedFont); white-space: nowrap; font-style: italic; }
 
     .move-name-cell {
         display: flex;
