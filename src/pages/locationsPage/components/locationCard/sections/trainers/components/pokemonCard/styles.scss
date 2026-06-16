@@ -109,8 +109,18 @@
 
     .loc-types {
         display: flex;
-        gap: 3px;
+        gap: 4px;
         flex-wrap: wrap;
+
+        a {
+            display: flex;
+            border-radius: 4px;
+            transition: transform 0.12s;
+
+            &:hover {
+                transform: scale(1.12);
+            }
+        }
     }
 
     .loc-details-row {

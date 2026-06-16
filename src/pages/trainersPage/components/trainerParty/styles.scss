@@ -128,7 +128,17 @@
         display: flex;
         gap: 4px;
         flex-wrap: nowrap;
-        overflow: hidden;
+        // overflow: hidden;
+
+        a {
+            display: flex;
+            border-radius: 4px;
+            transition: transform 0.12s;
+
+            &:hover {
+                transform: scale(1.12);
+            }
+        }
 
         .type-badge {
             padding: 2px 5px;
@@ -149,14 +159,11 @@
         font-style: italic;
         color: var(--fadedFont);
         text-decoration: none;
-        border-radius: 3px;
-        padding: 1px 4px;
         align-self: flex-start;
-        transition: color 0.12s, background 0.12s;
+        transition: color 0.12s;
 
         &:hover {
             color: var(--primaryColor);
-            background: color-mix(in srgb, var(--primaryColor), transparent 85%);
         }
     }
 

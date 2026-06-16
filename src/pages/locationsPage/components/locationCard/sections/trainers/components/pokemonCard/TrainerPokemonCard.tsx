@@ -149,7 +149,13 @@ export default function TrainerPokemonCard({
           {species.types && (
             <div className="loc-types">
               {(species.types as string[]).filter(Boolean).map((t) => (
-                <TypeIconBadge key={t} type={t} size={18} />
+                <Link
+                  key={t}
+                  to={`/types/${t.toLowerCase()}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <TypeIconBadge type={t} size={18} />
+                </Link>
               ))}
             </div>
           )}

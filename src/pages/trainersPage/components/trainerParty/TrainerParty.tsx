@@ -156,7 +156,13 @@ function PartyPokemonCard({ pokemon, exportMode }: { pokemon: any; exportMode: b
           {species.types && (
             <div className="party-types">
               {species.types.filter(Boolean).map((t: string) => (
-                <TypeIconBadge key={t} type={t} size={18} />
+                <Link
+                  key={t}
+                  to={`/types/${t.toLowerCase()}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <TypeIconBadge type={t} size={18} />
+                </Link>
               ))}
             </div>
           )}
